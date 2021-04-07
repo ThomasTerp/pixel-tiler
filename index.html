@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<title>Pixel Tiler</title>
+
+		<meta charset="utf-8">
+		<meta name="description" content="Pixel Tiler">
+		<meta name="author" content="ThomasTerp">
+
+		<script src="jquery-3.6.0.min.js"></script>
+		<script src="scripts/index.js" type="module"></script>
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<rect width="300" height="100" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<circle cx="50" cy="50" r="50" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<polygon points="50,0 100,100 0,100" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M50,0 L100,0 L100,100 L0,100 L0,50 Z" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M100,0 L100,100 L0,100 Z" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M50,0 L100,0 L100,100 L0,100 L0,50 A 50 50 -45 0 1 50 0 Z" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M100,0 L100,100 L0,100 A 100 100 -45 0 1 100 0 Z" fill="black" onclick="console.log('click')" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M50,0 L100,0 L100,100 L0,100 L0,50 A 50 50 -45 0 0 50 0 Z" fill="black" />
+		</svg>
+		<svg width="100px" height="100px" viewBox="0 0 100 100">
+			<path d="M100,0 L100,100 L0,100 A 100 100 -45 0 0 100 0 Z" fill="black" />
+		</svg>
+	</body>
+</html>
