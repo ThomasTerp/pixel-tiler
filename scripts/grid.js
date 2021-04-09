@@ -1,4 +1,5 @@
 import HTMLObject from "./html-object.js";
+import generateUniqueID from "./generateUniqueID.js";
 
 function isPowerOfTwo(x)
 {
@@ -36,6 +37,8 @@ export default class Grid extends HTMLObject
 	constructor(containerHTML)
 	{
 		super(containerHTML);
+
+		this.uniqueID = `grid${generateUniqueID()}`;
 	}
 
 	buildHTML()
