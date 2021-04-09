@@ -1,5 +1,5 @@
 import HTMLObject from "./html-object.js";
-import GridCanvas from "./grid-canvas.js";
+import Grid from "./grid.js";
 
 export default class App extends HTMLObject
 {
@@ -14,8 +14,8 @@ export default class App extends HTMLObject
 	{
 		super.initialize();
 
-		this.gridCanvas = new GridCanvas(this.html);
-		this.gridCanvas.initialize();
+		this.grid = new Grid(this.html);
+		this.grid.initialize();
 	}
 
 	buildHTML()

@@ -5,7 +5,7 @@ function isPowerOfTwo(x)
 	return (Math.log(x)/Math.log(2)) % 1 === 0;
 }
 
-export default class GridCanvas extends HTMLObject
+export default class Grid extends HTMLObject
 {
 	canvas;
 	maxGridSize = 128;
