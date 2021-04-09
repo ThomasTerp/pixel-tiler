@@ -2,5 +2,6 @@ import App from "./app.js"
 
 $(document).ready(() =>
 {
-	new App();
+	window.app = new App($("#appContainer"));
+	app.initialize();
 });
