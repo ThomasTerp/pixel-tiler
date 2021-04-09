@@ -48,9 +48,9 @@ export default class Grid extends HTMLObject
 		return this._zoom;
 	}
 
-	set offset(offset)
+	set offset(value)
 	{
-		this._offset = offset;
+		this._offset = value;
 
 		this._applyViewBox();
 	}

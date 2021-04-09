@@ -9,4 +9,9 @@ export default class Vector2D
 		this.x = x;
 		this.y = y;
 	}
+
+	copy()
+	{
+		return new Vector2D(this.x, this.y);
+	}
 }
