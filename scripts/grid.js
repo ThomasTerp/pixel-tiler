@@ -1,5 +1,6 @@
 import HTMLObject from "./html-object.js";
-import generateUniqueID from "./generateUniqueID.js";
+import generateUniqueID from "./generate-unique-id.js";
+import Vector2D from "./vector-2d.js";
 
 function isPowerOfTwo(x)
 {
@@ -8,9 +9,10 @@ function isPowerOfTwo(x)
 
 export default class Grid extends HTMLObject
 {
-	canvas;
 	maxGridSize = 128;
 	_gridSize = 32;
+	_zoom = 100;
+	_offset = new Vector2D(0, 0);
 
 	set gridSize(value)
 	{
@@ -34,6 +36,30 @@ export default class Grid extends HTMLObject
 		return this._gridSize;
 	}
 
+	set zoom(value)
+	{
+		this._zoom = value;
+
+		this._applyViewBox();
+	}
+
+	get zoom()
+	{
+		return this._zoom;
+	}
+
+	set offset(offset)
+	{
+		this._offset = offset;
+
+		this._applyViewBox();
+	}
+
+	get offset()
+	{
+		return this._offset;
+	}
+
 	constructor(containerHTML)
 	{
 		super(containerHTML);
@@ -44,21 +70,26 @@ export default class Grid extends HTMLObject
 	buildHTML()
 	{
 		return $(`
-			<svg width="100%" height="100%" viewBox="-1000,-1000 2000,2000" xmlns="http://www.w3.org/2000/svg">
+			<svg id="${this.uniqueID}" width="100%" height="100%" viewBox="-${this.zoom + this.offset.x},-${this.zoom + this.offset.y} ${this.zoom * 2},${this.zoom * 2}" xmlns="http://www.w3.org/2000/svg">
 				<defs>
-					<pattern id="subGrid" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
+					<pattern id="${this.uniqueID}pattern1" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
 						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="grey" stroke-width="1" />
 					</pattern>
-					<pattern id="grid" width="${this.maxGridSize}" height="${this.maxGridSize}" patternUnits="userSpaceOnUse">
-						<rect width="${this.maxGridSize}" height="${this.maxGridSize}" fill="url(#subGrid)" />
+					<pattern id="${this.uniqueID}pattern2" width="${this.maxGridSize}" height="${this.maxGridSize}" patternUnits="userSpaceOnUse">
+						<rect width="${this.maxGridSize}" height="${this.maxGridSize}" fill="url(#${this.uniqueID}pattern1)" />
 						<path d="M0,${this.maxGridSize} L0,0 L${this.maxGridSize},0" fill="none" stroke="black" stroke-width="1" />
 					</pattern>
 				</defs>
 
-				<rect x="-100%" y="-100%" width="200%" height="200%" fill="url(#grid)" />
+				<rect x="-100%" y="-100%" width="200%" height="200%" fill="url(#${this.uniqueID}pattern2)" />
 				<line x1="-100%" y1="0" x2="100%" y2="0" stroke="black" stroke-width="2" />
 				<line x1="0" y1="-100%" x2="0" y2="100%" stroke="black" stroke-width="2" />
 			</svg>
 		`);
+	}
+
+	_applyViewBox()
+	{
+		this.html[0].setAttribute("viewBox", `-${this.zoom + this.offset.x},-${this.zoom + this.offset.y} ${this.zoom * 2},${this.zoom * 2}`);
 	}
 }
