@@ -11,7 +11,7 @@ export default class Grid extends HTMLObject
 {
 	maxGridSize = 128;
 	_gridSize = 32;
-	_zoom = 100;
+	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
 
 	set gridSize(value)
@@ -70,7 +70,7 @@ export default class Grid extends HTMLObject
 	buildHTML()
 	{
 		return $(`
-			<svg id="${this.uniqueID}" width="100%" height="100%" viewBox="-${this.zoom + this.offset.x},-${this.zoom + this.offset.y} ${this.zoom * 2},${this.zoom * 2}" xmlns="http://www.w3.org/2000/svg">
+			<svg id="${this.uniqueID}" width="100%" height="100%" viewBox="-${(this.zoom / 2) + this.offset.x},-${(this.zoom / 2) + this.offset.y} ${this.zoom},${this.zoom}" xmlns="http://www.w3.org/2000/svg">
 				<defs>
 					<pattern id="${this.uniqueID}pattern1" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
 						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="grey" stroke-width="1" />
@@ -90,6 +90,10 @@ export default class Grid extends HTMLObject
 
 	_applyViewBox()
 	{
-		this.html[0].setAttribute("viewBox", `-${this.zoom + this.offset.x},-${this.zoom + this.offset.y} ${this.zoom * 2},${this.zoom * 2}`);
+		const width = this.html.width();
+		const x = this.offset.x / (width / this.zoom);
+		const y = this.offset.y / (width / this.zoom);
+
+		this.html[0].setAttribute("viewBox", `${-x},${-y} ${this.zoom},${this.zoom}`);
 	}
 }
