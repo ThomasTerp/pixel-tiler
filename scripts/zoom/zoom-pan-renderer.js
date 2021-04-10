@@ -7,32 +7,45 @@ export default class ZoomPanRenderer
 	html;
 	transformations;
 	wheelDelta = 120;
+	_cursorX = 0;
+	_cursorY = 0;
 
 	constructor(html)
 	{
 		this.html = html;
 		this.transformations = new Transformations(0, 0, 0, 0, 1);
 
+		$(document).on("mousemove", (event) =>
+		{
+			this._cursorX = event.originalEvent.pageX;
+			this._cursorY = event.originalEvent.pageY;
+		});
+
 		this.html.on("mousewheel", (event) =>
 		{
-			if(typeof this.zooming === "undefined")
-			{
-				const offsetLeft = this.html.offset().left;
-				const offsetTop = this.html.offset().top;
-				const zooming = new MouseZoom(this.transformations, event.pageX, event.pageY, offsetLeft, offsetTop, -event.originalEvent.deltaY / this.wheelDelta);
-				this.zooming = zooming;
-
-				const transformations = zooming.zoom();
-				this.applyTransformations(transformations);
-				this.transformations = transformations;
-				this.zooming = undefined;
-			}
+			this.addZoom(event.originalEvent.deltaY);
 
 			return false;
 		});
 	}
 
-	getTransform2d(transformations)
+	addZoom(amount)
+	{
+		if(typeof this.zooming === "undefined")
+		{
+			const offsetLeft = this.html.offset().left;
+			const offsetTop = this.html.offset().top;
+			const zooming = new MouseZoom(this.transformations, this._cursorX, this._cursorY, offsetLeft, offsetTop, -amount / this.wheelDelta);
+			this.zooming = zooming;
+
+			const transformations = zooming.zoom();
+			this.applyTransformations(transformations);
+			this.transformations = transformations;
+			this.zooming = undefined;
+		}
+	}
+
+	getTransform(transformations)
 	{
 		return `matrix(${transformations.scale.toFixed(1)}, 0, 0, ${transformations.scale.toFixed(1)}, ${transformations.translateX.toFixed(1)}, ${transformations.translateY.toFixed(1)})`;
 	}
@@ -46,7 +59,7 @@ export default class ZoomPanRenderer
 		this.html.css("-moz-transform-origin", origin);
 		this.html.css("-webkit-transform-origin", origin);
 
-		const transform = this.getTransform2d(transformations);
+		const transform = this.getTransform(transformations);
 		this.html.css("transform", transform);
 		this.html.css("-ms-transform", transform);
 		this.html.css("-o-transform", transform);

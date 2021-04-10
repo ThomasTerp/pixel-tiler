@@ -7,28 +7,13 @@ import clamp from "./clamp.js";
 export default class App extends HTMLObject
 {
 	grid;
-	zoomMultiplier = 0.0016;
-	zoomMinimum = 1;
-	zoomMaximum = 10;
-	zoomAdd = 120;
 	offsetAdd = 20;
-	_zoom = 1;
+	zoomPanRenderer;
+	zoomAdd = 120;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
 	_contentCursorOffset = new Vector2D(0, 0);
-
-	set zoom(value)
-	{
-		if(value < 0)
-		{
-			throw new RangeError("zoom must be above 0");
-		}
-
-		this._zoom = value;
-		this.contentHTML.css("transform-origin", `${this._contentCursorOffset.x}px ${this._contentCursorOffset.y}px`);
-		this.contentHTML.css("transform", `scale(${this.zoom})`);
-	}
 
 	get zoom()
 	{
@@ -64,10 +49,9 @@ export default class App extends HTMLObject
 		this.grid.initialize();
 
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
+		this.zoomPanRenderer = new ZoomPanRenderer(this.contentHTML);
 
 		this._activateEvents();
-
-		new ZoomPanRenderer(this.contentHTML);
 	}
 
 	buildHTML()
@@ -89,11 +73,6 @@ export default class App extends HTMLObject
 
 	_activateEvents()
 	{
-		this.html.on("mousewheel", (event) =>
-		{
-			//this._addZoom(event.originalEvent.wheelDelta);
-		});
-
 		this.html.on("mousedown", (event) =>
 		{
 			if (event.originalEvent.which === 2)
@@ -144,11 +123,12 @@ export default class App extends HTMLObject
 			switch (event.originalEvent.which)
 			{
 				case 43:
-					this._addZoom(-this.zoomAdd);
+					console.log("zoom")
+					this.zoomPanRenderer.addZoom(-this.zoomAdd);
 					break;
 
 				case 45:
-					this._addZoom(this.zoomAdd);
+					this.zoomPanRenderer.addZoom(this.zoomAdd);
 					break;
 			}
 		});
@@ -158,10 +138,5 @@ export default class App extends HTMLObject
 			this._contentCursorOffset.x = event.originalEvent.offsetX;
 			this._contentCursorOffset.y = event.originalEvent.offsetY;
 		});
-	}
-
-	_addZoom(zoomAdd)
-	{
-		this.zoom = clamp(this.zoom + zoomAdd * this.zoomMultiplier, this.zoomMinimum, this.zoomMaximum);
 	}
 }
