@@ -10,7 +10,7 @@ export default class Grid extends HTMLObject
 {
 	maxGridSize = 128;
 	_gridSize = 32;
-	_zoom = 1000;
+	_zoom = 1600;
 	_offset = new Vector2D(0, 0);
 
 	set gridSize(value)

@@ -31,9 +31,8 @@ export default class HTMLObject
 
 		this.html = this.buildHTML();
 		this.html.attr("id", this.uniqueID.toString());
-
 		this.html.data("htmlObject", this);
-		this.containerHTML.append(this.html);
+		this.html.appendTo(this.containerHTML);
 	}
 
 	buildHTML()

@@ -1,18 +1,22 @@
 import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
+import ZoomPanRenderer from "./zoom/zoom-pan-renderer.js";
+import clamp from "./clamp.js";
 
 export default class App extends HTMLObject
 {
 	grid;
-	zoomMultiplier = 0.001;
-	zoomMinimum = 10;
+	zoomMultiplier = 0.0016;
+	zoomMinimum = 1;
+	zoomMaximum = 10;
 	zoomAdd = 120;
 	offsetAdd = 20;
-	_zoom = 1000;
+	_zoom = 1;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
+	_contentCursorOffset = new Vector2D(0, 0);
 
 	set zoom(value)
 	{
@@ -22,9 +26,8 @@ export default class App extends HTMLObject
 		}
 
 		this._zoom = value;
-		this._applyViewBox();
-
-		this.grid.zoom = value;
+		this.contentHTML.css("transform-origin", `${this._contentCursorOffset.x}px ${this._contentCursorOffset.y}px`);
+		this.contentHTML.css("transform", `scale(${this.zoom})`);
 	}
 
 	get zoom()
@@ -35,8 +38,6 @@ export default class App extends HTMLObject
 	set offset(value)
 	{
 		this._offset = value;
-		this._applyViewBox();
-
 		this.grid.offset = this.offset.copy();
 	}
 
@@ -65,13 +66,15 @@ export default class App extends HTMLObject
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
 
 		this._activateEvents();
+
+		new ZoomPanRenderer(this.contentHTML);
 	}
 
 	buildHTML()
 	{
 		return $(`
 			<div class="app">
-				<div class="content">
+				<div id="testt" class="content">
 				</div>
 			</div>
 		`);
@@ -88,7 +91,7 @@ export default class App extends HTMLObject
 	{
 		this.html.on("mousewheel", (event) =>
 		{
-			this._addZoom(event.originalEvent.wheelDelta);
+			//this._addZoom(event.originalEvent.wheelDelta);
 		});
 
 		this.html.on("mousedown", (event) =>
@@ -149,15 +152,16 @@ export default class App extends HTMLObject
 					break;
 			}
 		});
+
+		$(this.contentHTML).on("mousemove", (event) =>
+		{
+			this._contentCursorOffset.x = event.originalEvent.offsetX;
+			this._contentCursorOffset.y = event.originalEvent.offsetY;
+		});
 	}
 
 	_addZoom(zoomAdd)
 	{
-		this.zoom = Math.max(this.zoom - zoomAdd * this.zoom * this.zoomMultiplier, this.zoomMinimum);
-	}
-
-	_applyViewBox()
-	{
-
+		this.zoom = clamp(this.zoom + zoomAdd * this.zoomMultiplier, this.zoomMinimum, this.zoomMaximum);
 	}
 }
