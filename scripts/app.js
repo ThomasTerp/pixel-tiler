@@ -1,19 +1,31 @@
 import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
-import ZoomPanRenderer from "./zoom/zoom-pan-renderer.js";
-import clamp from "./clamp.js";
 
 export default class App extends HTMLObject
 {
+	tileset;
 	grid;
 	offsetAdd = 20;
-	zoomPanRenderer;
+	zoomMultiplier = 0.001;
+	zoomMinimum = 10;
 	zoomAdd = 120;
+	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
 	_contentCursorOffset = new Vector2D(0, 0);
+
+	set zoom(value)
+	{
+		if(value < 0)
+		{
+			throw new RangeError("zoom must be above 0");
+		}
+
+		this._zoom = value;
+		this.grid.zoom = value;
+	}
 
 	get zoom()
 	{
@@ -36,9 +48,11 @@ export default class App extends HTMLObject
 		return this._isDragging;
 	}
 
-	constructor(containerHTML)
+	constructor(containerHTML, tileset)
 	{
 		super(containerHTML);
+
+		this.tileset = tileset;
 	}
 
 	initialize()
@@ -49,7 +63,6 @@ export default class App extends HTMLObject
 		this.grid.initialize();
 
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
-		this.zoomPanRenderer = new ZoomPanRenderer(this.contentHTML);
 
 		this._activateEvents();
 	}
@@ -58,7 +71,7 @@ export default class App extends HTMLObject
 	{
 		return $(`
 			<div class="app">
-				<div id="testt" class="content">
+				<div class="content">
 				</div>
 			</div>
 		`);
@@ -73,6 +86,28 @@ export default class App extends HTMLObject
 
 	_activateEvents()
 	{
+		this.html.on("mousewheel", (event) =>
+		{
+			this._addZoom(event.originalEvent.wheelDelta);
+
+			/*const center = new Vector2D(this.contentHTML.width() / 2, this.contentHTML.height() / 2);
+
+			if(event.originalEvent.wheelDelta > 0)
+			{
+				const offset = new Vector2D(this.offset.x, this.offset.y);
+				offset.x = (this._contentCursorOffset.x - offset.x) * (this.zoom) * 0.000001;
+				offset.y = (this._contentCursorOffset.y - offset.y) * (this.zoom) * 0.000001;
+				this.offset = offset
+			}
+			else
+			{
+				const offset = new Vector2D(this.offset.x, this.offset.y);
+				offset.x += (this._contentCursorOffset.x - center.x) * (this.zoom - zoomDifference) * 0.0001;
+				offset.y += (this._contentCursorOffset.y - center.y) * (this.zoom - zoomDifference) * 0.0001;
+				this.offset = offset
+			}*/
+		});
+
 		this.html.on("mousedown", (event) =>
 		{
 			if (event.originalEvent.which === 2)
@@ -123,12 +158,11 @@ export default class App extends HTMLObject
 			switch (event.originalEvent.which)
 			{
 				case 43:
-					console.log("zoom")
-					this.zoomPanRenderer.addZoom(-this.zoomAdd);
+					this._addZoom(-this.zoomAdd);
 					break;
 
 				case 45:
-					this.zoomPanRenderer.addZoom(this.zoomAdd);
+					this._addZoom(this.zoomAdd);
 					break;
 			}
 		});
@@ -138,5 +172,10 @@ export default class App extends HTMLObject
 			this._contentCursorOffset.x = event.originalEvent.offsetX;
 			this._contentCursorOffset.y = event.originalEvent.offsetY;
 		});
+	}
+
+	_addZoom(zoomAdd)
+	{
+		this.zoom = Math.max(this.zoom - zoomAdd * this.zoom * this.zoomMultiplier, this.zoomMinimum);
 	}
 }
