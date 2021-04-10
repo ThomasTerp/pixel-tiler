@@ -5,14 +5,37 @@ import Vector2D from "./vector-2d.js";
 export default class App extends HTMLObject
 {
 	grid;
+	zoomSpeedMultiplier = 1;
+	zoomMinimum = 10;
+	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
 
+	set zoom(value)
+	{
+		if(value < 0)
+		{
+			throw new RangeError("zoom must be above 0");
+		}
+
+		this._zoom = value;
+		this._applyViewBox();
+
+		this.grid.zoom = value;
+	}
+
+	get zoom()
+	{
+		return this._zoom;
+	}
+
 	set offset(value)
 	{
 		this._offset = value;
-		this.grid.offset = value.copy();
+		this._applyViewBox();
+
+		this.grid.offset = this.offset.copy();
 	}
 
 	get offset()
@@ -39,7 +62,12 @@ export default class App extends HTMLObject
 
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
 
-		this.grid.html.on("mousedown", (event) =>
+		this.html.on("mousewheel", (event) =>
+		{
+			this.zoom = Math.max(this.zoom - event.originalEvent.wheelDelta * this.zoomSpeedMultiplier, this.zoomMinimum);
+		});
+
+		this.html.on("mousedown", (event) =>
 		{
 			this._dragOffset.x = this.offset.x - event.offsetX;
 			this._dragOffset.y = this.offset.y - event.offsetY;
@@ -51,7 +79,7 @@ export default class App extends HTMLObject
 			this._isDragging = false;
 		});
 
-		this.grid.html.on("mousemove", (event) =>
+		this.html.on("mousemove", (event) =>
 		{
 			if(this.isDragging)
 			{
@@ -62,6 +90,13 @@ export default class App extends HTMLObject
 
 	buildHTML()
 	{
-		return $(`<div class="App"></div>`);
+		return $(`
+			<div class="app"></div>
+		`);
+	}
+
+	_applyViewBox()
+	{
+
 	}
 }

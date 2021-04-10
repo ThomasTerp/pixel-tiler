@@ -1,12 +1,20 @@
+import generateUniqueID from "./generate-unique-id.js";
 
 export default class HTMLObject
 {
 	containerHTML;
 	html;
+	_uniqueID;
+
+	get uniqueID()
+	{
+		return this._uniqueID;
+	}
 
 	constructor(containerHTML)
 	{
 		this.containerHTML = containerHTML;
+		this._uniqueID = `object${generateUniqueID()}`;
 	}
 
 	initialize()
@@ -22,6 +30,7 @@ export default class HTMLObject
 		}
 
 		this.html = this.buildHTML();
+		this.html.attr("id", this.uniqueID.toString());
 
 		this.html.data("htmlObject", this);
 		this.containerHTML.append(this.html);
