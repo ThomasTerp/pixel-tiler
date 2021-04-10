@@ -59,11 +59,33 @@ export default class App extends HTMLObject
 	{
 		super.initialize();
 
-		this.grid = new Grid(this.html);
+		this.grid = new Grid(this.contentHTML);
 		this.grid.initialize();
 
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
 
+		this._activateEvents();
+	}
+
+	buildHTML()
+	{
+		return $(`
+			<div class="app">
+				<div class="content">
+				</div>
+			</div>
+		`);
+	}
+
+	rebuildHTML()
+	{
+		super.rebuildHTML();
+
+		this.contentHTML = this.html.find(">.content");
+	}
+
+	_activateEvents()
+	{
 		this.html.on("mousewheel", (event) =>
 		{
 			this._addZoom(event.originalEvent.wheelDelta);
@@ -71,7 +93,7 @@ export default class App extends HTMLObject
 
 		this.html.on("mousedown", (event) =>
 		{
-			if(event.originalEvent.which === 2)
+			if (event.originalEvent.which === 2)
 			{
 				this._dragOffset.x = this.offset.x - event.offsetX;
 				this._dragOffset.y = this.offset.y - event.offsetY;
@@ -86,7 +108,7 @@ export default class App extends HTMLObject
 
 		this.html.on("mousemove", (event) =>
 		{
-			if(this.isDragging)
+			if (this.isDragging)
 			{
 				this.offset = new Vector2D(event.offsetX + this._dragOffset.x, event.offsetY + this._dragOffset.y);
 			}
@@ -116,7 +138,7 @@ export default class App extends HTMLObject
 
 		$(document).on("keypress", (event) =>
 		{
-			switch(event.originalEvent.which)
+			switch (event.originalEvent.which)
 			{
 				case 43:
 					this._addZoom(-this.zoomAdd);
@@ -127,16 +149,6 @@ export default class App extends HTMLObject
 					break;
 			}
 		});
-	}
-
-	buildHTML()
-	{
-		return $(`
-			<div class="app">
-				<svg xmlns="http://www.w3.org/2000/svg>
-				</svg>
-			</div>
-		`);
 	}
 
 	_addZoom(zoomAdd)
