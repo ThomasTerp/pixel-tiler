@@ -5,7 +5,7 @@ import Vector2D from "./vector-2d.js";
 export default class App extends HTMLObject
 {
 	grid;
-	zoomSpeedMultiplier = 1;
+	zoomMultiplier = 0.001;
 	zoomMinimum = 10;
 	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
@@ -64,7 +64,7 @@ export default class App extends HTMLObject
 
 		this.html.on("mousewheel", (event) =>
 		{
-			this.zoom = Math.max(this.zoom - event.originalEvent.wheelDelta * this.zoomSpeedMultiplier, this.zoomMinimum);
+			this.zoom = Math.max(this.zoom - event.originalEvent.wheelDelta * this.zoom * this.zoomMultiplier, this.zoomMinimum);
 		});
 
 		this.html.on("mousedown", (event) =>
