@@ -6,7 +6,7 @@ function isPowerOfTwo(x)
 	return (Math.log(x)/Math.log(2)) % 1 === 0;
 }
 
-export default class Grid extends HTMLObject
+export default class TileGrid extends HTMLObject
 {
 	maxGridSize = 128;
 	_gridSize = 32;
@@ -85,11 +85,6 @@ export default class Grid extends HTMLObject
 				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="black" stroke-width="2" />
 			</svg>
 		`);
-	}
-
-	placeTile(position, tile)
-	{
-		this.html.append(tile.buildHTML(32));
 	}
 
 	_applyViewBox()

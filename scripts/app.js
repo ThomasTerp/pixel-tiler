@@ -110,11 +110,17 @@ export default class App extends HTMLObject
 
 		this.html.on("mousedown", (event) =>
 		{
-			if (event.originalEvent.which === 2)
+			switch(event.originalEvent.which)
 			{
-				this._dragOffset.x = this.offset.x - event.offsetX;
-				this._dragOffset.y = this.offset.y - event.offsetY;
-				this._isDragging = true;
+				case 1:
+					this.grid.placeTile(new Vector2D(0, 0), this.tileset.getTile("tile3"));
+					break;
+
+				case 2:
+					this._dragOffset.x = this.offset.x - event.offsetX;
+					this._dragOffset.y = this.offset.y - event.offsetY;
+					this._isDragging = true;
+					break;
 			}
 		});
 
