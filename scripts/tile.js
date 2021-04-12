@@ -7,7 +7,7 @@ function parseSVG(svg)
 	const fragment = document.createDocumentFragment();
 	fragment.appendChild(div.firstChild);
 
-	return $(fragment);
+	return fragment;
 }
 
 export default class Tile

@@ -10,7 +10,7 @@ export default class Grid extends HTMLObject
 {
 	maxGridSize = 128;
 	_gridSize = 32;
-	_zoom = 1600;
+	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
 
 	set gridSize(value)
@@ -69,7 +69,7 @@ export default class Grid extends HTMLObject
 	buildHTML()
 	{
 		return $(`
-			<svg class="grid" width="100%" height="100%" viewBox="-${(this.zoom / 2) + this.offset.x},-${(this.zoom / 2) + this.offset.y} ${this.zoom},${this.zoom}" xmlns="http://www.w3.org/2000/svg">
+			<svg class="grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
 				<defs>
 					<pattern id="${this.uniqueID}-pattern1" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
 						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="grey" stroke-width="1" />
@@ -87,9 +87,31 @@ export default class Grid extends HTMLObject
 		`);
 	}
 
-	placeTile(position, tile)
+	placeTile(gridPosition, tile)
 	{
-		this.html.append(tile.buildHTML(32));
+		const half = this.gridSize / 2;
+
+		const tileHTML = tile.buildHTML(this.gridSize);
+		tileHTML.firstChild.setAttribute("x", `${gridPosition.x * this.gridSize}px`);
+		tileHTML.firstChild.setAttribute("y", `${gridPosition.y * this.gridSize}px`);
+
+		this.html.append(tileHTML);
+	}
+
+	cursorToView(cursorPosition)
+	{
+		return new Vector2D(
+			(cursorPosition.x - this.offset.x) * (this.zoom / this.html.width()),
+			(cursorPosition.y - this.offset.y) * (this.zoom / this.html.height())
+		);
+	}
+
+	positionToGrid(position)
+	{
+		return new Vector2D(
+			Math.floor(position.x / this.gridSize),
+			Math.floor(position.y / this.gridSize)
+		)
 	}
 
 	_applyViewBox()

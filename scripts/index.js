@@ -88,3 +88,24 @@ $(document).ready(() =>
 	window.app = new App($("#app-container"), tileset);
 	app.initialize();
 });
+
+/*
+<canvas id="canvas" width="800" height="400"></canvas>
+<div id="png-container"></div>
+
+var svgString = new XMLSerializer().serializeToString($(".grid")[0]);
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var DOMURL = self.URL || self.webkitURL || self;
+var img = new Image();
+var svg = new Blob([svgString], {type: "image/svg+xml;charset=utf-8"});
+var url = DOMURL.createObjectURL(svg);
+img.onload = function() {
+    ctx.drawImage(img, 0, 0);
+    var png = canvas.toDataURL("image/png");
+    document.querySelector('#png-container').innerHTML = '<img src="'+png+'"/>';
+    DOMURL.revokeObjectURL(png);
+};
+img.src = url;
+*/

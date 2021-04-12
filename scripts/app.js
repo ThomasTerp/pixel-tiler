@@ -113,7 +113,7 @@ export default class App extends HTMLObject
 			switch(event.originalEvent.which)
 			{
 				case 1:
-					this.grid.placeTile(new Vector2D(0, 0), this.tileset.getTile("tile3"));
+					this.grid.placeTile(this.grid.positionToGrid(this.grid.cursorToView(this._contentCursorOffset)), this.tileset.getTile("tile3"));
 					break;
 
 				case 2:
