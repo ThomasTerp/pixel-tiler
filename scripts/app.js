@@ -15,6 +15,10 @@ export default class App extends HTMLObject
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
 	_contentCursorOffset = new Vector2D(0, 0);
+	_isDrawing = false;
+	_lastDrawmTileHTML;
+	_lastDrawnGridPosition = new Vector2D(0, 0);
+	_lastHoverHTML;
 
 	set zoom(value)
 	{
@@ -46,6 +50,11 @@ export default class App extends HTMLObject
 	get isDragging()
 	{
 		return this._isDragging;
+	}
+
+	get isDrawing()
+	{
+		return this._isDrawing;
 	}
 
 	constructor(containerHTML, tileset)
@@ -113,7 +122,10 @@ export default class App extends HTMLObject
 			switch(event.originalEvent.which)
 			{
 				case 1:
-					this.grid.placeTile(this.grid.positionToGrid(this.grid.cursorToView(this._contentCursorOffset)), this.tileset.getTile("tile3"));
+					this._lastHoverHTML = undefined;
+					this._isDrawing = true;
+					this._draw(true);
+
 					break;
 
 				case 2:
@@ -127,13 +139,19 @@ export default class App extends HTMLObject
 		$(document).on("mouseup", (event) =>
 		{
 			this._isDragging = false;
+			this._isDrawing = false;
 		});
 
 		this.html.on("mousemove", (event) =>
 		{
-			if (this.isDragging)
+			if(this.isDragging)
 			{
 				this.offset = new Vector2D(event.offsetX + this._dragOffset.x, event.offsetY + this._dragOffset.y);
+			}
+
+			if(this.isDrawing)
+			{
+				this._draw();
 			}
 		});
 
@@ -173,11 +191,40 @@ export default class App extends HTMLObject
 			}
 		});
 
+		$(this.grid.html).on("mouseover", ".tile-pointer", (event) =>
+		{
+			const hoverHTML = $(event.target).parent();
+			console.log(hoverHTML, "hover");
+			if(hoverHTML[0] !== this._lastDrawnTileHTML[0])
+			{
+				this._lastHoverHTML = hoverHTML;
+			}
+		});
+
 		$(this.contentHTML).on("mousemove", (event) =>
 		{
 			this._contentCursorOffset.x = event.originalEvent.offsetX;
 			this._contentCursorOffset.y = event.originalEvent.offsetY;
 		});
+	}
+
+	_draw(override)
+	{
+		const gridPosition = this.grid.positionToGrid(this.grid.cursorToView(this._contentCursorOffset));
+
+		if(override || !gridPosition.equal(this._lastDrawnGridPosition))
+		{
+			if(typeof this._lastHoverHTML !== "undefined")
+			{
+				console.log(event.target, "remove");
+				this._lastHoverHTML.remove();
+			}
+
+			this._lastDrawnTileHTML = this.grid.placeTile(gridPosition, this.tileset.getTile("tile3"));
+			this._lastDrawnGridPosition = gridPosition;
+
+			console.log(this._lastDrawnTileHTML, "create");
+		}
 	}
 
 	_addZoom(zoomAdd)

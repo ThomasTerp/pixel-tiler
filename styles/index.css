@@ -7,3 +7,7 @@ html, body {
 svg {
 	transform: translate(0, 0);
 }
+
+.tile-pointer {
+	pointer-events: all;
+}

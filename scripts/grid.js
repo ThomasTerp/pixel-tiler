@@ -96,6 +96,8 @@ export default class Grid extends HTMLObject
 		tileHTML.firstChild.setAttribute("y", `${gridPosition.y * this.gridSize}px`);
 
 		this.html.append(tileHTML);
+
+		return this.html.find(">:last-child");
 	}
 
 	cursorToView(cursorPosition)
