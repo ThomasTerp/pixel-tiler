@@ -97,7 +97,10 @@ export default class Grid extends HTMLObject
 
 		this.html.append(tileHTML);
 
-		return this.html.find(">:last-child");
+		const lastTileHTML = this.html.find(">:last-child");
+		lastTileHTML.data("gridPosition", gridPosition);
+
+		return lastTileHTML;
 	}
 
 	cursorToView(cursorPosition)

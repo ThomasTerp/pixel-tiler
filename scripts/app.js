@@ -2,9 +2,32 @@ import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
 
+function getElementsAtPosition(position)
+{
+	const stack = []
+	let element;
+
+	do
+	{
+		element = document.elementFromPoint(position.x, position.y);
+		stack.push(element);
+		element.classList.add("pointer-events-none");
+	}
+	while(element.tagName !== "HTML");
+
+	for(var i  = 0; i < stack.length; i += 1)
+	{
+		stack[i].classList.remove("pointer-events-none");
+	}
+
+	return stack;
+}
+
 export default class App extends HTMLObject
 {
-	tileset;
+	tilesets;
+	selectedTileset = "Default"
+	selectedTile = "tile1";
 	grid;
 	offsetAdd = 20;
 	zoomMultiplier = 0.001;
@@ -57,11 +80,13 @@ export default class App extends HTMLObject
 		return this._isDrawing;
 	}
 
-	constructor(containerHTML, tileset)
+	constructor(containerHTML, tilesets)
 	{
 		super(containerHTML);
 
-		this.tileset = tileset;
+		this.tilesets = tilesets;
+		this.selectedTileset = tilesets[0];
+		this.selectedTile = this.selectedTileset.getTile("tile1");
 	}
 
 	initialize()
@@ -122,9 +147,8 @@ export default class App extends HTMLObject
 			switch(event.originalEvent.which)
 			{
 				case 1:
-					this._lastHoverHTML = undefined;
 					this._isDrawing = true;
-					this._draw(true);
+					this._draw(this._contentCursorOffset, true);
 
 					break;
 
@@ -140,19 +164,6 @@ export default class App extends HTMLObject
 		{
 			this._isDragging = false;
 			this._isDrawing = false;
-		});
-
-		this.html.on("mousemove", (event) =>
-		{
-			if(this.isDragging)
-			{
-				this.offset = new Vector2D(event.offsetX + this._dragOffset.x, event.offsetY + this._dragOffset.y);
-			}
-
-			if(this.isDrawing)
-			{
-				this._draw();
-			}
 		});
 
 		$(document).on("keydown", (event) =>
@@ -191,39 +202,52 @@ export default class App extends HTMLObject
 			}
 		});
 
-		$(this.grid.html).on("mouseover", ".tile-pointer", (event) =>
-		{
-			const hoverHTML = $(event.target).parent();
-			console.log(hoverHTML, "hover");
-			if(hoverHTML[0] !== this._lastDrawnTileHTML[0])
-			{
-				this._lastHoverHTML = hoverHTML;
-			}
-		});
-
 		$(this.contentHTML).on("mousemove", (event) =>
 		{
 			this._contentCursorOffset.x = event.originalEvent.offsetX;
 			this._contentCursorOffset.y = event.originalEvent.offsetY;
+
+			if(this.isDragging)
+			{
+				this.offset = new Vector2D(this._contentCursorOffset.x + this._dragOffset.x, this._contentCursorOffset.y + this._dragOffset.y);
+			}
+
+			if(this.isDrawing)
+			{
+				this._removeElements(this._contentCursorOffset);
+				this._draw(this._contentCursorOffset);
+			}
 		});
 	}
 
-	_draw(override)
+	_removeElements(position)
 	{
-		const gridPosition = this.grid.positionToGrid(this.grid.cursorToView(this._contentCursorOffset));
+		for(const element of getElementsAtPosition(position))
+		{
+			const elementHTML = $(element);
+
+			if(elementHTML.hasClass("tile-pointer"))
+			{
+				const tileHTML = elementHTML.parent();
+
+				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
+				{
+					tileHTML.remove();
+				}
+			}
+		}
+	}
+
+	_draw(position, override)
+	{
+		const gridPosition = this.grid.positionToGrid(this.grid.cursorToView(position));
 
 		if(override || !gridPosition.equal(this._lastDrawnGridPosition))
 		{
-			if(typeof this._lastHoverHTML !== "undefined")
-			{
-				console.log(event.target, "remove");
-				this._lastHoverHTML.remove();
-			}
+			this._removeElements(position);
 
-			this._lastDrawnTileHTML = this.grid.placeTile(gridPosition, this.tileset.getTile("tile3"));
+			this._lastDrawnTileHTML = this.grid.placeTile(gridPosition, this.selectedTile);
 			this._lastDrawnGridPosition = gridPosition;
-
-			console.log(this._lastDrawnTileHTML, "create");
 		}
 	}
 

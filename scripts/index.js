@@ -85,7 +85,9 @@ $(document).ready(() =>
 		return $(`<polygon points="0,0 ${size * 0.25},${size * 0.5} ${size * 0.5},0 ${size * 0.75},${size * 0.5} ${size},0 ${size},${size} 0,${size}" fill="black" />`);
 	}));
 
-	window.app = new App($("#app-container"), tileset);
+	window.app = new App($("#app-container"), [
+		tileset
+	]);
 	app.initialize();
 });
 
