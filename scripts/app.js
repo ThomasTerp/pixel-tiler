@@ -246,7 +246,6 @@ export default class App extends HTMLObject
 				//TODO: Fix _lastDrawnGridPosition when 0, 0
 				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
 				{
-					console.log("remove")
 					tileHTML.remove();
 				}
 			}
