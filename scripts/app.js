@@ -1,6 +1,7 @@
 import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
+import BrushTool from "./tools/brush-tool.js";
 
 function getElementsAtPosition(position)
 {
@@ -26,8 +27,9 @@ function getElementsAtPosition(position)
 export default class App extends HTMLObject
 {
 	tilesets;
-	selectedTileset = "Default"
-	selectedTile = "tile1";
+	tools = [];
+	selectedTileset;
+	selectedTile;
 	grid;
 	offsetAdd = 20;
 	zoomMultiplier = 0.001;
@@ -98,14 +100,19 @@ export default class App extends HTMLObject
 
 		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
 
-		this._activateEvents();
+		this.tools[0] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
+		this.tools[0].initialize();
 	}
 
 	buildHTML()
 	{
 		return $(`
 			<div class="app">
-				<div class="content">
+				<div class="content"></div>
+				<div class="side-panel">
+					<div class="tools"></div>
+					<hr />
+					<div class="all-tool-properties"></div>
 				</div>
 			</div>
 		`);
@@ -115,12 +122,16 @@ export default class App extends HTMLObject
 	{
 		super.rebuildHTML();
 
-		this.contentHTML = this.html.find(">.content");
+		this.contentHTML = this.html.find("> .content");
+		this.toolsHTML = this.html.find("> .side-panel > .tools");
+		this.allToolPropertiesHTML = this.html.find("> .side-panel > .all-tool-properties");
+
+		this._activateEvents();
 	}
 
 	_activateEvents()
 	{
-		this.html.on("mousewheel", (event) =>
+		this.contentHTML.on("mousewheel", (event) =>
 		{
 			this._addZoom(event.originalEvent.wheelDelta);
 
@@ -142,7 +153,7 @@ export default class App extends HTMLObject
 			}*/
 		});
 
-		this.html.on("mousedown", (event) =>
+		this.contentHTML.on("mousedown", (event) =>
 		{
 			switch(event.originalEvent.which)
 			{
@@ -164,6 +175,7 @@ export default class App extends HTMLObject
 		{
 			this._isDragging = false;
 			this._isDrawing = false;
+			this._lastDrawnGridPosition = new Vector2D(0, 0);
 		});
 
 		$(document).on("keydown", (event) =>
@@ -230,8 +242,11 @@ export default class App extends HTMLObject
 			{
 				const tileHTML = elementHTML.parent();
 
+				//TODO: Check grid size
+				//TODO: Fix _lastDrawnGridPosition when 0, 0
 				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
 				{
+					console.log("remove")
 					tileHTML.remove();
 				}
 			}

@@ -5,84 +5,84 @@ import Tile from "./tile.js";
 $(document).ready(() =>
 {
 	const tileset = new Tileset("Default");
-	tileset.addTile("tile1", new Tile((size) =>
+	tileset.setTile("tile1", new Tile((size, color) =>
 	{
-		return $(`<rect width="${size}" height="${size}" fill="black" />`);
+		return `<rect width="${size}" height="${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile2", new Tile((size) =>
+	tileset.setTile("tile2", new Tile((size, color) =>
 	{
-		return $(`<circle cx="${size * 0.5}" cy="${size * 0.5}" r="${size * 0.5}" fill="black" />`);
+		return `<circle cx="${size * 0.5}" cy="${size * 0.5}" r="${size * 0.5}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile3", new Tile((size) =>
+	tileset.setTile("tile3", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} Z" fill="black" />`);
+		return `<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile4", new Tile((size) =>
+	tileset.setTile("tile4", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size},0 L${size},${size} L0,${size} Z" fill="black" />`);
+		return `<path d="M${size},0 L${size},${size} L0,${size} Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile5", new Tile((size) =>
+	tileset.setTile("tile5", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 1 ${size * 0.5},0 Z" fill="black" />`);
+		return `<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 1 ${size * 0.5},0 Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile6", new Tile((size) =>
+	tileset.setTile("tile6", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size},0 L${size},${size} L0,${size} A ${size},${size} 0 0 1 ${size},0 Z" fill="black" />`);
+		return `<path d="M${size},0 L${size},${size} L0,${size} A ${size},${size} 0 0 1 ${size},0 Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile7", new Tile((size) =>
+	tileset.setTile("tile7", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},0 Z" fill="black" />`);
+		return `<path d="M${size * 0.5},0 L${size},0 L${size},${size} L0,${size} L0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},0 Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile8", new Tile((size) =>
+	tileset.setTile("tile8", new Tile((size, color) =>
 	{
-		return $(`<path d="M${size},0 L${size},${size} L0,${size} A ${size},${size} 0 0 0 ${size},0 Z" fill="black" />`);
+		return `<path d="M${size},0 L${size},${size} L0,${size} A ${size},${size} 0 0 0 ${size},0 Z" fill="${color}" />`;
 	}));
-	tileset.addTile("tile9", new Tile((size) =>
+	tileset.setTile("tile9", new Tile((size, color) =>
 	{
-		return $(`<polygon points="${size * 0.5},0 ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="${size * 0.5},0 ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile10", new Tile((size) =>
+	tileset.setTile("tile10", new Tile((size, color) =>
 	{
-		return $(`
-			<polygon points="${size * 0.25},0 ${size * 0.5},${size} 0,${size}" fill="black" />
-			<polygon points="${size * 0.75},0 ${size},${size} ${size * 0.5},${size}" fill="black" />
-		`);
+		return `
+			<polygon points="${size * 0.25},0 ${size * 0.5},${size} 0,${size}" fill="${color}" />
+			<polygon points="${size * 0.75},0 ${size},${size} ${size * 0.5},${size}" fill="${color}" />
+		`;
 	}));
-	tileset.addTile("tile11", new Tile((size) =>
+	tileset.setTile("tile11", new Tile((size, color) =>
 	{
-		return $(`<polygon points="${size * 0.5},${size * 0.5} ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="${size * 0.5},${size * 0.5} ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile12", new Tile((size) =>
+	tileset.setTile("tile12", new Tile((size, color) =>
 	{
-		return $(`
-			<polygon points="${size * 0.25},${size * 0.5} ${size * 0.5},${size} 0,${size}" fill="black" />
-			<polygon points="${size * 0.75},${size * 0.5} ${size},${size} ${size * 0.5},${size}" fill="black" />
-		`);
+		return `
+			<polygon points="${size * 0.25},${size * 0.5} ${size * 0.5},${size} 0,${size}" fill="${color}" />
+			<polygon points="${size * 0.75},${size * 0.5} ${size},${size} ${size * 0.5},${size}" fill="${color}" />
+		`;
 	}));
-	tileset.addTile("tile13", new Tile((size) =>
+	tileset.setTile("tile13", new Tile((size, color) =>
 	{
-		return $(`
-			<path d="M0,${size * 0.5} L0,0 L${size * 0.5},0 A ${size * 0.5},${size * 0.5},0 0 0 0 ${size * 0.5},Z" fill="black" />
-			<path d="M${size},${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},0 L${size},0 Z" fill="black" />
-			<path d="M${size},${size * 0.5} L${size},${size} L${size * 0.5},${size} A ${size * 0.5},${size * 0.5} 0 0 0 ${size},${size * 0.5} Z" fill="black" />
-			<path d="M0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},${size} L0,${size} Z" fill="black" />
-		`);
+		return `
+			<path d="M0,${size * 0.5} L0,0 L${size * 0.5},0 A ${size * 0.5},${size * 0.5},0 0 0 0 ${size * 0.5},Z" fill="${color}" />
+			<path d="M${size},${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},0 L${size},0 Z" fill="${color}" />
+			<path d="M${size},${size * 0.5} L${size},${size} L${size * 0.5},${size} A ${size * 0.5},${size * 0.5} 0 0 0 ${size},${size * 0.5} Z" fill="${color}" />
+			<path d="M0,${size * 0.5} A ${size * 0.5},${size * 0.5} 0 0 0 ${size * 0.5},${size} L0,${size} Z" fill="${color}" />
+		`;
 	}));
-	tileset.addTile("tile14", new Tile((size) =>
+	tileset.setTile("tile14", new Tile((size, color) =>
 	{
-		return $(`<polygon points="0,0 ${size * 0.5},${size} ${size},0 ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="0,0 ${size * 0.5},${size} ${size},0 ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile15", new Tile((size) =>
+	tileset.setTile("tile15", new Tile((size, color) =>
 	{
-		return $(`<polygon points="0,0 ${size * 0.25},${size} ${size * 0.5},0 ${size * 0.75},${size} ${size},0 ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="0,0 ${size * 0.25},${size} ${size * 0.5},0 ${size * 0.75},${size} ${size},0 ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile16", new Tile((size) =>
+	tileset.setTile("tile16", new Tile((size, color) =>
 	{
-		return $(`<polygon points="0,0 ${size * 0.5},${size * 0.5} ${size},0 ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="0,0 ${size * 0.5},${size * 0.5} ${size},0 ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
-	tileset.addTile("tile17", new Tile((size) =>
+	tileset.setTile("tile17", new Tile((size, color) =>
 	{
-		return $(`<polygon points="0,0 ${size * 0.25},${size * 0.5} ${size * 0.5},0 ${size * 0.75},${size * 0.5} ${size},0 ${size},${size} 0,${size}" fill="black" />`);
+		return `<polygon points="0,0 ${size * 0.25},${size * 0.5} ${size * 0.5},0 ${size * 0.75},${size * 0.5} ${size},0 ${size},${size} 0,${size}" fill="${color}" />`;
 	}));
 
 	window.app = new App($("#app-container"), [

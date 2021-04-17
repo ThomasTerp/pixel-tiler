@@ -72,32 +72,30 @@ export default class Grid extends HTMLObject
 			<svg class="grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
 				<defs>
 					<pattern id="${this.uniqueID}-pattern1" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
-						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="grey" stroke-width="1" />
+						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="#202124" stroke-width="1" />
 					</pattern>
 					<pattern id="${this.uniqueID}-pattern2" width="${this.maxGridSize}" height="${this.maxGridSize}" patternUnits="userSpaceOnUse">
 						<rect width="${this.maxGridSize}" height="${this.maxGridSize}" fill="url(#${this.uniqueID}-pattern1)" />
-						<path d="M0,${this.maxGridSize} L0,0 L${this.maxGridSize},0" fill="none" stroke="black" stroke-width="1" />
+						<path d="M0,${this.maxGridSize} L0,0 L${this.maxGridSize},0" fill="none" stroke="#202124" stroke-width="3" />
 					</pattern>
 				</defs>
 
 				<rect id="${this.uniqueID}-rect1" x="-100%" y="-100%" width="200%" height="200%" fill="url(#${this.uniqueID}-pattern2)" />
-				<line id="${this.uniqueID}-line1" x1="-100%" y1="0" x2="100%" y2="0" stroke="black" stroke-width="2" />
-				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="black" stroke-width="2" />
+				<line id="${this.uniqueID}-line1" x1="-100%" y1="0" x2="100%" y2="0" stroke="#202124" stroke-width="3" />
+				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="#202124" stroke-width="3" />
 			</svg>
 		`);
 	}
 
 	placeTile(gridPosition, tile)
 	{
-		const half = this.gridSize / 2;
-
-		const tileHTML = tile.buildHTML(this.gridSize);
+		const tileHTML = tile.buildHTML(this.gridSize, "white");
 		tileHTML.firstChild.setAttribute("x", `${gridPosition.x * this.gridSize}px`);
 		tileHTML.firstChild.setAttribute("y", `${gridPosition.y * this.gridSize}px`);
 
 		this.html.append(tileHTML);
 
-		const lastTileHTML = this.html.find(">:last-child");
+		const lastTileHTML = this.html.find("> :last-child");
 		lastTileHTML.data("gridPosition", gridPosition);
 
 		return lastTileHTML;

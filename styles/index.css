@@ -8,10 +8,63 @@ svg {
 	transform: translate(0, 0);
 }
 
+hr {
+	border: 2px solid #1f2f46;
+}
+
 .tile-pointer {
 	pointer-events: all;
 }
 
 .pointer-events-none {
     pointer-events: none;
+}
+
+.grid
+{
+	background-color: #0e0e10;
+}
+
+.side-panel
+{
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 260px;
+	height: 100%;
+	background-color: #1a212d;
+}
+
+.tools
+{
+	width: 100%;
+	text-align: center;
+	margin-top: 32px;
+}
+
+.tool
+{
+	width: 46px;
+	height: 46px;
+	text-align: center;
+	padding: 0px;
+	background-color: #1f2f46;
+	color: #79c0ff;
+	border: none;
+}
+
+.brush-tiles
+{
+	text-align: center;
+}
+
+.brush-tiles > svg
+{
+	padding: 8px;
+	margin: 0px;
+}
+
+.selected-tile
+{
+	background-color: #1f2f46;
 }

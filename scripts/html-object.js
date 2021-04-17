@@ -5,6 +5,7 @@ export default class HTMLObject
 	containerHTML;
 	html;
 	_uniqueID;
+	_hasInitialized = false;
 
 	get uniqueID()
 	{
@@ -19,6 +20,13 @@ export default class HTMLObject
 
 	initialize()
 	{
+		if(this._hasInitialized)
+		{
+			throw new Error("Instance has already been initialized");
+		}
+
+		this._hasInitialized = true;
+
 		this.rebuildHTML();
 	}
 

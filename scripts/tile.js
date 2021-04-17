@@ -19,8 +19,8 @@ export default class Tile
 		this.buildSVG = buildSVG;
 	}
 
-	buildHTML(size)
+	buildHTML(size, color)
 	{
-		return parseSVG(`<svg width="${size}px" height="${size}px" viewBox="0,0 ${size},${size}">${this.buildSVG(size)[0].outerHTML}<rect class="tile-pointer" x="0" y="0" width="100%" height="100%" fill="none" /></svg>`);
+		return parseSVG(`<svg width="${size}px" height="${size}px" viewBox="0,0 ${size},${size}">${this.buildSVG(size, color)}<rect class="tile-pointer" x="0" y="0" width="100%" height="100%" fill="none" /></svg>`);
 	}
 }

@@ -4,13 +4,18 @@ export default class Tileset
 	name;
 	_tiles;
 
+	get tiles()
+	{
+		return this._tiles;
+	}
+
 	constructor(name)
 	{
 		this.name = name;
 		this._tiles = {};
 	}
 
-	addTile(tileID, tile)
+	setTile(tileID, tile)
 	{
 		this._tiles[tileID] = tile;
 	}
