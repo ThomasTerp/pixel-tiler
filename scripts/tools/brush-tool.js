@@ -25,8 +25,13 @@ export default class BrushTool extends Tool
 		{
 			brushTiles.append(tile.buildHTML(64, "white"));
 
-			const lastTileHTML = brushTiles.find("> :last-child");
-			lastTileHTML.data("tile", tile);
+			const tileHTML = brushTiles.find("> :last-child");
+			tileHTML.data("tile", tile);
+
+			if(this.app.selectedTile === tile)
+			{
+				tileHTML.addClass("selected-tile");
+			}
 		}
 
 		propertiesHTML.append(brushTiles);
@@ -34,8 +39,10 @@ export default class BrushTool extends Tool
 		return propertiesHTML;
 	}
 
-	_setSelectedTile(tileHTML)
+	_setSelectedTileHTML(tileHTML)
 	{
+		this.app.selectedTile = tileHTML.data("tile");
+		this.brushTilesHTML.find("> svg").removeClass("selected-tile");
 		tileHTML.addClass("selected-tile");
 	}
 
@@ -43,10 +50,7 @@ export default class BrushTool extends Tool
 	{
 		this.propertiesHTML.on("click", ".tile-pointer", (event) =>
 		{
-			this.app.selectedTile = $(event.target).parent().data("tile");
-
-			this.brushTilesHTML.find("> svg").removeClass("selected-tile");
-			$(event.target).parent().addClass("selected-tile");
+			this._setSelectedTileHTML($(event.target).parent());
 		});
 	}
 }
