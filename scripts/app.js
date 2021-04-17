@@ -226,13 +226,13 @@ export default class App extends HTMLObject
 
 			if(this.isDrawing)
 			{
-				this._removeElements(this._contentCursorOffset);
+				this._removeTileHTMLs(this._contentCursorOffset);
 				this._draw(this._contentCursorOffset);
 			}
 		});
 	}
 
-	_removeElements(position)
+	_removeTileHTMLs(position)
 	{
 		for(const element of getElementsAtPosition(position))
 		{
@@ -258,7 +258,7 @@ export default class App extends HTMLObject
 
 		if(override || !gridPosition.equal(this._lastDrawnGridPosition))
 		{
-			this._removeElements(position);
+			this._removeTileHTMLs(position);
 
 			this._lastDrawnTileHTML = this.grid.placeTile(gridPosition, this.selectedTile);
 			this._lastDrawnGridPosition = gridPosition;
