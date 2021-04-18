@@ -14,12 +14,16 @@ export default class Vector2D
 	{
 		this.x += other.x;
 		this.y += other.y;
+
+		return this;
 	}
 
 	subtract(other)
 	{
 		this.x -= other.x;
 		this.y -= other.y;
+
+		return this;
 	}
 
 	multiply(other)
@@ -38,6 +42,8 @@ export default class Vector2D
 		{
 			throw new Error("Can only multiply by a number or another Vector2D");
 		}
+
+		return this;
 	}
 
 	divide(other)
@@ -56,6 +62,8 @@ export default class Vector2D
 		{
 			throw new Error("Can only divide by a number or another Vector2D");
 		}
+
+		return this;
 	}
 
 	equal(other)

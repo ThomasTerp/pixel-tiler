@@ -17,7 +17,7 @@ hr {
 }
 
 .pointer-events-none {
-    pointer-events: none;
+	pointer-events: none;
 }
 
 .grid
@@ -50,7 +50,7 @@ hr {
 	padding: 0px;
 	background-color: #1f2f46;
 	color: #79c0ff;
-	border: none;
+	border: 1px solid #79c0ff;
 }
 
 .brush-tiles

@@ -66,6 +66,13 @@ export default class Grid extends HTMLObject
 		super(containerHTML);
 	}
 
+	initialize()
+	{
+		super.initialize();
+
+		this._activateGlobalEvents();
+	}
+
 	buildHTML()
 	{
 		return $(`
@@ -87,18 +94,14 @@ export default class Grid extends HTMLObject
 		`);
 	}
 
-	placeTile(gridPosition, tile)
+	placeTile(tile, gridPosition, color, rotation)
 	{
-		const tileHTML = tile.buildHTML(this.gridSize, "white");
-		tileHTML.firstChild.setAttribute("x", `${gridPosition.x * this.gridSize}px`);
-		tileHTML.firstChild.setAttribute("y", `${gridPosition.y * this.gridSize}px`);
+		this.html.append(tile.buildHTML(false, this.gridSize, gridPosition.copy().multiply(this.gridSize), color, rotation));
 
-		this.html.append(tileHTML);
+		const tileHTML = this.html.find("> :last-child");
+		tileHTML.data("gridPosition", gridPosition);
 
-		const lastTileHTML = this.html.find("> :last-child");
-		lastTileHTML.data("gridPosition", gridPosition);
-
-		return lastTileHTML;
+		return tileHTML;
 	}
 
 	cursorToView(cursorPosition)
@@ -115,6 +118,19 @@ export default class Grid extends HTMLObject
 			Math.floor(position.x / this.gridSize),
 			Math.floor(position.y / this.gridSize)
 		)
+	}
+
+	gridToPosition(gridPosition)
+	{
+		return gridPosition.copy().multiply(this.gridSize);
+	}
+
+	_activateGlobalEvents()
+	{
+		$(window).resize(() =>
+		{
+			this._applyViewBox();
+		});
 	}
 
 	_applyViewBox()

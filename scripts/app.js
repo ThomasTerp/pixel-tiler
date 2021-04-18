@@ -3,27 +3,6 @@ import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
 import BrushTool from "./tools/brush-tool.js";
 
-function getElementsAtPosition(position)
-{
-	const stack = []
-	let element;
-
-	do
-	{
-		element = document.elementFromPoint(position.x, position.y);
-		stack.push(element);
-		element.classList.add("pointer-events-none");
-	}
-	while(element.tagName !== "HTML");
-
-	for(var i  = 0; i < stack.length; i += 1)
-	{
-		stack[i].classList.remove("pointer-events-none");
-	}
-
-	return stack;
-}
-
 export default class App extends HTMLObject
 {
 	tilesets;
@@ -35,15 +14,17 @@ export default class App extends HTMLObject
 	zoomMultiplier = 0.001;
 	zoomMinimum = 10;
 	zoomAdd = 120;
+	_selectedRotation = 0;
 	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
-	_contentCursorOffset = new Vector2D(0, 0);
-	_isDrawing = false;
-	_lastDrawmTileHTML;
-	_lastDrawnGridPosition = new Vector2D(0, 0);
-	_lastHoverHTML;
+	_isCTRLPressed = false;
+
+	get selectedRotation()
+	{
+		return this._selectedRotation;
+	}
 
 	set zoom(value)
 	{
@@ -77,11 +58,6 @@ export default class App extends HTMLObject
 		return this._isDragging;
 	}
 
-	get isDrawing()
-	{
-		return this._isDrawing;
-	}
-
 	constructor(containerHTML, tilesets)
 	{
 		super(containerHTML);
@@ -102,6 +78,8 @@ export default class App extends HTMLObject
 
 		this.tools[0] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
 		this.tools[0].initialize();
+
+		this._activateGlobalEvents();
 	}
 
 	buildHTML()
@@ -129,11 +107,93 @@ export default class App extends HTMLObject
 		this._activateEvents();
 	}
 
+	rotateSelectedRotationClockwise()
+	{
+		if(++this._selectedRotation >= 4)
+		{
+			this._selectedRotation = 0;
+		}
+	}
+
+	rotateSelectedRotationAnticlockwise()
+	{
+		if(--this._selectedRotation < 0)
+		{
+			this._selectedRotation = 3;
+		}
+	}
+
+	_activateGlobalEvents()
+	{
+		$(document).on("mouseup", (event) =>
+		{
+			this._isDragging = false;
+		});
+
+		$(document).on("keydown", (event) =>
+		{
+			switch(event.originalEvent.which)
+			{
+				case 17:
+					this._isCTRLPressed = true;
+					break;
+
+				case 37:
+					this.offset = new Vector2D(this.offset.x + this.offsetAdd, this.offset.y);
+					break;
+
+				case 38:
+					this.offset = new Vector2D(this.offset.x, this.offset.y + this.offsetAdd);
+					break;
+
+				case 39:
+					this.offset = new Vector2D(this.offset.x - this.offsetAdd, this.offset.y);
+					break;
+
+				case 40:
+					this.offset = new Vector2D(this.offset.x, this.offset.y - this.offsetAdd);
+					break;
+			}
+		});
+
+		$(document).on("keyup", (event) =>
+		{
+			switch(event.originalEvent.which)
+			{
+				case 17:
+					this._isCTRLPressed = false;
+					break;
+			}
+		});
+
+		$(document).on("keypress", (event) =>
+		{
+			if(!this._isCTRLPressed)
+			{
+				switch(event.originalEvent.which)
+				{
+					case 43:
+						this._addZoom(-this.zoomAdd);
+						break;
+
+					case 45:
+						this._addZoom(this.zoomAdd);
+						break;
+				}
+			}
+		});
+	}
+
 	_activateEvents()
 	{
 		this.contentHTML.on("mousewheel", (event) =>
 		{
-			this._addZoom(event.originalEvent.wheelDelta);
+			if(this._isCTRLPressed)
+			{
+				this._addZoom(event.originalEvent.wheelDelta);
+
+				event.preventDefault();
+			}
 
 			/*const center = new Vector2D(this.contentHTML.width() / 2, this.contentHTML.height() / 2);
 
@@ -157,112 +217,21 @@ export default class App extends HTMLObject
 		{
 			switch(event.originalEvent.which)
 			{
-				case 1:
-					this._isDrawing = true;
-					this._draw(this._contentCursorOffset, true);
-
-					break;
-
 				case 2:
-					this._dragOffset.x = this.offset.x - event.offsetX;
-					this._dragOffset.y = this.offset.y - event.offsetY;
+					this._dragOffset.x = this.offset.x - event.originalEvent.offsetX;
+					this._dragOffset.y = this.offset.y - event.originalEvent.offsetY;
 					this._isDragging = true;
 					break;
 			}
 		});
 
-		$(document).on("mouseup", (event) =>
+		this.contentHTML.on("mousemove", (event) =>
 		{
-			this._isDragging = false;
-			this._isDrawing = false;
-			this._lastDrawnGridPosition = new Vector2D(0, 0);
-		});
-
-		$(document).on("keydown", (event) =>
-		{
-			switch(event.originalEvent.which)
-			{
-				case 37:
-					this.offset = new Vector2D(this.offset.x + this.offsetAdd, this.offset.y);
-					break;
-
-				case 38:
-					this.offset = new Vector2D(this.offset.x, this.offset.y + this.offsetAdd);
-					break;
-
-				case 39:
-					this.offset = new Vector2D(this.offset.x - this.offsetAdd, this.offset.y);
-					break;
-
-				case 40:
-					this.offset = new Vector2D(this.offset.x, this.offset.y - this.offsetAdd);
-					break;
-			}
-		});
-
-		$(document).on("keypress", (event) =>
-		{
-			switch (event.originalEvent.which)
-			{
-				case 43:
-					this._addZoom(-this.zoomAdd);
-					break;
-
-				case 45:
-					this._addZoom(this.zoomAdd);
-					break;
-			}
-		});
-
-		$(this.contentHTML).on("mousemove", (event) =>
-		{
-			this._contentCursorOffset.x = event.originalEvent.offsetX;
-			this._contentCursorOffset.y = event.originalEvent.offsetY;
-
 			if(this.isDragging)
 			{
-				this.offset = new Vector2D(this._contentCursorOffset.x + this._dragOffset.x, this._contentCursorOffset.y + this._dragOffset.y);
-			}
-
-			if(this.isDrawing)
-			{
-				this._removeTileHTMLs(this._contentCursorOffset);
-				this._draw(this._contentCursorOffset);
+				this.offset = new Vector2D(event.originalEvent.offsetX + this._dragOffset.x, event.originalEvent.offsetY + this._dragOffset.y);
 			}
 		});
-	}
-
-	_removeTileHTMLs(position)
-	{
-		for(const element of getElementsAtPosition(position))
-		{
-			const elementHTML = $(element);
-
-			if(elementHTML.hasClass("tile-pointer"))
-			{
-				const tileHTML = elementHTML.parent();
-
-				//TODO: Check grid size
-				//TODO: Fix _lastDrawnGridPosition when 0, 0
-				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
-				{
-					tileHTML.remove();
-				}
-			}
-		}
-	}
-
-	_draw(position, override)
-	{
-		const gridPosition = this.grid.positionToGrid(this.grid.cursorToView(position));
-
-		if(override || !gridPosition.equal(this._lastDrawnGridPosition))
-		{
-			this._removeTileHTMLs(position);
-
-			this._lastDrawnTileHTML = this.grid.placeTile(gridPosition, this.selectedTile);
-			this._lastDrawnGridPosition = gridPosition;
-		}
 	}
 
 	_addZoom(zoomAdd)

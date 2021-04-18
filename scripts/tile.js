@@ -1,14 +1,4 @@
-
-function parseSVG(svg)
-{
-	const div = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
-	div.innerHTML= svg;
-
-	const fragment = document.createDocumentFragment();
-	fragment.appendChild(div.firstChild);
-
-	return fragment;
-}
+import parseSVG from "./parse-svg.js";
 
 export default class Tile
 {
@@ -19,8 +9,8 @@ export default class Tile
 		this.buildSVG = buildSVG;
 	}
 
-	buildHTML(size, color)
+	buildHTML(svgMode, size, position, color, rotation)
 	{
-		return parseSVG(`<svg width="${size}px" height="${size}px" viewBox="0,0 ${size},${size}">${this.buildSVG(size, color)}<rect class="tile-pointer" x="0" y="0" width="100%" height="100%" fill="none" /></svg>`);
+		return parseSVG(`<svg><${svgMode ? "svg" : "g"} width="${size}px" height="${size}px" viewBox="0,0 ${size},${size}" style="transform-origin: ${size / 2}px ${size / 2}px; transform: translate(${position.x}px, ${position.y}px) rotate(${rotation * 90}deg);">${this.buildSVG(size, color)}<rect class="tile-pointer" x="0" y="0" width="${size}px" height="${size}px" fill="none" /></${svgMode ? "svg" : "g"}></svg>`);
 	}
 }
