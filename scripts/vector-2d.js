@@ -12,16 +12,40 @@ export default class Vector2D
 
 	add(other)
 	{
-		this.x += other.x;
-		this.y += other.y;
+		if(typeof other === "number")
+		{
+			this.x += other;
+			this.y += other;
+		}
+		else if(other instanceof Vector2D)
+		{
+			this.x += other.x;
+			this.y += other.y;
+		}
+		else
+		{
+			throw new Error("Can only multiply by a number or another Vector2D");
+		}
 
 		return this;
 	}
 
 	subtract(other)
 	{
-		this.x -= other.x;
-		this.y -= other.y;
+		if(typeof other === "number")
+		{
+			this.x -= other;
+			this.y -= other;
+		}
+		else if(other instanceof Vector2D)
+		{
+			this.x -= other.x;
+			this.y -= other.y;
+		}
+		else
+		{
+			throw new Error("Can only multiply by a number or another Vector2D");
+		}
 
 		return this;
 	}
@@ -33,7 +57,7 @@ export default class Vector2D
 			this.x *= other;
 			this.y *= other;
 		}
-		else if(other instanceof Vector2)
+		else if(other instanceof Vector2D)
 		{
 			this.x *= other.x;
 			this.y *= other.y;
@@ -53,7 +77,7 @@ export default class Vector2D
 			this.x /= other;
 			this.y /= other;
 		}
-		else if(other instanceof Vector2)
+		else if(other instanceof Vector2D)
 		{
 			this.x /= other.x;
 			this.y /= other.y;
