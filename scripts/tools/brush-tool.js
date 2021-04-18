@@ -1,13 +1,13 @@
 import Tool from "./tool.js";
 import Vector2D from "./../vector-2d.js";
 import getElementsAtPosition from "./../get-elements-at-position.js";
-import parseSVG from "./../parse-svg.js";
 
 export default class BrushTool extends Tool
 {
-	boundaryBoxMultiplier = 0.08;
+	boundaryBoxMultiplier = 0.02;
 	_isDrawing = false;
 	_lastDrawnGridPosition = new Vector2D(0, 0);
+	_tileGhostPosition = new Vector2D(0, 0);
 
 	get isDrawing()
 	{
@@ -23,20 +23,7 @@ export default class BrushTool extends Tool
 	{
 		super.initialize();
 
-		$(document).on("mousewheel", (event) =>
-		{
-			if(!this.app.isCTRLPressed)
-			{
-				if(event.originalEvent.wheelDelta > 0)
-				{
-					this.app.rotateSelectedRotationClockwise();
-				}
-				else if(event.originalEvent.wheelDelta < 0)
-				{
-					this.app.rotateSelectedRotationAnticlockwise();
-				}
-			}
-		});
+		this._activateGlobalEvents();
 	}
 
 	rebuildHTML()
@@ -78,11 +65,51 @@ export default class BrushTool extends Tool
 		tileHTML.addClass("selected-tile");
 	}
 
-	_activateEvents()
+	_activateGlobalEvents()
 	{
-		this.propertiesHTML.on("click", ".tile-pointer", (event) =>
+		$(document).on("mousewheel", (event) =>
 		{
-			this._setSelectedTileHTML($(event.target).parent());
+			if(!this.app.isCTRLPressed)
+			{
+				if(event.originalEvent.wheelDelta > 0)
+				{
+					this.app.rotateSelectedRotationAnticlockwise();
+				}
+				else if(event.originalEvent.wheelDelta < 0)
+				{
+					this.app.rotateSelectedRotationClockwise();
+				}
+			}
+
+			if(this.app.isMouseOnContent)
+			{
+				this._drawGhost();
+			}
+		});
+
+		$(document).on("keypress", (event) =>
+		{
+			switch(event.originalEvent.which)
+			{
+				case 120:
+					this.app.rotateSelectedRotationAnticlockwise();
+					break;
+
+				case 122:
+					this.app.rotateSelectedRotationClockwise();
+					break;
+			}
+
+			if(this.app.isMouseOnContent)
+			{
+				this._drawGhost();
+			}
+		});
+
+		$(document).on("mouseup", (event) =>
+		{
+			this._isDrawing = false;
+			this._lastDrawnGridPosition = new Vector2D(0, 0);
 		});
 
 		this.app.contentHTML.on("mousedown", (event) =>
@@ -99,22 +126,76 @@ export default class BrushTool extends Tool
 			}
 		});
 
-		$(document).on("mouseup", (event) =>
-		{
-			this._isDrawing = false;
-			this._lastDrawnGridPosition = new Vector2D(0, 0);
-		});
-
 		this.app.contentHTML.on("mousemove", (event) =>
 		{
 			if(this.isDrawing)
 			{
-				const position = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
-
-				//this._removeTileHTMLs(position);
-				this._draw(position);
+				this._draw(new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY));
 			}
 		});
+
+		$(document).on("mousemove", (event) =>
+		{
+			if(this.app.isMouseOnContent)
+			{
+				this._tileGhostPosition = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
+				this._drawGhost();
+			}
+			else
+			{
+				this._removeGhost();
+			}
+		});
+	}
+
+	_activateEvents()
+	{
+		this.propertiesHTML.on("mousedown", ".tile-pointer", (event) =>
+		{
+			this._setSelectedTileHTML($(event.target).parent());
+		});
+	}
+
+	_drawGhost()
+	{
+		const gridSize = this.app.grid.gridSize;
+		let tileGhostHTML = $(".tile-ghost");
+
+		if(tileGhostHTML.length > 0 && (tileGhostHTML.data("gridSize") !== gridSize || tileGhostHTML.data("color") !== "white" || tileGhostHTML.data("rotation") !== this.app.selectedRotation))
+		{
+			this._removeGhost();
+		}
+
+		tileGhostHTML = $(".tile-ghost");
+
+		if(tileGhostHTML.length === 0)
+		{
+			const tileHTML = this.app.selectedTile.buildHTML(true, gridSize, new Vector2D(-16, -16), "white", this.app.selectedRotation);
+
+			const appHTML = $(".app");
+			appHTML.append(tileHTML);
+
+			tileGhostHTML = appHTML.find("> :last-child");
+			tileGhostHTML.addClass("tile-ghost");
+			tileGhostHTML.data("gridSize", gridSize);
+			tileGhostHTML.data("color", "white");
+			tileGhostHTML.data("rotation", this.app.selectedRotation);
+		}
+
+		$(".tile-ghost").css({
+			left: this._tileGhostPosition.x,
+			top: this._tileGhostPosition.y
+		});
+	}
+
+	_removeGhost()
+	{
+		const tileGhostHTML = $(".tile-ghost");
+
+		if(tileGhostHTML.length > 0)
+		{
+			$(".tile-ghost").remove();
+		}
 	}
 
 	_removeTileHTMLs(position)

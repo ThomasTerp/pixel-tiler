@@ -20,6 +20,7 @@ export default class App extends HTMLObject
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
 	_isCTRLPressed = false;
+	_isMouseOnContent;
 
 	get selectedRotation()
 	{
@@ -56,6 +57,11 @@ export default class App extends HTMLObject
 	get isDragging()
 	{
 		return this._isDragging;
+	}
+
+	get isMouseOnContent()
+	{
+		return this._isMouseOnContent;
 	}
 
 	constructor(containerHTML, tilesets)
@@ -231,6 +237,16 @@ export default class App extends HTMLObject
 			{
 				this.offset = new Vector2D(event.originalEvent.offsetX + this._dragOffset.x, event.originalEvent.offsetY + this._dragOffset.y);
 			}
+		});
+
+		this.contentHTML.on("mouseover", (event) =>
+		{
+			this._isMouseOnContent = true;
+		});
+
+		this.contentHTML.on("mouseleave", (event) =>
+		{
+			this._isMouseOnContent = false;
 		});
 	}
 
