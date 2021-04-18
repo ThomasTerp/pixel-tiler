@@ -132,7 +132,6 @@ export default class BrushTool extends Tool
 				//TODO: Fix _lastDrawnGridPosition when 0, 0
 				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
 				{
-					console.log("remove");
 					tileHTML.remove();
 				}
 			}
@@ -143,10 +142,7 @@ export default class BrushTool extends Tool
 	{
 		const viewPosition = this.app.grid.cursorToView(position);
 		const gridPosition = this.app.grid.positionToGrid(viewPosition);
-		const differencePosition = new Vector2D(
-			viewPosition.x - this.app.grid.gridToPosition(gridPosition).x,
-			viewPosition.y - this.app.grid.gridToPosition(gridPosition).y
-		)
+		const differencePosition = viewPosition.copy().subtract(this.app.grid.gridToPosition(gridPosition));
 		const gridSize = this.app.grid.gridSize;
 		const boundaryBoxSize = gridSize * this.boundaryBoxMultiplier;
 
