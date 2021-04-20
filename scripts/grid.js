@@ -88,8 +88,8 @@ export default class Grid extends HTMLObject
 				</defs>
 
 				<rect id="${this.uniqueID}-rect1" x="-100%" y="-100%" width="200%" height="200%" fill="url(#${this.uniqueID}-pattern2)" />
-				<line id="${this.uniqueID}-line1" x1="-100%" y1="0" x2="100%" y2="0" stroke="#202124" stroke-width="3" />
-				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="#202124" stroke-width="3" />
+				<line id="${this.uniqueID}-line1" x1="-100%" y1="0" x2="100%" y2="0" stroke="#303136" stroke-width="2" />
+				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="#303136" stroke-width="2" />
 			</svg>
 		`);
 	}

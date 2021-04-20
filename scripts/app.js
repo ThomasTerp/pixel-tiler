@@ -80,8 +80,7 @@ export default class App extends HTMLObject
 
 		this.grid = new Grid(this.contentHTML);
 		this.grid.initialize();
-
-		this.offset = new Vector2D(this.grid.html.width() / 2, this.grid.html.height() / 2);
+		this.offset = new Vector2D(window.innerWidth / 2, window.innerHeight / 2);
 
 		this.tools[0] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
 		this.tools[0].initialize();
