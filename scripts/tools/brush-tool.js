@@ -229,7 +229,11 @@ export default class BrushTool extends Tool
 
 		if(override || (!gridPosition.equal(this._lastDrawnGridPosition) && (differencePosition.x >= boundaryBoxSize && differencePosition.y >= boundaryBoxSize && differencePosition.x <= gridSize - boundaryBoxSize && differencePosition.y <= gridSize - boundaryBoxSize)))
 		{
-			this._removeTileHTMLs(position);
+			if(!this.app.isShiftPressed)
+			{
+				this._removeTileHTMLs(position);
+			}
+
 			this.app.grid.placeTile(this.app.selectedTile, gridPosition, this.app.palette[this.app.selectedColor], this.app.selectedRotation);
 			this._lastDrawnGridPosition = gridPosition;
 		}

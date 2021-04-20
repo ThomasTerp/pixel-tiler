@@ -31,6 +31,7 @@ export default class App extends HTMLObject
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
+	_isShiftPressed = false;
 	_isCTRLPressed = false;
 	_isMouseOnContent;
 
@@ -74,6 +75,16 @@ export default class App extends HTMLObject
 	get isMouseOnContent()
 	{
 		return this._isMouseOnContent;
+	}
+
+	get isShiftPressed()
+	{
+		return this._isShiftPressed;
+	}
+
+	get isCTRLPressed()
+	{
+		return this._isCTRLPressed;
 	}
 
 	constructor(containerHTML, tilesets)
@@ -155,6 +166,10 @@ export default class App extends HTMLObject
 		{
 			switch(event.originalEvent.which)
 			{
+				case 16:
+					this._isShiftPressed = true;
+					break;
+
 				case 17:
 					this._isCTRLPressed = true;
 					break;
@@ -181,6 +196,10 @@ export default class App extends HTMLObject
 		{
 			switch(event.originalEvent.which)
 			{
+				case 16:
+					this._isShiftPressed = false;
+					break;
+
 				case 17:
 					this._isCTRLPressed = false;
 					break;
