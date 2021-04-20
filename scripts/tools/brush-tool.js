@@ -98,11 +98,11 @@ export default class BrushTool extends Tool
 				switch(event.originalEvent.which)
 				{
 					case 120:
-						this.app.rotateSelectedRotationAnticlockwise();
+						this.app.rotateSelectedRotationClockwise();
 						break;
 
 					case 122:
-						this.app.rotateSelectedRotationClockwise();
+						this.app.rotateSelectedRotationAnticlockwise();
 						break;
 				}
 
