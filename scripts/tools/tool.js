@@ -53,7 +53,11 @@ export default class Tool extends HTMLObject
 
 	buildPropertiesHTML()
 	{
-		return $(`<div class="tool-properties"></div>`);
+		return $(`
+			<div class="tool-properties">
+				<h1 class="tool-title">${this.name}</h1>
+			</div>
+		`);
 	}
 
 	rebuildHTML()

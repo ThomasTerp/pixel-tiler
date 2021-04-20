@@ -10,6 +10,17 @@ export default class App extends HTMLObject
 	tools = [];
 	selectedTileset;
 	selectedTile;
+	selectedColor = 0;
+	palette = [
+		"#FFFFFF",
+		"#000000",
+		"#FF0000",
+		"#00FF00",
+		"#0000FF",
+		"#FFFF00",
+		"#FF00FF",
+		"#00FFFF",
+	];
 	grid;
 	offsetAdd = 20;
 	zoomMultiplier = 0.001;
@@ -100,7 +111,6 @@ export default class App extends HTMLObject
 				<div class="content"></div>
 				<div class="side-panel">
 					<div class="tools"></div>
-					<hr />
 					<div class="all-tool-properties"></div>
 				</div>
 			</div>

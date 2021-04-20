@@ -42,7 +42,8 @@ hr {
 {
 	width: 100%;
 	text-align: center;
-	margin-top: 32px;
+	margin-top: 16px;
+	margin-bottom: 16px;
 }
 
 .tool
@@ -64,6 +65,23 @@ hr {
 	border: 1px solid #79c0ff;
 }
 
+.all-tool-properties {
+	height: 100%;
+}
+
+.tool-properties {
+	background-color: #1f2f46;
+	padding-top: 16px;
+	height: 100%
+}
+
+.tool-title {
+	font-size: 1.2em;
+	text-align: center;
+	margin-top: 0px;
+	margin-bottom: 8px;
+}
+
 .brush-tiles
 {
 	text-align: center;
@@ -77,7 +95,32 @@ hr {
 
 .selected-tile
 {
-	background-color: #1f2f46;
+	background-color: #79c0ff;
+}
+
+.palette
+{
+	text-align: center;
+	margin-bottom: 16px;
+}
+
+.palette-color {
+	width: 46px;
+	height: 46px;
+	text-align: center;
+	padding: 0px 2px 0px 2px;
+	background-color: transparent;
+	border: none;
+	margin: 4px;
+}
+
+.palette-color:focus {
+	outline: 0;
+}
+
+.selected-palette-color
+{
+	background-color: #79c0ff;
 }
 
 .tile-ghost {

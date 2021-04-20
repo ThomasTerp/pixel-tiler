@@ -14,7 +14,7 @@ export default class BrushTilesComponent extends Component
 
 		for(const tile of Object.values(this.app.selectedTileset.tiles))
 		{
-			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), "white", 0));
+			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), this.app.palette[this.app.selectedColor], 0));
 
 			const tileHTML = brushTilesHTML.find("> :last-child");
 			tileHTML.data("tile", tile);
@@ -32,7 +32,7 @@ export default class BrushTilesComponent extends Component
 	{
 		super.rebuildHTML();
 
-		this._activateBrushTilesEvents();
+		this._activateEvents();
 	}
 
 	_setSelectedTileHTML(tileHTML)
@@ -42,7 +42,7 @@ export default class BrushTilesComponent extends Component
 		tileHTML.addClass("selected-tile");
 	}
 
-	_activateBrushTilesEvents()
+	_activateEvents()
 	{
 		this.html.on("mousedown", ".tile-pointer", (event) =>
 		{
