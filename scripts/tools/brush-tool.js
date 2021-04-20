@@ -1,6 +1,7 @@
 import Tool from "./tool.js";
 import Vector2D from "./../vector-2d.js";
 import getElementsAtPosition from "./../get-elements-at-position.js";
+import BrushTilesComponent from "./components/brush-tiles-component.js";
 
 export default class BrushTool extends Tool
 {
@@ -9,6 +10,7 @@ export default class BrushTool extends Tool
 	_isDrawing = false;
 	_lastDrawnGridPosition = new Vector2D(0, 0);
 	_tileGhostPosition = new Vector2D(0, 0);
+	_brushTilesComponent;
 
 	get isDrawing()
 	{
@@ -17,7 +19,7 @@ export default class BrushTool extends Tool
 
 	constructor(app, containerHTML, propertiesContainerHTML)
 	{
-		super(app, containerHTML, propertiesContainerHTML)
+		super(app, containerHTML, propertiesContainerHTML);
 	}
 
 	initialize()
@@ -31,39 +33,8 @@ export default class BrushTool extends Tool
 	{
 		super.rebuildHTML();
 
-		this.brushTilesHTML = this.propertiesHTML.find("> .brush-tiles");
-
-		this._activateBrushEvents();
-	}
-
-	buildPropertiesHTML()
-	{
-		const propertiesHTML = super.buildPropertiesHTML();
-		const brushTilesHTML = $(`<div class="brush-tiles"></div>`);
-
-		for(const tile of Object.values(this.app.selectedTileset.tiles))
-		{
-			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), "white", 0));
-
-			const tileHTML = brushTilesHTML.find("> :last-child");
-			tileHTML.data("tile", tile);
-
-			if(this.app.selectedTile === tile)
-			{
-				tileHTML.addClass("selected-tile");
-			}
-		}
-
-		propertiesHTML.append(brushTilesHTML);
-
-		return propertiesHTML;
-	}
-
-	_setSelectedTileHTML(tileHTML)
-	{
-		this.app.selectedTile = tileHTML.data("tile");
-		this.brushTilesHTML.find("> svg").removeClass("selected-tile");
-		tileHTML.addClass("selected-tile");
+		this._brushTilesComponent = new BrushTilesComponent(this.app, this.propertiesHTML);
+		this._brushTilesComponent.initialize();
 	}
 
 	_activateGlobalEvents()
@@ -162,13 +133,13 @@ export default class BrushTool extends Tool
 				}
 			}
 		});
-	}
 
-	_activateBrushEvents()
-	{
-		this.propertiesHTML.on("mousedown", ".tile-pointer", (event) =>
+		$(document).mouseleave(() =>
 		{
-			this._setSelectedTileHTML($(event.target).parent());
+			if(this.isActive)
+			{
+				this._removeGhost();
+			}
 		});
 	}
 

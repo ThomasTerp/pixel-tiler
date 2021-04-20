@@ -14,7 +14,7 @@ export default class EraserTool extends Tool
 
 	constructor(app, containerHTML, propertiesContainerHTML)
 	{
-		super(app, containerHTML, propertiesContainerHTML)
+		super(app, containerHTML, propertiesContainerHTML);
 	}
 
 	initialize()
