@@ -4,6 +4,7 @@ import getElementsAtPosition from "./../get-elements-at-position.js";
 
 export default class BrushTool extends Tool
 {
+	name = "Brush"
 	boundaryBoxMultiplier = 0.02;
 	_isDrawing = false;
 	_lastDrawnGridPosition = new Vector2D(0, 0);
@@ -16,7 +17,7 @@ export default class BrushTool extends Tool
 
 	constructor(app, containerHTML, propertiesContainerHTML)
 	{
-		super(app, containerHTML, propertiesContainerHTML, "Brush")
+		super(app, containerHTML, propertiesContainerHTML)
 	}
 
 	initialize()
@@ -32,7 +33,7 @@ export default class BrushTool extends Tool
 
 		this.brushTilesHTML = this.propertiesHTML.find("> .brush-tiles");
 
-		this._activateEvents();
+		this._activateBrushEvents();
 	}
 
 	buildPropertiesHTML()
@@ -69,66 +70,78 @@ export default class BrushTool extends Tool
 	{
 		$(document).on("mousewheel", (event) =>
 		{
-			if(!this.app.isCTRLPressed)
+			if(this.isActive)
 			{
-				if(event.originalEvent.wheelDelta > 0)
+				if(!this.app.isCTRLPressed)
 				{
-					this.app.rotateSelectedRotationAnticlockwise();
+					if(event.originalEvent.wheelDelta > 0)
+					{
+						this.app.rotateSelectedRotationAnticlockwise();
+					}
+					else if(event.originalEvent.wheelDelta < 0)
+					{
+						this.app.rotateSelectedRotationClockwise();
+					}
 				}
-				else if(event.originalEvent.wheelDelta < 0)
-				{
-					this.app.rotateSelectedRotationClockwise();
-				}
-			}
 
-			if(this.app.isMouseOnContent)
-			{
-				this._drawGhost();
+				if(this.app.isMouseOnContent)
+				{
+					this._drawGhost();
+				}
 			}
 		});
 
 		$(document).on("keypress", (event) =>
 		{
-			switch(event.originalEvent.which)
+			if(this.isActive)
 			{
-				case 120:
-					this.app.rotateSelectedRotationAnticlockwise();
-					break;
+				switch(event.originalEvent.which)
+				{
+					case 120:
+						this.app.rotateSelectedRotationAnticlockwise();
+						break;
 
-				case 122:
-					this.app.rotateSelectedRotationClockwise();
-					break;
-			}
+					case 122:
+						this.app.rotateSelectedRotationClockwise();
+						break;
+				}
 
-			if(this.app.isMouseOnContent)
-			{
-				this._drawGhost();
+				if(this.app.isMouseOnContent)
+				{
+					this._drawGhost();
+				}
 			}
 		});
 
 		$(document).on("mouseup", (event) =>
 		{
-			this._isDrawing = false;
-			this._lastDrawnGridPosition = new Vector2D(0, 0);
+			if(this.isActive)
+			{
+				this._lastDrawnGridPosition = new Vector2D(0, 0);
+				this._isDrawing = false;
+			}
 		});
 
 		this.app.contentHTML.on("mousedown", (event) =>
 		{
-			switch(event.originalEvent.which)
+			if(this.isActive)
 			{
-				case 1:
-					const position = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
+				switch(event.originalEvent.which)
+				{
+					case 1:
+						const position = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
 
-					this._isDrawing = true;
-					this._draw(position, true);
+						this._isDrawing = true;
+						this._draw(position, true);
 
-					break;
+						break;
+				}
 			}
 		});
 
 		this.app.contentHTML.on("mousemove", (event) =>
 		{
-			if(this.isDrawing)
+			if(this.isActive && this.isDrawing)
 			{
 				this._draw(new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY));
 			}
@@ -136,24 +149,36 @@ export default class BrushTool extends Tool
 
 		$(document).on("mousemove", (event) =>
 		{
-			if(this.app.isMouseOnContent)
+			if(this.isActive)
 			{
-				this._tileGhostPosition = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
-				this._drawGhost();
-			}
-			else
-			{
-				this._removeGhost();
+				if(this.app.isMouseOnContent)
+				{
+					this._tileGhostPosition = new Vector2D(event.originalEvent.offsetX, event.originalEvent.offsetY);
+					this._drawGhost();
+				}
+				else
+				{
+					this._removeGhost();
+				}
 			}
 		});
 	}
 
-	_activateEvents()
+	_activateBrushEvents()
 	{
 		this.propertiesHTML.on("mousedown", ".tile-pointer", (event) =>
 		{
 			this._setSelectedTileHTML($(event.target).parent());
 		});
+	}
+
+	_deactivate()
+	{
+		super._deactivate();
+
+		this._lastDrawnGridPosition = new Vector2D(0, 0);
+		this._isDrawing = false;
+		this._removeGhost();
 	}
 
 	_drawGhost()

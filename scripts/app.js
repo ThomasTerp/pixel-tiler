@@ -2,6 +2,7 @@ import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
 import BrushTool from "./tools/brush-tool.js";
+import EraserTool from "./tools/eraser-tool.js";
 
 export default class App extends HTMLObject
 {
@@ -84,6 +85,11 @@ export default class App extends HTMLObject
 
 		this.tools[0] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
 		this.tools[0].initialize();
+
+		this.tools[1] =	new EraserTool(this, this.toolsHTML, this.allToolPropertiesHTML);
+		this.tools[1].initialize();
+
+		this.tools[0].isActive = true;
 
 		this._activateGlobalEvents();
 	}

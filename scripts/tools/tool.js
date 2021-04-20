@@ -2,17 +2,41 @@ import HTMLObject from "../html-object.js";
 
 export default class Tool extends HTMLObject
 {
+	name = "Tool";
 	app;
 	propertiesContainerHTML;
-	name;
+	_isActive = false;
 
-	constructor(app, containerHTML, propertiesContainerHTML, name)
+	set isActive(value)
+	{
+		if(value)
+		{
+			for(const tool of this.app.tools)
+			{
+				tool.isActive = false;
+			}
+
+			this._activate();
+		}
+		else
+		{
+			this._deactivate();
+		}
+
+		this._isActive = value;
+	}
+
+	get isActive()
+	{
+		return this._isActive;
+	}
+
+	constructor(app, containerHTML, propertiesContainerHTML)
 	{
 		super(containerHTML);
 
 		this.app = app;
 		this.propertiesContainerHTML = propertiesContainerHTML;
-		this.name = name;
 	}
 
 	initialize()
@@ -45,5 +69,27 @@ export default class Tool extends HTMLObject
 		this.propertiesHTML.attr("id", `${this.uniqueID.toString()}-properties`);
 		this.propertiesHTML.data("htmlObject", this);
 		this.propertiesHTML.appendTo(this.propertiesContainerHTML);
+
+		this._activateEvents();
+	}
+
+	_activateEvents()
+	{
+		this.html.on("mousedown", (event) =>
+		{
+			this.isActive = true;
+		})
+	}
+
+	_activate()
+	{
+		this.propertiesHTML.show();
+		this.html.addClass("active-tool");
+	}
+
+	_deactivate()
+	{
+		this.propertiesHTML.hide();
+		this.html.removeClass("active-tool");
 	}
 }
