@@ -1,6 +1,7 @@
 import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
+import EventObject from "./event-object.js";
 import BrushTool from "./tools/brush-tool.js";
 import EraserTool from "./tools/eraser-tool.js";
 
@@ -10,22 +11,32 @@ export default class App extends HTMLObject
 	tools = [];
 	selectedTileset;
 	selectedTile;
-	selectedColor = 0;
-	palette = [
-		"#FFFFFF",
-		"#000000",
-		"#FF0000",
-		"#00FF00",
-		"#0000FF",
-		"#FFFF00",
-		"#FF00FF",
-		"#00FFFF",
-	];
 	grid;
 	offsetAdd = 20;
 	zoomMultiplier = 0.001;
 	zoomMinimum = 10;
 	zoomAdd = 120;
+	selectedColorChangeEvent = new EventObject();
+	paletteChangeEvent = new EventObject();
+	_selectedColor = 0;
+	_palette = [
+		"#ffffff",
+		"#cccccc",
+		"#000000",
+		"#333333",
+		"#925c3a",
+		"#784f35",
+		"#dc6d1c",
+		"#f4dd42",
+		"#b23434",
+		"#631d1d",
+		"#81b93b",
+		"#4d893a",
+		"#5e81ca",
+		"#343d65",
+		"#7a367b",
+		"#df84a5"
+	];
 	_selectedRotation = 0;
 	_zoom = 1000;
 	_offset = new Vector2D(0, 0);
@@ -85,6 +96,25 @@ export default class App extends HTMLObject
 	get isCTRLPressed()
 	{
 		return this._isCTRLPressed;
+	}
+
+	set selectedColor(value)
+	{
+		const event = this.selectedColorChangeEvent.broadcast({
+			selectedColor: value
+		});
+
+		this._selectedColor = event.selectedColor;
+	}
+
+	get selectedColor()
+	{
+		return this._selectedColor;
+	}
+
+	get palette()
+	{
+		return [...this._palette];
 	}
 
 	constructor(containerHTML, tilesets)
@@ -153,6 +183,22 @@ export default class App extends HTMLObject
 		{
 			this._selectedRotation = 3;
 		}
+	}
+
+	setPaletteColor(colorIndex, color)
+	{
+		const event = this.paletteChangeEvent.broadcast({
+			colorIndex: colorIndex,
+			color: color
+		});
+
+		this._palette[event.colorIndex] = event.color;
+		this.grid.updateColor(event.colorIndex, event.color);
+	}
+
+	getPaletteColor(colorIndex)
+	{
+		return this._palette[colorIndex];
 	}
 
 	_activateGlobalEvents()

@@ -94,14 +94,20 @@ export default class Grid extends HTMLObject
 		`);
 	}
 
-	placeTile(tile, gridPosition, color, rotation)
+	placeTile(tile, gridPosition, colorIndex, color, rotation)
 	{
 		this.html.append(tile.buildHTML(false, this.gridSize, gridPosition.copy().multiply(this.gridSize), color, rotation));
 
 		const tileHTML = this.html.find("> :last-child");
 		tileHTML.data("gridPosition", gridPosition);
+		tileHTML.attr("color-index", colorIndex);
 
 		return tileHTML;
+	}
+
+	updateColor(colorIndex, color)
+	{
+		this.html.find(`> g[color-index="${colorIndex}"] > :not(.tile-pointer)`).attr("fill", color);
 	}
 
 	cursorToView(cursorPosition)

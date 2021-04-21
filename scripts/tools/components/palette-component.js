@@ -15,7 +15,7 @@ export default class PaletteComponent extends Component
 		for(const [colorIndex, color] of this.app.palette.entries())
 		{
 			const paletteColorHTML = $(`<input class="palette-color" type="color" value="${color}" />`);
-			paletteColorHTML.data("colorIndex", colorIndex);
+			paletteColorHTML.attr("color-index", colorIndex);
 
 			if(this.app.selectedColor === colorIndex)
 			{
@@ -72,13 +72,13 @@ export default class PaletteComponent extends Component
 		this.html.on("change", ".palette-color", (event) =>
 		{
 			const paletteColorHTML = $(event.currentTarget);
-			this.app.palette[paletteColorHTML.data("colorIndex")] = paletteColorHTML.val();
+			this.app.setPaletteColor(paletteColorHTML.attr("color-index"), paletteColorHTML.val());
 		});
 	}
 
 	_setSelectedPaletteColorHTML(paletteColorHTML)
 	{
-		this.app.selectedColor = paletteColorHTML.data("colorIndex");
+		this.app.selectedColor = paletteColorHTML.attr("color-index");
 		this.html.find(".palette-color").removeClass("selected-palette-color");
 		paletteColorHTML.addClass("selected-palette-color");
 	}

@@ -8,13 +8,20 @@ export default class BrushTilesComponent extends Component
 		super(app, containerHTML);
 	}
 
+	initialize()
+	{
+		super.initialize();
+
+		this._activateGlobalEvents();
+	}
+
 	buildHTML()
 	{
 		const brushTilesHTML = $(`<div class="brush-tiles"></div>`);
 
 		for(const tile of Object.values(this.app.selectedTileset.tiles))
 		{
-			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), this.app.palette[this.app.selectedColor], 0));
+			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), this.app.getPaletteColor(this.app.selectedColor), 0));
 
 			const tileHTML = brushTilesHTML.find("> :last-child");
 			tileHTML.data("tile", tile);
@@ -40,6 +47,14 @@ export default class BrushTilesComponent extends Component
 		this.app.selectedTile = tileHTML.data("tile");
 		this.html.find("> svg").removeClass("selected-tile");
 		tileHTML.addClass("selected-tile");
+	}
+
+	_activateGlobalEvents()
+	{
+		this.app.selectedColorChangeEvent.startListening((event) =>
+		{
+			this.html.find("> svg > :not(.tile-pointer)").attr("fill", this.app.getPaletteColor(event.selectedColor));
+		});
 	}
 
 	_activateEvents()

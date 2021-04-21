@@ -51,11 +51,11 @@ export default class BrushTool extends Tool
 				{
 					if(event.originalEvent.wheelDelta > 0)
 					{
-						this.app.rotateSelectedRotationAnticlockwise();
+						this.app.rotateSelectedRotationClockwise();
 					}
 					else if(event.originalEvent.wheelDelta < 0)
 					{
-						this.app.rotateSelectedRotationClockwise();
+						this.app.rotateSelectedRotationAnticlockwise();
 					}
 				}
 
@@ -161,7 +161,7 @@ export default class BrushTool extends Tool
 		const gridSize = this.app.grid.gridSize;
 		let tileGhostHTML = $(".tile-ghost");
 
-		if(tileGhostHTML.length > 0 && (tileGhostHTML.data("gridSize") !== gridSize || tileGhostHTML.data("color") !== this.app.palette[this.app.selectedColor] || tileGhostHTML.data("rotation") !== this.app.selectedRotation))
+		if(tileGhostHTML.length > 0 && (tileGhostHTML.data("gridSize") !== gridSize || tileGhostHTML.attr("color") !== this.app.getPaletteColor(this.app.selectedColor) || tileGhostHTML.attr("rotation") !== this.app.selectedRotation))
 		{
 			this._removeGhost();
 		}
@@ -170,7 +170,7 @@ export default class BrushTool extends Tool
 
 		if(tileGhostHTML.length === 0)
 		{
-			const tileHTML = this.app.selectedTile.buildHTML(true, gridSize, new Vector2D(-16, -16), this.app.palette[this.app.selectedColor], this.app.selectedRotation);
+			const tileHTML = this.app.selectedTile.buildHTML(true, gridSize, new Vector2D(-16, -16), this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
 
 			const appHTML = $(".app");
 			appHTML.append(tileHTML);
@@ -178,8 +178,8 @@ export default class BrushTool extends Tool
 			tileGhostHTML = appHTML.find("> :last-child");
 			tileGhostHTML.addClass("tile-ghost");
 			tileGhostHTML.data("gridSize", gridSize);
-			tileGhostHTML.data("color", this.app.palette[this.app.selectedColor]);
-			tileGhostHTML.data("rotation", this.app.selectedRotation);
+			tileGhostHTML.attr("color", this.app.getPaletteColor(this.app.selectedColor));
+			tileGhostHTML.attr("rotation", this.app.selectedRotation);
 		}
 
 		$(".tile-ghost").css({
@@ -234,7 +234,7 @@ export default class BrushTool extends Tool
 				this._removeTileHTMLs(position);
 			}
 
-			this.app.grid.placeTile(this.app.selectedTile, gridPosition, this.app.palette[this.app.selectedColor], this.app.selectedRotation);
+			this.app.grid.placeTile(this.app.selectedTile, gridPosition, this.app.selectedColor, this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
 			this._lastDrawnGridPosition = gridPosition;
 		}
 	}
