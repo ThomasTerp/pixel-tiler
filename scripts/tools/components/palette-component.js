@@ -3,6 +3,8 @@ import Vector2D from "./../../vector-2d.js";
 
 export default class PaletteComponent extends Component
 {
+	_ignoreNextSelectedColorChange = false;
+
 	constructor(app, containerHTML)
 	{
 		super(app, containerHTML);
@@ -41,7 +43,7 @@ export default class PaletteComponent extends Component
 		{
 			const paletteColorHTML = $(event.currentTarget);
 
-			this._setSelectedPaletteColorHTML(paletteColorHTML);
+			this._setSelectedPaletteColorHTML(paletteColorHTML, true);
 
 			if(paletteColorHTML.data("allow-click") === true)
 			{
@@ -74,11 +76,22 @@ export default class PaletteComponent extends Component
 			const paletteColorHTML = $(event.currentTarget);
 			this.app.setPaletteColor(paletteColorHTML.attr("color-index"), paletteColorHTML.val());
 		});
+
+		this.app.selectedColorChangeEvent.startListening((event) =>
+		{
+			event.selectedColor = 0;
+
+			this._setSelectedPaletteColorHTML(this.html.find(`> .palette-color[color-index="${event.selectedColor}"]`), false);
+		});
 	}
 
-	_setSelectedPaletteColorHTML(paletteColorHTML)
+	_setSelectedPaletteColorHTML(paletteColorHTML, isGlobal)
 	{
-		this.app.selectedColor = paletteColorHTML.attr("color-index");
+		if(isGlobal)
+		{
+			this.app.selectedColor = paletteColorHTML.attr("color-index");
+		}
+
 		this.html.find(".palette-color").removeClass("selected-palette-color");
 		paletteColorHTML.addClass("selected-palette-color");
 	}

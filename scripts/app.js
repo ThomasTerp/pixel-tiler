@@ -2,6 +2,7 @@ import HTMLObject from "./html-object.js";
 import Grid from "./grid.js";
 import Vector2D from "./vector-2d.js";
 import EventObject from "./event-object.js";
+import FileTool from "./tools/file-tool.js";
 import BrushTool from "./tools/brush-tool.js";
 import EraserTool from "./tools/eraser-tool.js";
 
@@ -134,14 +135,6 @@ export default class App extends HTMLObject
 		this.grid.initialize();
 		this.offset = new Vector2D(window.innerWidth / 2, window.innerHeight / 2);
 
-		this.tools[0] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
-		this.tools[0].initialize();
-
-		this.tools[1] =	new EraserTool(this, this.toolsHTML, this.allToolPropertiesHTML);
-		this.tools[1].initialize();
-
-		this.tools[0].isActive = true;
-
 		this._activateGlobalEvents();
 	}
 
@@ -166,6 +159,17 @@ export default class App extends HTMLObject
 		this.sidePanelHTML = this.html.find("> .side-panel");
 		this.toolsHTML = this.html.find("> .side-panel > .tools");
 		this.allToolPropertiesHTML = this.html.find("> .side-panel > .all-tool-properties");
+
+		this.tools[0] =	new FileTool(this, this.toolsHTML, this.allToolPropertiesHTML);
+		this.tools[0].initialize();
+
+		this.tools[1] =	new BrushTool(this, this.toolsHTML, this.allToolPropertiesHTML);
+		this.tools[1].initialize();
+
+		this.tools[2] =	new EraserTool(this, this.toolsHTML, this.allToolPropertiesHTML);
+		this.tools[2].initialize();
+
+		this.tools[0].isActive = true;
 
 		this._activateEvents();
 	}
