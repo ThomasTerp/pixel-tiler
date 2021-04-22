@@ -163,6 +163,7 @@ export default class App extends HTMLObject
 		super.rebuildHTML();
 
 		this.contentHTML = this.html.find("> .content");
+		this.sidePanelHTML = this.html.find("> .side-panel");
 		this.toolsHTML = this.html.find("> .side-panel > .tools");
 		this.allToolPropertiesHTML = this.html.find("> .side-panel > .all-tool-properties");
 
@@ -297,6 +298,14 @@ export default class App extends HTMLObject
 				offset.y += (this._contentCursorOffset.y - center.y) * (this.zoom - zoomDifference) * 0.0001;
 				this.offset = offset
 			}*/
+		});
+
+		this.sidePanelHTML.on("mousewheel", (event) =>
+		{
+			if(this._isCTRLPressed)
+			{
+				event.preventDefault();
+			}
 		});
 
 		this.contentHTML.on("mousedown", (event) =>
