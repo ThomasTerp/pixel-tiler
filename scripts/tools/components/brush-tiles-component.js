@@ -55,6 +55,14 @@ export default class BrushTilesComponent extends Component
 		{
 			this.html.find("> svg > :not(.tile-pointer)").attr("fill", this.app.getPaletteColor(event.selectedColor));
 		});
+
+		this.app.paletteChangeEvent.startListening((event) =>
+		{
+			if(this.app.selectedColor === event.colorIndex)
+			{
+				this.html.find("> svg > :not(.tile-pointer)").attr("fill", event.color);
+			}
+		});
 	}
 
 	_activateEvents()

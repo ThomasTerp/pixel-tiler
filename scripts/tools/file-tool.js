@@ -34,7 +34,7 @@ export default class FileTool extends Tool
 	{
 		super.rebuildHTML();
 
-		this._paletteComponent = new PaletteComponent(this.app, this.propertiesHTML.find("> .palette-container"));
+		this._paletteComponent = new PaletteComponent(this.app, this.propertiesHTML.find("> .palette-container"), false);
 		this._paletteComponent.initialize();
 	}
 }
