@@ -35,9 +35,9 @@ export default class App extends HTMLObject
 		"#4d893a",
 		"#5e81ca",
 		"#343d65",
-		"#7a367b",
-		"#df84a5",
-		"#df84a5"
+		"#cc00ff",
+		"#8f00b3",
+		"#ffb3ff",
 	];
 	_selectedRotation = 0;
 	_zoom = 1000;
