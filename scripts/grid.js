@@ -8,6 +8,7 @@ function isPowerOfTwo(x)
 
 export default class Grid extends HTMLObject
 {
+	minGridSize = 2;
 	maxGridSize = 128;
 	_gridSize = 32;
 	_zoom = 1000;
@@ -15,9 +16,9 @@ export default class Grid extends HTMLObject
 
 	set gridSize(value)
 	{
-		if(value <= 0 || value > this.maxGridSize)
+		if(value < this.minGridSize || value > this.maxGridSize)
 		{
-			throw new RangeError("gridSize must be above 0 and less than or equal to maxGridSize");
+			throw new RangeError("gridSize must be between minGridSize and maxGridSize");
 		}
 
 		if(!isPowerOfTwo(value))
@@ -26,7 +27,9 @@ export default class Grid extends HTMLObject
 		}
 
 		this._gridSize = value;
-		this.rebuildHTML();
+		this.pattern1PathHTML.attr("d", `M0,${this.gridSize} L0,0 L${this.gridSize},0`);
+		this.pattern1HTML.attr("width", this.gridSize);
+		this.pattern1HTML.attr("height", this.gridSize);
 	}
 
 	get gridSize()
@@ -78,8 +81,8 @@ export default class Grid extends HTMLObject
 		return $(`
 			<svg class="grid" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
 				<defs>
-					<pattern id="${this.uniqueID}-pattern1" width="${this._gridSize}" height="${this._gridSize}" patternUnits="userSpaceOnUse">
-						<path d="M0,${this._gridSize} L0,0 L${this._gridSize},0" fill="none" stroke="#202124" stroke-width="1" />
+					<pattern id="${this.uniqueID}-pattern1" width="${this.gridSize}" height="${this.gridSize}" patternUnits="userSpaceOnUse">
+						<path d="M0,${this.gridSize} L0,0 L${this.gridSize},0" fill="none" stroke="#202124" stroke-width="1" />
 					</pattern>
 					<pattern id="${this.uniqueID}-pattern2" width="${this.maxGridSize}" height="${this.maxGridSize}" patternUnits="userSpaceOnUse">
 						<rect width="${this.maxGridSize}" height="${this.maxGridSize}" fill="url(#${this.uniqueID}-pattern1)" />
@@ -92,6 +95,14 @@ export default class Grid extends HTMLObject
 				<line id="${this.uniqueID}-line2" x1="0" y1="-100%" x2="0" y2="100%" stroke="#303136" stroke-width="2" />
 			</svg>
 		`);
+	}
+
+	rebuildHTML()
+	{
+		super.rebuildHTML();
+
+		this.pattern1HTML = $(`#${this.uniqueID}-pattern1`);
+		this.pattern1PathHTML = this.pattern1HTML.find("> path")
 	}
 
 	placeTile(tile, gridPosition, colorIndex, color, rotation)

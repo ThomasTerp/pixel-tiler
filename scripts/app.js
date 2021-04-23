@@ -252,6 +252,14 @@ export default class App extends HTMLObject
 				case 40:
 					this.offset = new Vector2D(this.offset.x, this.offset.y - this.offsetAdd);
 					break;
+
+				case 65:
+					this.grid.gridSize = Math.max(this.grid.gridSize / 2, this.grid.minGridSize);
+					break;
+
+				case 83:
+					this.grid.gridSize = Math.min(this.grid.gridSize * 2, this.grid.maxGridSize);
+					break;
 			}
 		});
 
