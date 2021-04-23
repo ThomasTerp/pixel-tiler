@@ -36,6 +36,7 @@ export default class App extends HTMLObject
 		"#5e81ca",
 		"#343d65",
 		"#7a367b",
+		"#df84a5",
 		"#df84a5"
 	];
 	_selectedRotation = 0;
