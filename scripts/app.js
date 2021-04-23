@@ -16,7 +16,7 @@ export default class App extends HTMLObject
 	offsetAdd = 20;
 	zoomMultiplier = 0.001;
 	zoomMinimum = 10;
-	zoomAdd = 120;
+	zoomFactorIncrement = 0.25;
 	selectedColorChangeEvent = new EventObject();
 	addPaletteColorEvent = new EventObject();
 	paletteChangeEvent = new EventObject();
@@ -42,6 +42,7 @@ export default class App extends HTMLObject
 	];
 	_selectedRotation = 0;
 	_zoom = 1000;
+	_zoomFactor = 1;
 	_offset = new Vector2D(0, 0);
 	_isDragging = false;
 	_dragOffset = new Vector2D(0, 0);
@@ -135,7 +136,8 @@ export default class App extends HTMLObject
 
 		this.grid = new Grid(this.contentHTML);
 		this.grid.initialize();
-		this.offset = new Vector2D(window.innerWidth / 2, window.innerHeight / 2);
+		this.zoom = this.contentHTML.width() / this._zoomFactor;
+		this.offset = new Vector2D(Math.round(window.innerWidth / 2), Math.round(window.innerHeight / 2));
 
 		this._activateGlobalEvents();
 	}
@@ -284,11 +286,11 @@ export default class App extends HTMLObject
 				switch(event.originalEvent.which)
 				{
 					case 43:
-						this._addZoom(-this.zoomAdd);
+						this._addZoom(-1);
 						break;
 
 					case 45:
-						this._addZoom(this.zoomAdd);
+						this._addZoom(1);
 						break;
 				}
 			}
@@ -351,7 +353,7 @@ export default class App extends HTMLObject
 		{
 			if(this.isDragging)
 			{
-				this.offset = new Vector2D(event.originalEvent.offsetX + this._dragOffset.x, event.originalEvent.offsetY + this._dragOffset.y);
+				this.offset = new Vector2D(Math.round(event.originalEvent.offsetX + this._dragOffset.x), Math.round(event.originalEvent.offsetY + this._dragOffset.y));
 			}
 		});
 
@@ -368,6 +370,20 @@ export default class App extends HTMLObject
 
 	_addZoom(zoomAdd)
 	{
-		this.zoom = Math.max(this.zoom - zoomAdd * this.zoom * this.zoomMultiplier, this.zoomMinimum);
+		if(zoomAdd > 0)
+		{
+			this._zoomFactor += this.zoomFactorIncrement;
+		}
+		else if(zoomAdd < 0)
+		{
+			this._zoomFactor -= this.zoomFactorIncrement;
+		}
+
+		if(this._zoomFactor <= 0)
+		{
+			this._zoomFactor = this.zoomFactorIncrement;
+		}
+
+		this.zoom = this.contentHTML.width() / this._zoomFactor;
 	}
 }
