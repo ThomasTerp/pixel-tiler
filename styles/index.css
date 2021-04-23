@@ -135,6 +135,23 @@ hr {
 	outline: 0;
 }
 
+.add-palette-color {
+	position: relative;
+	top: -8px;
+	left: 2px;
+	width: 28px;
+	height: 28px;
+	text-align: center;
+	font-size: 1.6em;
+	background-color: #1f2f46;
+	border: 1px solid #79c0ff;
+	padding: 0px;
+}
+
+.add-palette-color:focus {
+	outline: 0;
+}
+
 .selected-palette-color
 {
 	background-color: #79c0ff;

@@ -37,12 +37,16 @@ export default class PaletteComponent extends Component
 			paletteHTML.append(paletteColorHTML);
 		}
 
+		paletteHTML.append(`<input class="add-palette-color" type="button" value="+" />`);
+
 		return paletteHTML
 	}
 
 	rebuildHTML()
 	{
 		super.rebuildHTML();
+
+		this.addPaletteColorHTML = this.html.find("> .add-palette-color");
 
 		this._activateEvents();
 	}
