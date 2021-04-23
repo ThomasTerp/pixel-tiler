@@ -20,10 +20,10 @@ export default class FileTool extends Tool
 			</div>
 			<div class="palette-container"></div>
 			<div class="input">
-				<input id=${this.unqiueID}-save" type="button" value="Save" />
+				<input id=${this.unqiueID}-save" type="button" value="Save (WIP)" />
 			</div>
 			<div class="input">
-				<input id=${this.unqiueID}-load" type="button" value="Load" />
+				<input id=${this.unqiueID}-load" type="button" value="Load (WIP)" />
 			</div>
 		`);
 
