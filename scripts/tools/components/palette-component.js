@@ -29,7 +29,7 @@ export default class PaletteComponent extends Component
 			const paletteColorHTML = $(`<input class="palette-color" type="color" value="${color}" />`);
 			paletteColorHTML.attr("color-index", colorIndex);
 
-			if(this.isisSelectable && this.app.selectedColor === colorIndex)
+			if(this.isSelectable && this.app.selectedColor === colorIndex)
 			{
 				paletteColorHTML.addClass("selected-palette-color");
 			}
