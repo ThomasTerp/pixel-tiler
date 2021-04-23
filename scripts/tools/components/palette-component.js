@@ -37,7 +37,7 @@ export default class PaletteComponent extends Component
 			paletteHTML.append(paletteColorHTML);
 		}
 
-		paletteHTML.append(`<input class="add-palette-color" type="button" value="+" />`);
+		paletteHTML.append(`<span class="add-palette-color">+</div>`);
 
 		return paletteHTML
 	}
@@ -60,6 +60,13 @@ export default class PaletteComponent extends Component
 				this.html.find(".palette-color").removeClass("selected-palette-color");
 				this.html.find(`> .palette-color[color-index="${event.selectedColor}"]`).addClass("selected-palette-color");
 			}
+		});
+
+		this.app.addPaletteColorEvent.startListening((event) =>
+		{
+			const paletteColorHTML = $(`<input class="palette-color" type="color" value="${event.color}" />`);
+			paletteColorHTML.attr("color-index", event.colorIndex);
+			paletteColorHTML.insertBefore(this.addPaletteColorHTML);
 		});
 
 		this.app.paletteChangeEvent.startListening((event) =>
@@ -87,6 +94,11 @@ export default class PaletteComponent extends Component
 					event.preventDefault();
 				}
 			}
+		});
+
+		this.html.find(".add-palette-color").on("click", () =>
+		{
+			this.app.addPaletteColor("#ffffff");
 		});
 
 		this.html.on("dblclick", ".palette-color", (event) =>

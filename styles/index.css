@@ -73,6 +73,7 @@ hr {
 	background-color: #1f2f46;
 	border: none;
 	margin: 4px;
+	cursor: pointer;
 }
 
 .tool:focus {
@@ -80,7 +81,7 @@ hr {
 }
 
 .active-tool {
-	border: 1px solid #79c0ff;
+	border: 1px solid #79c0ff !important;
 }
 
 .all-tool-properties {
@@ -107,13 +108,16 @@ hr {
 
 .brush-tiles > svg
 {
-	padding: 8px;
-	margin: 0px;
+	padding: 0px;
+	margin: 4px;
+	border: 4px solid transparent;
+	cursor: pointer;
 }
 
 .selected-tile
 {
-	background-color: #79c0ff;
+	background-color: #79c0ff !important;
+	border: 4px solid #79c0ff !important;
 }
 
 .palette
@@ -129,6 +133,7 @@ hr {
 	background-color: transparent;
 	border: none;
 	margin: 0px;
+	cursor: pointer;
 }
 
 .palette-color:focus {
@@ -136,17 +141,16 @@ hr {
 }
 
 .add-palette-color {
-	position: relative;
-	top: -12px;
-	left: 0px;
-	width: 32px;
-	height: 32px;
+	display: inline-block;
+	width: 28px;
+	height: 30px;
 	text-align: center;
-	font-size: 1.6em;
+	font-size: 1.8em;
 	background-color: #1f2f46;
 	border: 1px solid #79c0ff;
-	padding: 0px;
-	margin: 0px 4px 0px 4px;
+	padding: 0px 2px 0px 2px;
+	margin: 0px 4px 4px 4px;
+	cursor: pointer;
 }
 
 .add-palette-color:focus {

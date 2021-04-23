@@ -18,6 +18,7 @@ export default class App extends HTMLObject
 	zoomMinimum = 10;
 	zoomAdd = 120;
 	selectedColorChangeEvent = new EventObject();
+	addPaletteColorEvent = new EventObject();
 	paletteChangeEvent = new EventObject();
 	_selectedColor = 0;
 	_palette = [
@@ -170,7 +171,7 @@ export default class App extends HTMLObject
 		this.tools[2] =	new EraserTool(this, this.toolsHTML, this.allToolPropertiesHTML);
 		this.tools[2].initialize();
 
-		this.tools[0].isActive = true;
+		this.tools[1].isActive = true;
 
 		this._activateEvents();
 	}
@@ -189,6 +190,16 @@ export default class App extends HTMLObject
 		{
 			this._selectedRotation = 3;
 		}
+	}
+
+	addPaletteColor(color)
+	{
+		const event = this.addPaletteColorEvent.broadcast({
+			colorIndex: this._palette.length,
+			color: color
+		});
+
+		this._palette[event.colorIndex] = event.color;
 	}
 
 	setPaletteColor(colorIndex, color)
@@ -321,6 +332,9 @@ export default class App extends HTMLObject
 					this._dragOffset.x = this.offset.x - event.originalEvent.offsetX;
 					this._dragOffset.y = this.offset.y - event.originalEvent.offsetY;
 					this._isDragging = true;
+
+					event.preventDefault();
+
 					break;
 			}
 		});

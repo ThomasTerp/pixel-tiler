@@ -21,7 +21,7 @@ export default class BrushTilesComponent extends Component
 
 		for(const tile of Object.values(this.app.selectedTileset.tiles))
 		{
-			brushTilesHTML.append(tile.buildHTML(true, 64, new Vector2D(0, 0), this.app.getPaletteColor(this.app.selectedColor), 0));
+			brushTilesHTML.append(tile.buildHTML(true, 44, new Vector2D(0, 0), this.app.getPaletteColor(this.app.selectedColor), 0));
 
 			const tileHTML = brushTilesHTML.find("> :last-child");
 			tileHTML.data("tile", tile);
