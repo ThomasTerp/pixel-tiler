@@ -161,7 +161,7 @@ export default class BrushTool extends Tool
 		const gridSize = this.app.grid.gridSize;
 		let tileGhostHTML = $(".tile-ghost");
 
-		if(tileGhostHTML.length > 0 && (tileGhostHTML.data("gridSize") !== gridSize || tileGhostHTML.attr("color") !== this.app.getPaletteColor(this.app.selectedColor) || tileGhostHTML.attr("rotation") !== this.app.selectedRotation))
+		if(tileGhostHTML.length > 0 && (tileGhostHTML.data("gridSize") !== gridSize || tileGhostHTML.attr("color") !== this.app.getPaletteColor(this.app.selectedColor) || parseInt(tileGhostHTML.attr("rotation")) !== this.app.selectedRotation))
 		{
 			this._removeGhost();
 		}
@@ -170,7 +170,7 @@ export default class BrushTool extends Tool
 
 		if(tileGhostHTML.length === 0)
 		{
-			const tileHTML = this.app.selectedTile.buildHTML(true, gridSize, new Vector2D(-16, -16), this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
+			const tileHTML = this.app.selectedTile.buildHTML(true, gridSize, new Vector2D(-gridSize / 2, -gridSize / 2), this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
 
 			const appHTML = $(".app");
 			appHTML.append(tileHTML);
@@ -209,9 +209,8 @@ export default class BrushTool extends Tool
 				const tileHTML = elementHTML.parent();
 
 				//TODO: Check grid size
-				//TODO: Check rotation
 				//TODO: Fix _lastDrawnGridPosition when 0, 0
-				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition)
+				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition && tileHTML.data("gridSize") === this.app.grid.gridSize)
 				{
 					tileHTML.remove();
 				}

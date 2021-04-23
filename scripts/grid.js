@@ -111,6 +111,7 @@ export default class Grid extends HTMLObject
 
 		const tileHTML = this.html.find("> :last-child");
 		tileHTML.data("gridPosition", gridPosition);
+		tileHTML.data("gridSize", this.gridSize);
 		tileHTML.attr("color-index", colorIndex);
 
 		return tileHTML;
