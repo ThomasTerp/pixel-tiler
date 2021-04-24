@@ -95,31 +95,36 @@ export default class BrushTool extends Tool
 		{
 			if(this.isActive)
 			{
-				const oldPlacedTileHTMLs = [...this._placedTileHTMLs];
-				const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
-				this.app.revertManager.addRevert(new Revert(false,
-					() =>
-					{
-						this.app.grid.html.append(oldRemovedTileHTMLs);
+				if(this._placedTileHTMLs.length > 0 || this._removedTileHTMLs.length > 0)
+				{
+					const oldPlacedTileHTMLs = [...this._placedTileHTMLs];
+					const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
 
-						for(const tileHTML of oldPlacedTileHTMLs)
+					this.app.revertManager.addRevert(new Revert(false,
+						() =>
 						{
-							tileHTML.detach();
-						}
-					},
-					() =>
-					{
-						this.app.grid.html.append(oldPlacedTileHTMLs);
+							this.app.grid.html.append(oldRemovedTileHTMLs);
 
-						for(const tileHTML of oldRemovedTileHTMLs)
+							for(const tileHTML of oldPlacedTileHTMLs)
+							{
+								tileHTML.detach();
+							}
+						},
+						() =>
 						{
-							tileHTML.detach();
-						}
-					}
-				));
+							this.app.grid.html.append(oldPlacedTileHTMLs);
 
-				this._placedTileHTMLs = [];
-				this._removedTileHTMLs = [];
+							for(const tileHTML of oldRemovedTileHTMLs)
+							{
+								tileHTML.detach();
+							}
+						}
+					));
+
+					this._placedTileHTMLs = [];
+					this._removedTileHTMLs = [];
+				}
+
 				this._lastDrawnGridPosition = new Vector2D(0, 0);
 				this._isDrawing = false;
 			}

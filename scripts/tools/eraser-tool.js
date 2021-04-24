@@ -45,22 +45,27 @@ export default class EraserTool extends Tool
 		{
 			if(this.isActive)
 			{
-				const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
-				this.app.revertManager.addRevert(new Revert(false,
-					() =>
-					{
-						this.app.grid.html.append(oldRemovedTileHTMLs);
-					},
-					() =>
-					{
-						for(const tileHTML of oldRemovedTileHTMLs)
-						{
-							tileHTML.detach();
-						}
-					}
-				));
+				if(this._removedTileHTMLs.length > 0)
+				{
+					const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
 
-				this._removedTileHTMLs = [];
+					this.app.revertManager.addRevert(new Revert(false,
+						() =>
+						{
+							this.app.grid.html.append(oldRemovedTileHTMLs);
+						},
+						() =>
+						{
+							for(const tileHTML of oldRemovedTileHTMLs)
+							{
+								tileHTML.detach();
+							}
+						}
+					));
+
+					this._removedTileHTMLs = [];
+				}
+
 				this._isErasing = false;
 			}
 		});

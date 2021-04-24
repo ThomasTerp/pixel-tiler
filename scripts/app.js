@@ -184,6 +184,7 @@ export default class App extends HTMLObject
 	addPaletteColor(color, isRevertable)
 	{
 		let oldColorIndex;
+
 		const revert = new Revert(true,
 			() => {
 				this.removePaletteColor(oldColorIndex, false);
@@ -209,6 +210,7 @@ export default class App extends HTMLObject
 	removePaletteColor(colorIndex, isRevertable)
 	{
 		let oldColor;
+
 		const revert = new Revert(true,
 			() => {
 				this.addPaletteColor(color, false);
@@ -239,6 +241,7 @@ export default class App extends HTMLObject
 	{
 		let oldColorIndex;
 		let oldColor;
+
 		const revert = new Revert(true,
 			() => {
 				this.setPaletteColor(oldColorIndex, oldColor, false);
