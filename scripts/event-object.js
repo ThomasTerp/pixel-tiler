@@ -18,7 +18,7 @@ export default class EventObject
 
 	stopListening(listenerID)
 	{
-		self._listeners[listenerID] = undefined;
+		delete self._listeners[listenerID];
 	}
 
 	listenOnce(onBroadcast)

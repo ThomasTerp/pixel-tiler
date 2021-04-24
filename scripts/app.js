@@ -237,7 +237,7 @@ export default class App extends HTMLObject
 				});
 
 				oldColor = this._palette[event.colorIndex];
-				this._palette[event.colorIndex] = undefined;
+				this._palette.splice(event.colorIndex, 1);
 
 				if(this.selectedColor === event.colorIndex)
 				{
