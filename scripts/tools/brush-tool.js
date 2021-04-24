@@ -3,6 +3,7 @@ import Vector2D from "./../vector-2d.js";
 import getElementsAtPosition from "./../get-elements-at-position.js";
 import BrushTilesComponent from "./components/brush-tiles-component.js";
 import PaletteComponent from "./components/palette-component.js";
+import Revert from "../revert.js";
 
 export default class BrushTool extends Tool
 {
@@ -12,6 +13,8 @@ export default class BrushTool extends Tool
 	_lastDrawnGridPosition = new Vector2D(0, 0);
 	_tileGhostPosition = new Vector2D(0, 0);
 	_brushTilesComponent;
+	_placedTileHTMLs = [];
+	_removedTileHTMLs = [];
 
 	get isDrawing()
 	{
@@ -92,6 +95,31 @@ export default class BrushTool extends Tool
 		{
 			if(this.isActive)
 			{
+				const oldPlacedTileHTMLs = [...this._placedTileHTMLs];
+				const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
+				this.app.revertManager.addRevert(new Revert(false,
+					() =>
+					{
+						this.app.grid.html.append(oldRemovedTileHTMLs);
+
+						for(const tileHTML of oldPlacedTileHTMLs)
+						{
+							tileHTML.detach();
+						}
+					},
+					() =>
+					{
+						this.app.grid.html.append(oldPlacedTileHTMLs);
+
+						for(const tileHTML of oldRemovedTileHTMLs)
+						{
+							tileHTML.detach();
+						}
+					}
+				));
+
+				this._placedTileHTMLs = [];
+				this._removedTileHTMLs = [];
 				this._lastDrawnGridPosition = new Vector2D(0, 0);
 				this._isDrawing = false;
 			}
@@ -212,7 +240,8 @@ export default class BrushTool extends Tool
 				//TODO: Fix _lastDrawnGridPosition when 0, 0
 				if(tileHTML.data("gridPosition") !== this._lastDrawnGridPosition && tileHTML.data("gridSize") === this.app.grid.gridSize)
 				{
-					tileHTML.remove();
+					tileHTML.detach();
+					this._removedTileHTMLs.push(tileHTML);
 				}
 			}
 		}
@@ -233,8 +262,9 @@ export default class BrushTool extends Tool
 				this._removeTileHTMLs(position);
 			}
 
-			this.app.grid.placeTile(this.app.selectedTile, gridPosition, this.app.selectedColor, this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
+			const tileHTML = this.app.grid.placeTile(this.app.selectedTile, gridPosition, this.app.selectedColor, this.app.getPaletteColor(this.app.selectedColor), this.app.selectedRotation);
 			this._lastDrawnGridPosition = gridPosition;
+			this._placedTileHTMLs.push(tileHTML);
 		}
 	}
 }

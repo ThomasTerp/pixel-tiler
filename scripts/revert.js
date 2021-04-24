@@ -3,36 +3,39 @@ export default class Revert
 {
 	onUndo;
 	onRedo;
-	_isInRedoState = false;
+	_isInUndoneState = false;
 
-	constructor(onUndo, onRedo)
+	constructor(callRedoimmediately, onUndo, onRedo)
 	{
 		this.onUndo = onUndo;
 		this.onRedo = onRedo;
 
-		this.redo();
+		if(callRedoimmediately)
+		{
+			this.onRedo();
+		}
 	}
 
 	undo()
 	{
-		if(!this._isInRedoState)
+		if(this._isInUndoneState)
 		{
-			throw new Error("Already in undo state");
+			throw new Error("Already in undone state");
 		}
 
-		this._isInRedoState = false;
+		this._isInUndoneState = true;
 
 		return this.onUndo();
 	}
 
 	redo()
 	{
-		if(this._isInRedoState)
+		if(!this._isInUndoneState)
 		{
-			throw new Error("Already in redo state");
+			throw new Error("Already in redone state");
 		}
 
-		this._isInRedoState = true;
+		this._isInUndoneState = false;
 
 		return this.onRedo();
 	}
