@@ -69,6 +69,11 @@ export default class PaletteComponent extends Component
 			paletteColorHTML.insertBefore(this.addPaletteColorHTML);
 		});
 
+		this.app.removePaletteColorEvent.startListening((event) =>
+		{
+			this.html.find(`> .palette-color[color-index="${event.colorIndex}"]`).remove();
+		});
+
 		this.app.paletteChangeEvent.startListening((event) =>
 		{
 			this.html.find(`> .palette-color[color-index="${event.colorIndex}"]`).val(event.color);
@@ -98,7 +103,7 @@ export default class PaletteComponent extends Component
 
 		this.html.find(".add-palette-color").on("click", () =>
 		{
-			this.app.addPaletteColor("#ffffff");
+			this.app.addPaletteColor("#ffffff", true);
 		});
 
 		this.html.on("dblclick", ".palette-color", (event) =>
@@ -128,7 +133,7 @@ export default class PaletteComponent extends Component
 		this.html.on("change", ".palette-color", (event) =>
 		{
 			const paletteColorHTML = $(event.currentTarget);
-			this.app.setPaletteColor(parseInt(paletteColorHTML.attr("color-index")), paletteColorHTML.val());
+			this.app.setPaletteColor(parseInt(paletteColorHTML.attr("color-index")), paletteColorHTML.val(), true);
 		});
 	}
 }

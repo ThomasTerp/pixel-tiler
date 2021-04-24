@@ -5,6 +5,8 @@ import EventObject from "./event-object.js";
 import FileTool from "./tools/file-tool.js";
 import BrushTool from "./tools/brush-tool.js";
 import EraserTool from "./tools/eraser-tool.js";
+import RevertManager from "./revert-manager.js";
+import Revert from "./revert.js";
 
 export default class App extends HTMLObject
 {
@@ -19,7 +21,9 @@ export default class App extends HTMLObject
 	zoomFactorIncrement = 0.25;
 	selectedColorChangeEvent = new EventObject();
 	addPaletteColorEvent = new EventObject();
+	removePaletteColorEvent = new EventObject();
 	paletteChangeEvent = new EventObject();
+	revertManager = new RevertManager();
 	_selectedColor = 0;
 	_palette = [
 		"#ffffff",
@@ -194,25 +198,87 @@ export default class App extends HTMLObject
 		}
 	}
 
-	addPaletteColor(color)
+	addPaletteColor(color, isRevertable)
 	{
-		const event = this.addPaletteColorEvent.broadcast({
-			colorIndex: this._palette.length,
-			color: color
-		});
+		let oldColorIndex;
+		const revert = new Revert(
+			() => {
+				this.removePaletteColor(oldColorIndex, false);
+			},
+			() =>
+			{
+				const event = this.addPaletteColorEvent.broadcast({
+					colorIndex: this._palette.length,
+					color: color
+				});
 
-		this._palette[event.colorIndex] = event.color;
+				oldColorIndex = event.colorIndex;
+				this._palette[event.colorIndex] = event.color;
+			}
+		);
+
+		if(isRevertable)
+		{
+			this.revertManager.addRevert(revert);
+		}
 	}
 
-	setPaletteColor(colorIndex, color)
+	removePaletteColor(colorIndex, isRevertable)
 	{
-		const event = this.paletteChangeEvent.broadcast({
-			colorIndex: colorIndex,
-			color: color
-		});
+		let oldColor;
+		const revert = new Revert(
+			() => {
+				this.addPaletteColor(color, false);
+			},
+			() =>
+			{
+				const event = this.removePaletteColorEvent.broadcast({
+					colorIndex: colorIndex
+				});
 
-		this._palette[event.colorIndex] = event.color;
-		this.grid.updateColor(event.colorIndex, event.color);
+				oldColor = this._palette[event.colorIndex];
+				this._palette[event.colorIndex] = undefined;
+
+				if(this.selectedColor === event.colorIndex)
+				{
+					this.selectedColor = 0;
+				}
+			}
+		);
+
+		if(isRevertable)
+		{
+			this.revertManager.addRevert(revert);
+		}
+	}
+
+	setPaletteColor(colorIndex, color, isRevertable)
+	{
+		let oldColorIndex;
+		let oldColor;
+		const revert = new Revert(
+			() => {
+				this.setPaletteColor(oldColorIndex, oldColor, false);
+			},
+			() =>
+			{
+				const event = this.paletteChangeEvent.broadcast({
+					colorIndex: colorIndex,
+					color: color
+				});
+
+				oldColorIndex = event.colorIndex;
+				oldColor = this._palette[event.colorIndex]
+
+				this._palette[event.colorIndex] = event.color;
+				this.grid.updateColor(event.colorIndex, event.color);
+			}
+		);
+
+		if(isRevertable)
+		{
+			this.revertManager.addRevert(revert);
+		}
 	}
 
 	getPaletteColor(colorIndex)
@@ -281,18 +347,35 @@ export default class App extends HTMLObject
 
 		$(document).on("keypress", (event) =>
 		{
-			if(!this._isCTRLPressed)
+			switch(event.originalEvent.which)
 			{
-				switch(event.originalEvent.which)
-				{
-					case 43:
-						this._addZoom(-1);
-						break;
+				case 26:
+					if(event.ctrlKey && event.shiftKey)
+					{
+						this.revertManager.redo();
+					}
+					else if(event.ctrlKey)
+					{
+						this.revertManager.undo();
+					}
 
-					case 45:
+					break;
+
+				case 43:
+					if(event.ctrlKey)
+					{
+						this._addZoom(-1);
+					}
+
+					break;
+
+				case 45:
+					if(event.ctrlKey)
+					{
 						this._addZoom(1);
-						break;
-				}
+					}
+
+					break;
 			}
 		});
 	}
