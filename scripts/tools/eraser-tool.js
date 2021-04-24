@@ -43,7 +43,7 @@ export default class EraserTool extends Tool
 	{
 		$(document).on("mouseup", (event) =>
 		{
-			if(this.isActive)
+			if(this.isActive && this.isErasing)
 			{
 				if(this._removedTileHTMLs.length > 0)
 				{
@@ -67,12 +67,13 @@ export default class EraserTool extends Tool
 				}
 
 				this._isErasing = false;
+				this.app.revertManager.unlock();
 			}
 		});
 
 		this.app.contentHTML.on("mousedown", (event) =>
 		{
-			if(this.isActive)
+			if(this.isActive && !this.isErasing)
 			{
 				switch(event.originalEvent.which)
 				{
@@ -81,6 +82,7 @@ export default class EraserTool extends Tool
 
 						this._isErasing = true;
 						this._erase(position, true);
+						this.app.revertManager.lock();
 
 						break;
 				}

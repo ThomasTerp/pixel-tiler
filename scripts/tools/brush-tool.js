@@ -93,7 +93,7 @@ export default class BrushTool extends Tool
 
 		$(document).on("mouseup", (event) =>
 		{
-			if(this.isActive)
+			if(this.isActive && this.isDrawing)
 			{
 				if(this._placedTileHTMLs.length > 0 || this._removedTileHTMLs.length > 0)
 				{
@@ -127,12 +127,13 @@ export default class BrushTool extends Tool
 
 				this._lastDrawnGridPosition = new Vector2D(0, 0);
 				this._isDrawing = false;
+				this.app.revertManager.unlock();
 			}
 		});
 
 		this.app.contentHTML.on("mousedown", (event) =>
 		{
-			if(this.isActive)
+			if(this.isActive && !this.isDrawing)
 			{
 				switch(event.originalEvent.which)
 				{
@@ -141,6 +142,7 @@ export default class BrushTool extends Tool
 
 						this._isDrawing = true;
 						this._draw(position, true);
+						this.app.revertManager.lock();
 
 						break;
 				}
