@@ -36,12 +36,10 @@ export default class RevertManager
 	lock()
 	{
 		this._lockLevel++;
-		console.log(this._lockLevel)
 	}
 
 	unlock()
 	{
 		this._lockLevel--;
-		console.log(this._lockLevel)
 	}
 }
