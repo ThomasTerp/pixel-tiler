@@ -332,6 +332,14 @@ export default class App extends HTMLObject
 		{
 			switch(event.originalEvent.which)
 			{
+				case 25:
+					if(event.ctrlKey)
+					{
+						this.revertManager.redo();
+					}
+
+					break;
+
 				case 26:
 					if(event.ctrlKey && event.shiftKey)
 					{
