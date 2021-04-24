@@ -25,25 +25,7 @@ export default class App extends HTMLObject
 	paletteChangeEvent = new EventObject();
 	revertManager = new RevertManager();
 	_selectedColor = 0;
-	_palette = [
-		"#ffffff",
-		"#cccccc",
-		"#000000",
-		"#333333",
-		"#925c3a",
-		"#784f35",
-		"#dc6d1c",
-		"#f4dd42",
-		"#b23434",
-		"#631d1d",
-		"#81b93b",
-		"#4d893a",
-		"#5e81ca",
-		"#343d65",
-		"#cc00ff",
-		"#8f00b3",
-		"#ffb3ff",
-	];
+	_palette = [];
 	_selectedRotation = 0;
 	_zoom = 1000;
 	_zoomFactor = 1;
@@ -125,13 +107,14 @@ export default class App extends HTMLObject
 		return [...this._palette];
 	}
 
-	constructor(containerHTML, tilesets)
+	constructor(containerHTML, tilesets, palette)
 	{
 		super(containerHTML);
 
 		this.tilesets = tilesets;
 		this.selectedTileset = tilesets[0];
 		this.selectedTile = this.selectedTileset.getTile("tile1");
+		this._palette = palette;
 	}
 
 	initialize()
