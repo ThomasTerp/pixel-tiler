@@ -1,11 +1,13 @@
 import Tool from "./tool.js";
 import Vector2D from "./../vector-2d.js";
 import getElementsAtPosition from "./../get-elements-at-position.js";
+import Revert from "../revert.js";
 
 export default class EraserTool extends Tool
 {
 	name = "Eraser";
 	_isErasing = false;
+	_removedTileHTMLs = [];
 
 	get isErasing()
 	{
@@ -43,6 +45,22 @@ export default class EraserTool extends Tool
 		{
 			if(this.isActive)
 			{
+				const oldRemovedTileHTMLs = [...this._removedTileHTMLs];
+				this.app.revertManager.addRevert(new Revert(false,
+					() =>
+					{
+						this.app.grid.html.append(oldRemovedTileHTMLs);
+					},
+					() =>
+					{
+						for(const tileHTML of oldRemovedTileHTMLs)
+						{
+							tileHTML.detach();
+						}
+					}
+				));
+
+				this._removedTileHTMLs = [];
 				this._isErasing = false;
 			}
 		});
@@ -95,7 +113,8 @@ export default class EraserTool extends Tool
 				//TODO: Fix _lastDrawnGridPosition when 0, 0
 				if(true)
 				{
-					tileHTML.remove();
+					tileHTML.detach();
+					this._removedTileHTMLs.push(tileHTML);
 				}
 			}
 		}
