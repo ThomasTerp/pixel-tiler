@@ -37,6 +37,7 @@ export default class BrushTool extends Tool
 	{
 		super.rebuildHTML();
 
+		//TODO: Move to buildHTML
 		this._paletteComponent = new PaletteComponent(this.app, this.propertiesHTML, true);
 		this._paletteComponent.initialize();
 
