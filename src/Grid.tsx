@@ -8,6 +8,7 @@ export interface IProps {
 	offsetIncrement: number;
 	zoomIncrement: number;
 	zoomMultiplier: number;
+	zoomOffsetMultiplier: number;
 	zoomMinimum: number,
 	zoomMaximum: number,
 	gridSizeMinimum: number;
@@ -30,6 +31,7 @@ export default class Grid extends React.Component<IProps, IState>
 		offsetIncrement: 32,
 		zoomIncrement: 120,
 		zoomMultiplier: 0.002,
+		zoomOffsetMultiplier: 0.24,
 		zoomMinimum: 0.064,
 		zoomMaximum: 4,
 		gridSizeMinimum: 2,
@@ -149,6 +151,19 @@ export default class Grid extends React.Component<IProps, IState>
 	{
 		if(event.ctrlKey)
 		{
+			if((event.originalEvent.wheelDelta > 0 && this.state.zoom > this.props.zoomMinimum) || (event.originalEvent.wheelDelta < 0 && this.state.zoom < this.props.zoomMaximum))
+			{
+				const $window = $(window);
+				const add = new Vector2D(
+					(event.offsetX - ($window.width()! / 2)) * this.state.zoom * this.props.zoomOffsetMultiplier,
+					(event.offsetY - ($window.height()! / 2)) * this.state.zoom * this.props.zoomOffsetMultiplier
+				);
+
+				this.setState({
+					offset: event.originalEvent.wheelDelta > 0 ? this.state.offset.copy().subtract(add) : this.state.offset.copy().add(add)
+				})
+			}
+
 			this.addZoom(event.originalEvent.wheelDelta);
 
 			event.preventDefault();
