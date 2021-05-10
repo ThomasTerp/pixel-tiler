@@ -70,17 +70,17 @@ export default class Grid extends React.Component<IProps, IState>
 			<svg className="Grid" ref={this._svg} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
 				<defs>
 					<pattern id={`${this.state.uniqueID}_pattern1`} width={this.state.gridSize} height={this.state.gridSize} patternUnits="userSpaceOnUse">
-						<path d={`M0,${this.state.gridSize} L0,0 L${this.state.gridSize},0`} fill="none" stroke={this.state.color1} strokeWidth="1" />
+						<rect width={`${this.state.gridSize}`} height={`${this.state.gridSize}`} fill="none" stroke={this.state.color1} strokeWidth="1" />
 					</pattern>
 					<pattern id={`${this.state.uniqueID}_pattern2`} width={`${this.props.gridSizeMaximum}`} height={`${this.props.gridSizeMaximum}`} patternUnits="userSpaceOnUse">
 						<rect width={`${this.props.gridSizeMaximum}`} height={`${this.props.gridSizeMaximum}`} fill={`url(#${this.state.uniqueID}_pattern1)`} />
-						<path d={`M0,${this.props.gridSizeMaximum} L0,0 L${this.props.gridSizeMaximum},0`} fill="none" stroke={this.state.color1} strokeWidth="3" />
+						<rect width={`${this.props.gridSizeMaximum}`} height={`${this.props.gridSizeMaximum}`} fill="none" stroke={this.state.color1} strokeWidth="3" />
 					</pattern>
 				</defs>
 
 				<rect id={`${this.state.uniqueID}_rect1`} x={`${-offset.x}px`} y={`${-offset.y}px`} width="100%" height="100%" fill={`url(#${this.state.uniqueID}_pattern2)`} />
-				<line id={`${this.state.uniqueID}_line1`} x1={`${-offset.x}px`} y1="0" x2={`${-offset.x + size.x}px`} y2="0" stroke={this.state.color2} strokeWidth="2" />
-				<line id={`${this.state.uniqueID}_line2`} x1="0" y1={`${-offset.y}px`} x2="0" y2={`${-offset.y + size.y}px`} stroke={this.state.color2} strokeWidth="2" />
+				<line id={`${this.state.uniqueID}_line1`} x1={`${-offset.x}px`} y1="0" x2={`${-offset.x + size.x}px`} y2="0" stroke={this.state.color2} strokeWidth="3" />
+				<line id={`${this.state.uniqueID}_line2`} x1="0" y1={`${-offset.y}px`} x2="0" y2={`${-offset.y + size.y}px`} stroke={this.state.color2} strokeWidth="3" />
 				<g className="Tile" width="32px" height="32px" viewBox="0,0 32,32" style={{transformOrigin: "16px 16px", transform: "translate(0px, 0px) rotate(0deg)"}}>
 					<rect width="32px" height="32px" fill="white" />
 					<rect className="TilePointer" x="0" y="0" width="32px" height="32px" fill="none" />
