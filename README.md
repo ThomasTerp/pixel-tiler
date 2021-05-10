@@ -1,5 +1,5 @@
 # Pixel Tiler
-Web app for drawing using tiles.
+A web app for drawing using tiles.
 
 ## Available Scripts
 In the project directory, you can run:
