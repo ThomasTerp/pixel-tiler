@@ -1,0 +1,12 @@
+@import "colors.scss";
+
+* {
+	font-family: Arial, Helvetica, sans-serif;
+	color: $color1;
+	overflow: hidden;
+}
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+}

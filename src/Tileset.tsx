@@ -1,26 +1,27 @@
+import Tile from "./Tile";
 
 export default class Tileset
 {
-	name;
-	_tiles;
+	name: string;
+	_tiles: {[key: string]: Tile};
 
 	get tiles()
 	{
 		return this._tiles;
 	}
 
-	constructor(name)
+	constructor(name: string)
 	{
 		this.name = name;
 		this._tiles = {};
 	}
 
-	setTile(tileID, tile)
+	setTile(tileID: string, tile: Tile)
 	{
 		this._tiles[tileID] = tile;
 	}
 
-	getTile(tileID)
+	getTile(tileID: string)
 	{
 		return this._tiles[tileID];
 	}

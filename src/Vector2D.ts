@@ -1,16 +1,16 @@
 
 export default class Vector2D
 {
-	x;
-	y;
+	x: number;
+	y: number;
 
-	constructor(x, y)
+	constructor(x: number, y: number)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
-	add(other)
+	add(other: Vector2D | number)
 	{
 		if(typeof other === "number")
 		{
@@ -30,7 +30,7 @@ export default class Vector2D
 		return this;
 	}
 
-	subtract(other)
+	subtract(other: Vector2D | number)
 	{
 		if(typeof other === "number")
 		{
@@ -50,7 +50,7 @@ export default class Vector2D
 		return this;
 	}
 
-	multiply(other)
+	multiply(other: Vector2D | number)
 	{
 		if(typeof other === "number")
 		{
@@ -70,7 +70,7 @@ export default class Vector2D
 		return this;
 	}
 
-	divide(other)
+	divide(other: Vector2D | number)
 	{
 		if(typeof other === "number")
 		{
@@ -90,7 +90,7 @@ export default class Vector2D
 		return this;
 	}
 
-	equal(other)
+	equal(other: Vector2D)
 	{
 		return this.x === other.x && this.y === other.y;
 	}
