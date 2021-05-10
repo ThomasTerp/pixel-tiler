@@ -1,6 +1,8 @@
 # Pixel Tiler
 A web app for drawing using tiles.
 
+Hosted on GitHub Pages: https://thomasterp.github.io/pixel-tiler/
+
 ## Available Scripts
 In the project directory, you can run:
 
