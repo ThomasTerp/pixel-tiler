@@ -1,4 +1,6 @@
 import React from "react";
+import Tile from "./Tile";
+import GridTiles from "./GridTiles";
 import Vector2D from "./Vector2D";
 import {generateUniqueID, clamp} from "./util";
 import "./Grid.scss";
@@ -21,6 +23,7 @@ export interface IState {
 	zoom: number;
 	offset: Vector2D;
 	size: Vector2D;
+	tiles: Array<React.ReactNode>;
 	color1: string;
 	color2: string;
 }
@@ -42,6 +45,7 @@ export default class Grid extends React.Component<IProps, IState>
 	private _isDragging: boolean = false;
 	private _dragCursorOffset: Vector2D = new Vector2D(0, 0);
 	private _dragOffset: Vector2D = new Vector2D(0, 0);
+	private _tileKey: number = 0;
 
 	public constructor(props: IProps)
 	{
@@ -56,11 +60,14 @@ export default class Grid extends React.Component<IProps, IState>
 			zoom: 1,
 			offset: new Vector2D(0, 0),
 			size: windowSize,
+			tiles: [],
 			color1: "#202124",
 			color2: "#303136"
 		};
 
 		this._svg = React.createRef();
+
+		(window as any).$1 = this;
 	}
 
 	public render(): React.ReactNode
@@ -82,22 +89,7 @@ export default class Grid extends React.Component<IProps, IState>
 				<rect id={`${this.state.uniqueID}_rect1`} x={`${-offset.x}px`} y={`${-offset.y}px`} width="100%" height="100%" fill={`url(#${this.state.uniqueID}_pattern2)`} />
 				<line id={`${this.state.uniqueID}_line1`} x1={`${-offset.x}px`} y1="0" x2={`${-offset.x + size.x}px`} y2="0" stroke={this.state.color2} strokeWidth="3" />
 				<line id={`${this.state.uniqueID}_line2`} x1="0" y1={`${-offset.y}px`} x2="0" y2={`${-offset.y + size.y}px`} stroke={this.state.color2} strokeWidth="3" />
-				<g className="Tile" width="32px" height="32px" viewBox="0,0 32,32" style={{transformOrigin: "16px 16px", transform: "translate(0px, 0px) rotate(0deg)"}}>
-					<rect width="32px" height="32px" fill="white" />
-					<rect className="TilePointer" x="0" y="0" width="32px" height="32px" fill="none" />
-				</g>
-				<g className="Tile" width="32px" height="32px" viewBox="0,0 32,32" style={{transformOrigin: "16px 16px", transform: "translate(32px, 0px) rotate(0deg)"}}>
-					<rect width="32px" height="32px" fill="white" />
-					<rect className="TilePointer" x="0" y="0" width="32px" height="32px" fill="none" />
-				</g>
-				<g className="Tile" width="32px" height="32px" viewBox="0,0 32,32" style={{transformOrigin: "16px 16px", transform: "translate(0px, 32px) rotate(0deg)"}}>
-					<rect width="32px" height="32px" fill="white" />
-					<rect className="TilePointer" x="0" y="0" width="32px" height="32px" fill="none" />
-				</g>
-				<g className="Tile" width="32px" height="32px" viewBox="0,0 32,32" style={{transformOrigin: "16px 16px", transform: "translate(32px, 32px) rotate(0deg)"}}>
-					<circle cx="16" cy="16" r="16" fill="white" />
-					<rect className="TilePointer" x="0" y="0" width="32px" height="32px" fill="none" />
-				</g>
+				<GridTiles tiles={this.state.tiles} />
 			</svg>
 		);
 	}
@@ -133,7 +125,7 @@ export default class Grid extends React.Component<IProps, IState>
 		});
 	}
 
-	positionToGrid(position: Vector2D): Vector2D
+	public positionToGrid(position: Vector2D): Vector2D
 	{
 		return new Vector2D(
 			Math.floor(position.x / this.state.gridSize),
@@ -141,7 +133,7 @@ export default class Grid extends React.Component<IProps, IState>
 		)
 	}
 
-	gridToPosition(gridPosition: Vector2D): Vector2D
+	public gridToPosition(gridPosition: Vector2D): Vector2D
 	{
 		return gridPosition.copy().multiply(this.state.gridSize);
 	}
@@ -275,19 +267,18 @@ export default class Grid extends React.Component<IProps, IState>
 		});
 	}
 
-	/*
-	placeTile(tile, gridPosition, colorIndex, color, rotation)
+	placeTile(svg: React.ReactNode, position: Vector2D, size: number, rotation: number, color: string, colorIndex: number): React.ReactNode
 	{
-		this.html.append(tile.buildHTML(false, this.gridSize, gridPosition.copy().multiply(this.gridSize), color, rotation));
+		const tileNode: React.ReactNode = <Tile key={this._tileKey++} svg={svg} position={position} size={size} rotation={rotation} color={color} colorIndex={colorIndex} />;
 
-		const tileHTML = this.html.find("> :last-child");
-		tileHTML.data("gridPosition", gridPosition);
-		tileHTML.data("gridSize", this.gridSize);
-		tileHTML.attr("color-index", colorIndex);
+		this.setState({
+			tiles: this.state.tiles.concat(tileNode)
+		});
 
-		return tileHTML;
+		return tileNode;
 	}
 
+	/*
 	updateColor(colorIndex, color)
 	{
 		this.html.find(`> g[color-index="${colorIndex}"] > :not(.tile-pointer)`).attr("fill", color);

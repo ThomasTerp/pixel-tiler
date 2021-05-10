@@ -2,14 +2,16 @@ import React from "react";
 import Vector2D from "./Vector2D";
 
 export interface IProps {
-	svg: React.Component;
-}
-
-export interface IState {
+	svg: React.ReactNode;
 	position: Vector2D;
 	size: number;
 	rotation: number;
 	color: string;
+	colorIndex: number;
+}
+
+export interface IState {
+
 }
 
 export default class Tile extends React.Component<IProps, IState>
@@ -19,24 +21,21 @@ export default class Tile extends React.Component<IProps, IState>
 		super(props);
 
 		this.state = {
-			position: new Vector2D(0, 0),
-			size: 16,
-			rotation: 0,
-			color: "#FFFFFF"
+
 		}
 	}
 
-	render()
+	render(): React.ReactNode
 	{
 		const style = {
-			"transform-origin": `${this.state.size / 2}px ${this.state.size / 2}px`,
-			"transform": `translate(${this.state.position.x}px, ${this.state.position.y}px) rotate(${this.state.rotation * 90}deg)`
+			transformOrigin: `${this.props.size / 2}px ${this.props.size / 2}px`,
+			transform: `translate(${this.props.position.x}px, ${this.props.position.y}px) rotate(${this.props.rotation * 90}deg)`
 		};
 
 		return (
-			<g className="Tile" width={`${this.state.size}px`} height={`${this.state.size}px`} viewBox={`0,0 ${this.state.size},${this.state.size}`} style={style}>
+			<g className="Tile" width={`${this.props.size}px`} height={`${this.props.size}px`} viewBox={`0,0 ${this.props.size},${this.props.size}`} style={style}>
 				{this.props.svg}
-				<rect className="TilePointer" x="0" y="0" width={`${this.state.size}px`} height={`${this.state.size}px`} fill="none" />
+				<rect className="TilePointer" x="0" y="0" width={`${this.props.size}px`} height={`${this.props.size}px`} fill="none" />
 			</g>
 		);
 	}
