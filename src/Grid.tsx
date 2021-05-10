@@ -27,10 +27,10 @@ export interface IState {
 export default class Grid extends React.Component<IProps, IState>
 {
 	public static defaultProps = {
-		offsetIncrement: 20,
+		offsetIncrement: 32,
 		zoomIncrement: 120,
 		zoomMultiplier: 0.002,
-		zoomMinimum: 0.02,
+		zoomMinimum: 0.064,
 		zoomMaximum: 4,
 		gridSizeMinimum: 2,
 		gridSizeMaximum: 128
