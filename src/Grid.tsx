@@ -248,7 +248,7 @@ export default class Grid extends React.Component<IProps, IState>
 			case "+":
 				if(event.ctrlKey)
 				{
-					this.addZoom(-this.props.zoomIncrement);
+					this.addZoom(this.props.zoomIncrement);
 
 					event.preventDefault();
 				}
@@ -258,7 +258,7 @@ export default class Grid extends React.Component<IProps, IState>
 			case "-":
 				if(event.ctrlKey)
 				{
-					this.addZoom(this.props.zoomIncrement);
+					this.addZoom(-this.props.zoomIncrement);
 
 					event.preventDefault();
 				}
