@@ -6,8 +6,8 @@ import $ from "jquery";
 
 export interface IProps {
 	offsetIncrement: number;
-	zoomMultiplier: number;
 	zoomIncrement: number;
+	zoomMultiplier: number;
 	zoomMinimum: number,
 	zoomMaximum: number,
 	gridSizeMinimum: number;
@@ -28,8 +28,8 @@ export default class Grid extends React.Component<IProps, IState>
 {
 	public static defaultProps = {
 		offsetIncrement: 20,
-		zoomMultiplier: 0.002,
 		zoomIncrement: 120,
+		zoomMultiplier: 0.002,
 		zoomMinimum: 0.02,
 		zoomMaximum: 4,
 		gridSizeMinimum: 2,
