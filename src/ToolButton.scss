@@ -1,0 +1,25 @@
+
+.ToolButton {
+	position: relative;
+	text-align: center;
+	padding: 0px;
+	padding-top: 100%;
+	background-color: #1f2f46;
+	border: none;
+	cursor: pointer;
+
+	&.Active {
+		border: 1px solid #79c0ff !important;
+	}
+
+	div {
+		display: flex;
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		justify-content: center;
+		align-items: center;
+	}
+}

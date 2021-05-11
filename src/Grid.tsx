@@ -77,20 +77,36 @@ export default class Grid extends React.Component<IProps, IState>
 
 		return (
 			<svg className="Grid" ref={this._svg} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
-				<defs>
-					<pattern id={`${this.state.uniqueID}_pattern1`} width={this.state.gridSize} height={this.state.gridSize} patternUnits="userSpaceOnUse">
-						<rect width={`${this.state.gridSize}px`} height={`${this.state.gridSize}px`} fill="none" stroke={this.state.color1} strokeWidth="1" />
-					</pattern>
-					<pattern id={`${this.state.uniqueID}_pattern2`} width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} patternUnits="userSpaceOnUse">
-						<rect width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} fill={`url(#${this.state.uniqueID}_pattern1)`} />
-						<rect width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} fill="none" stroke={this.state.color1} strokeWidth="3" />
-					</pattern>
-				</defs>
+				{this.renderDefs()}
+				{this.renderGrid(offset, size)}
+				<GridTiles tiles={this.state.tiles} />
+			</svg>
+		);
+	}
+
+	public renderDefs(): React.ReactNode
+	{
+		return (
+			<defs>
+				<pattern id={`${this.state.uniqueID}_pattern1`} width={this.state.gridSize} height={this.state.gridSize} patternUnits="userSpaceOnUse">
+					<rect width={`${this.state.gridSize}px`} height={`${this.state.gridSize}px`} fill="none" stroke={this.state.color1} strokeWidth="1" />
+				</pattern>
+				<pattern id={`${this.state.uniqueID}_pattern2`} width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} patternUnits="userSpaceOnUse">
+					<rect width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} fill={`url(#${this.state.uniqueID}_pattern1)`} />
+					<rect width={`${this.props.gridSizeMaximum}px`} height={`${this.props.gridSizeMaximum}px`} fill="none" stroke={this.state.color1} strokeWidth="3" />
+				</pattern>
+			</defs>
+		);
+	}
+
+	public renderGrid(offset: Vector2D, size: Vector2D): React.ReactNode
+	{
+		return (
+			<g>
 				<rect id={`${this.state.uniqueID}_rect1`} x={`${-offset.x}px`} y={`${-offset.y}px`} width="100%" height="100%" fill={`url(#${this.state.uniqueID}_pattern2)`} />
 				<line id={`${this.state.uniqueID}_line1`} x1={`${-offset.x}px`} y1="0" x2={`${-offset.x + size.x}px`} y2="0" stroke={this.state.color2} strokeWidth="3" />
 				<line id={`${this.state.uniqueID}_line2`} x1="0" y1={`${-offset.y}px`} x2="0" y2={`${-offset.y + size.y}px`} stroke={this.state.color2} strokeWidth="3" />
-				<GridTiles tiles={this.state.tiles} />
-			</svg>
+			</g>
 		);
 	}
 

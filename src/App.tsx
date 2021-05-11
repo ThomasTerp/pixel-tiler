@@ -1,4 +1,5 @@
 import React from "react";
+import SideMenu from "./SideMenu";
 import Grid from "./Grid";
 import Tile from "./Tile";
 import Tileset from "./Tileset";
@@ -15,8 +16,6 @@ export interface IState {
 
 export default class App extends React.Component<IProps, IState>
 {
-	grid: React.RefObject<Grid>;
-
 	constructor(props: IProps)
 	{
 		super(props);
@@ -25,21 +24,23 @@ export default class App extends React.Component<IProps, IState>
 			selectedTileset: props.tilesets["default"],
 			selectedTile: props.tilesets["default"].getTile("tile1")
 		};
-
-		this.grid = React.createRef();
 	}
 
 	render(): React.ReactNode
 	{
 		return (
 			<div className="App">
-				<div className="Content">
-					<Grid ref={this.grid} />
-				</div>
-				<div className="SidePanel">
-					<div className="Tools"></div>
-					<div className="ToolProperties"></div>
-				</div>
+				{this.renderContent()}
+				<SideMenu />
+			</div>
+		);
+	}
+
+	renderContent(): React.ReactNode
+	{
+		return (
+			<div className="Content">
+				<Grid />
 			</div>
 		);
 	}
