@@ -112,7 +112,7 @@ export default class Grid extends React.Component<IProps, IState>
 		);
 	}
 
-	public componentDidMount()
+	public componentDidMount(): void
 	{
 		const $document: JQuery<Document> = $(document);
 		const $window: JQuery<Window> = $(window);
@@ -124,7 +124,7 @@ export default class Grid extends React.Component<IProps, IState>
 		$svg.on("mousewheel", this._svg_OnMouseWheel_Zoom);
 	}
 
-	public componentWillUnmount()
+	public componentWillUnmount(): void
 	{
 		const $document: JQuery<Document> = $(document);
 		const $window: JQuery<Window> = $(window);
@@ -136,7 +136,7 @@ export default class Grid extends React.Component<IProps, IState>
 		$svg.off("mousewheel", this._svg_OnMouseWheel_Zoom);
 	}
 
-	public addZoom(zoomAdd: number)
+	public addZoom(zoomAdd: number): void
 	{
 		this.setState({
 			zoom: clamp(this.state.zoom - zoomAdd * this.state.zoom * this.props.zoomMultiplier, this.props.zoomMinimum, this.props.zoomMaximum)

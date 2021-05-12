@@ -22,11 +22,11 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 	public render(): React.ReactNode
 	{
 		return (
-			<input className="PaletteColor" type="color" defaultValue={this.props.color} onChange={this._paletteColor_OnChange_SetPaletteColor} />
+			<input className="PaletteColor" style={{backgroundColor: this.props.color}} type="color" defaultValue={this.props.color} onChange={this._paletteColor_OnChange_SetPaletteColor} />
 		)
 	}
 
-	private _paletteColor_OnChange_SetPaletteColor(event: React.ChangeEvent): void
+	private _paletteColor_OnChange_SetPaletteColor = (event: React.ChangeEvent) =>
 	{
 		this.context.paletteManager.setColor(this.props.colorID, (event.target as any).value);
 	}
