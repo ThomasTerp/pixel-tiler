@@ -1,18 +1,16 @@
 import React from "react";
+import AppContext from "../AppContext";
 
 export interface IProps {
 	tiles: Array<React.ReactNode>
 }
 
-export interface IState {
-
-}
+export interface IState {}
 
 export default class GridTiles extends React.Component<IProps, IState>
 {
-	public static defaultProps = {
-
-	}
+	static contextType = AppContext;
+	public static defaultProps = {}
 
 	public constructor(props: IProps)
 	{

@@ -1,8 +1,9 @@
 import React from "react";
 import Tile from "./Tile";
 import GridTiles from "./GridTiles";
-import Vector2D from "./Vector2D";
-import {generateUniqueID, clamp} from "./util";
+import AppContext from "../AppContext";
+import Vector2D from "../Vector2D";
+import {generateUniqueID, clamp} from "../util";
 import "./Grid.scss";
 import $ from "jquery";
 
@@ -30,6 +31,7 @@ export interface IState {
 
 export default class Grid extends React.Component<IProps, IState>
 {
+	public static contextType = AppContext;
 	public static defaultProps = {
 		offsetIncrement: 32,
 		zoomIncrement: 120,

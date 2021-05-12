@@ -1,4 +1,5 @@
 import React from "react";
+import AppContext from "../../AppContext";
 
 export interface IProps {
 	name: string;
@@ -8,6 +9,8 @@ export interface IState {}
 
 export default abstract class Tool extends React.Component<IProps, IState>
 {
+	public static contextType = AppContext;
+
 	public constructor(props: IProps)
 	{
 		super(props);
@@ -19,7 +22,7 @@ export default abstract class Tool extends React.Component<IProps, IState>
 	{
 		return (
 			<div className="Tool">
-				<h1 className="Name">
+				<h1 className="Name" style={{color: this.context.theme.color2}}>
 					{this.props.name}
 				</h1>
 				{this.renderProperties()}

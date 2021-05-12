@@ -1,5 +1,6 @@
 import React from "react";
-import Vector2D from "./Vector2D";
+import AppContext from "../AppContext";
+import Vector2D from "../Vector2D";
 
 export interface IProps {
 	svg: React.ReactNode;
@@ -10,19 +11,17 @@ export interface IProps {
 	colorIndex: number;
 }
 
-export interface IState {
-
-}
+export interface IState {}
 
 export default class Tile extends React.Component<IProps, IState>
 {
+	static contextType = AppContext;
+
 	constructor(props: IProps)
 	{
 		super(props);
 
-		this.state = {
-
-		}
+		this.state = {}
 	}
 
 	render(): React.ReactNode

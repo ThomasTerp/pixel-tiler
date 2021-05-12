@@ -4,12 +4,11 @@
 	text-align: center;
 	padding: 0px;
 	padding-top: 100%;
-	background-color: #1f2f46;
 	border: none;
 	cursor: pointer;
 
 	&.Active {
-		border: 1px solid #79c0ff !important;
+		border: 1px solid;
 	}
 
 	div {
