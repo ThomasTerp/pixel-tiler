@@ -1,5 +1,5 @@
 
-export default interface Theme
+export default interface ITheme
 {
 	color1: string;
 	color2: string;

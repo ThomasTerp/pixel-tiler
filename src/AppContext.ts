@@ -1,16 +1,13 @@
 import React from "react";
-import PaletteManager from "./PaletteManager";
-import Theme from "./Theme";
-import darkTheme from "./Themes/darkTheme";
+import Theme from "./ITheme";
+import themes from "./data/themes";
 
 export interface IAppContext
 {
-	theme: Theme,
-	paletteManager: PaletteManager
+	theme: Theme
 }
 
 const AppContext = React.createContext({
-	theme: darkTheme,
-	paletteManager: new PaletteManager()
+	theme: themes.dark
 });
 export default AppContext;
