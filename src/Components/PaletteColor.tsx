@@ -1,7 +1,9 @@
 import React from "react";
 import AppContext from "../AppContext";
+import PaletteManager from "../PaletteManager";
 
 export interface IProps {
+	paletteManager: PaletteManager;
 	colorID: number;
 	color: string;
 }
@@ -28,6 +30,6 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 
 	private _paletteColor_OnChange_SetPaletteColor = (event: React.ChangeEvent) =>
 	{
-		this.context.paletteManager.setColor(this.props.colorID, (event.target as any).value);
+		this.props.paletteManager.setColor(this.props.colorID, (event.target as any).value);
 	}
 }

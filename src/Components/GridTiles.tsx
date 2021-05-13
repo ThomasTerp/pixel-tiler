@@ -2,7 +2,7 @@ import React from "react";
 import AppContext from "../AppContext";
 
 export interface IProps {
-	tiles: Array<React.ReactNode>
+	tiles: React.ReactNode[]
 }
 
 export interface IState {}

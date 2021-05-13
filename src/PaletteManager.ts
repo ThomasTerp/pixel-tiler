@@ -14,15 +14,13 @@ export class SetColorEvent extends Event
 	}
 }
 
-class Test {}
-
 export default class PaletteManager
 {
-	public colors: Array<string>;
+	public colors: string[];
 	public colorChangeEmitter: Emitter<SetColorEvent> = new Emitter<SetColorEvent>();
 	private _defaultColor: string = "#ffffff";
 
-	constructor(colors: Array<string> = [])
+	constructor(colors: string[] = [])
 	{
 		this.colors = colors;
 

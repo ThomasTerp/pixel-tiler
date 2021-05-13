@@ -7,8 +7,11 @@ import EraserTool from "./Tools/EraserTool";
 import SettingsTool from "./Tools/SettingsTool";
 import "./SideMenu.scss";
 import AppContext from "../AppContext";
+import PaletteManager from "../PaletteManager";
 
-export interface IProps {}
+export interface IProps {
+	paletteManager: PaletteManager;
+}
 
 export interface IState {
 	activeToolKey: string;
@@ -30,13 +33,13 @@ export default class SideMenu extends React.Component<IProps, IState>
 
 	public render(): React.ReactNode
 	{
-		const tools: Array<React.ReactNode> = [
+		const tools: React.ReactNode[] = [
 			<FileTool key="fileTool" />,
-			<BrushTool key="brushTool" />,
+			<BrushTool key="brushTool" paletteManager={this.props.paletteManager} />,
 			<EraserTool key="eraserTool" />,
 			<SettingsTool key="settingsTool" />
 		];
-		const toolButtons: Array<React.ReactNode> = tools.map((tool: React.ReactNode) => this.renderToolButton(tool));
+		const toolButtons: React.ReactNode[] = tools.map((tool: React.ReactNode) => this.renderToolButton(tool));
 		const activeTool: React.ReactNode = tools.find((tool: React.ReactNode) => this.state.activeToolKey === (tool as JSX.Element).key);
 
 		return (

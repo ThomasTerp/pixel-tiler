@@ -7,16 +7,9 @@ export interface IProps {
 
 export interface IState {}
 
-export default abstract class Tool extends React.Component<IProps, IState>
+export default abstract class Tool<P, S> extends React.Component<P & IProps, IState & S>
 {
 	public static contextType = AppContext;
-
-	public constructor(props: IProps)
-	{
-		super(props);
-
-		this.state = {};
-	}
 
 	public render(): React.ReactNode
 	{

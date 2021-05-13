@@ -24,7 +24,7 @@ export interface IState {
 	zoom: number;
 	offset: Vector2D;
 	size: Vector2D;
-	tiles: Array<React.ReactNode>;
+	tiles: React.ReactNode[];
 	color1: string;
 	color2: string;
 }

@@ -1,17 +1,15 @@
-import Tool, {IProps} from "./Tool";
+import Tool, {IProps as IToolProps, IState as IToolState} from "./Tool";
 
-export default class SettingsTool extends Tool
+export default class SettingsTool extends Tool<IToolProps, IToolState>
 {
 	public static defaultProps = {
 		name: "Settings"
 	};
 
-	public constructor(props: IProps)
+	public constructor(props: IToolProps)
 	{
 		super(props);
 
-		this.state = {
-
-		};
+		this.state = {};
 	}
 }

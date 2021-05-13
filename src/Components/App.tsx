@@ -5,15 +5,16 @@ import Tile from "./Tile";
 import Tileset from "../Tileset";
 import PaletteManager from "../PaletteManager";
 import AppContext, {IAppContext} from "../AppContext";
-import darkTheme from "../Themes/darkTheme";
-import whiteTheme from "../Themes/whiteTheme";
+import ITheme from "../ITheme";
 
 export interface IProps {
+	themes: {[themeID: string]: ITheme};
 	tilesets: {[tilesetID: string]: Tileset};
-	defaultPaletteColors: Array<string>;
+	defaultPaletteColors: string[];
 }
 
 export interface IState {
+	paletteManager: PaletteManager;
 	selectedTileset: Tileset;
 	selectedTile: Tile;
 }
@@ -27,13 +28,13 @@ export default class App extends React.Component<IProps, IState>
 		super(props);
 
 		this.state = {
+			paletteManager: new PaletteManager(this.props.defaultPaletteColors),
 			selectedTileset: props.tilesets["default"],
 			selectedTile: props.tilesets["default"].getTile("tile1")
 		};
 
 		this._appContext = {
-			theme: darkTheme,
-			paletteManager: new PaletteManager(this.props.defaultPaletteColors)
+			theme: this.props.themes.dark
 		}
 	}
 
@@ -43,7 +44,7 @@ export default class App extends React.Component<IProps, IState>
 			<AppContext.Provider value={this._appContext}>
 				<div className="App">
 					{this.renderContent()}
-					<SideMenu />
+					<SideMenu paletteManager={this.state.paletteManager} />
 				</div>
 			</AppContext.Provider>
 		);

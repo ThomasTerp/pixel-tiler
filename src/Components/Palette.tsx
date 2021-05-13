@@ -1,9 +1,10 @@
 import React from "react";
 import PaletteColor from "./PaletteColor";
 import AppContext from "../AppContext";
-import {SetColorEvent} from "../PaletteManager";
+import PaletteManager, {SetColorEvent} from "../PaletteManager";
 
 export interface IProps {
+	paletteManager: PaletteManager;
 	isSelectable: boolean;
 }
 
@@ -27,19 +28,19 @@ export default abstract class Palette extends React.Component<IProps, IState>
 	{
 		return (
 			<div className="Palette">
-				{this.context.paletteManager.colors.map((color: string, colorID: number) => <PaletteColor key={colorID} colorID={colorID} color={color} />)}
+				{this.props.paletteManager.colors.map((color: string, colorID: number) => <PaletteColor key={colorID} paletteManager={this.props.paletteManager} colorID={colorID} color={color} />)}
 			</div>
 		)
 	}
 
 	public componentDidMount(): void
 	{
-		this.context.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 	}
 
 	public componentWillUnmount(): void
 	{
-		this.context.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 	}
 
 	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: SetColorEvent) =>

@@ -8,30 +8,25 @@ export interface Callback<T>
 
 export default class Emitter<T extends Event = Event>
 {
-	_callbacks: {[callbackID: number]: Callback<T>} = {};
-	_callbackID: number = 0;
+	_callbacks: Map<Callback<T>, boolean> = new Map<Callback<T>, boolean>();
 
-	on(onEmit: Callback<T>): number
+	on(onEmit: Callback<T>): void
 	{
-		this._callbacks[this._callbackID++] = onEmit;
-
-		return this._callbackID;
+		this._callbacks.set(onEmit, true);
 	}
 
-	off(callbackID: number): void
+	off(onEmit: Callback<T>): void
 	{
-		delete this._callbacks[callbackID];
+		this._callbacks.delete(onEmit);
 	}
 
-	once(onEmit: Callback<T>): number
+	once(onEmit: Callback<T>): void
 	{
-		const callbackID: number = this.on((event: T) =>
+		this.on((event: T) =>
 		{
 			onEmit(event);
-			this.off(callbackID);
+			this.off(onEmit);
 		});
-
-		return callbackID;
 	}
 
 	emit(event?: Event): T
@@ -41,11 +36,13 @@ export default class Emitter<T extends Event = Event>
 			event = new Event();
 		}
 
-		for(const onEmit of Object.values(this._callbacks))
+		const tEvent: T = event as T;
+
+		for(const onEmit of Array.from(this._callbacks.keys()))
 		{
-			onEmit(event as T);
+			onEmit(tEvent);
 		}
 
-		return event as T;
+		return tEvent;
 	}
 }
