@@ -1,6 +1,7 @@
 import React from "react";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
+import "./PaletteColor.scss";
 
 export interface IProps {
 	paletteManager: PaletteManager;
@@ -24,7 +25,8 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 	public render(): React.ReactNode
 	{
 		return (
-			<input className="PaletteColor" style={{backgroundColor: this.props.color}} type="color" defaultValue={this.props.color} onChange={this._paletteColor_OnChange_SetPaletteColor} />
+			<div className="PaletteColor" style={{backgroundColor: this.props.color}}></div>
+			//<input className="PaletteColor" style={{backgroundColor: this.props.color}} type="color" defaultValue={this.props.color} onChange={this._paletteColor_OnChange_SetPaletteColor} />
 		)
 	}
 

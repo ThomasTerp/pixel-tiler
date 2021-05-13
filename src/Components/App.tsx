@@ -6,6 +6,7 @@ import Tileset from "../Tileset";
 import PaletteManager from "../PaletteManager";
 import AppContext, {IAppContext} from "../AppContext";
 import ITheme from "../ITheme";
+import "./App.scss";
 
 export interface IProps {
 	themes: {[themeID: string]: ITheme};

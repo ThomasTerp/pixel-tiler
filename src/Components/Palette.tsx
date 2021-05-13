@@ -2,6 +2,7 @@ import React from "react";
 import PaletteColor from "./PaletteColor";
 import AppContext from "../AppContext";
 import PaletteManager, {SetColorEvent} from "../PaletteManager";
+import "./Palette.scss";
 
 export interface IProps {
 	paletteManager: PaletteManager;

@@ -24,17 +24,17 @@ export default class ToolButton extends React.Component<IProps, IState>
 
 	public render(): React.ReactNode
 	{
-		const buttonStyle: React.CSSProperties = {
+		const toolButtonStyle: React.CSSProperties = {
 			backgroundColor: this.context.theme.color3
 		}
 
 		if(this.props.isActive)
 		{
-			buttonStyle.borderColor = this.context.theme.color2;
+			toolButtonStyle.borderColor = this.context.theme.color2;
 		}
 
 		return (
-			<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={buttonStyle} onClick={this.props.onClick}>
+			<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={toolButtonStyle} onClick={this.props.onClick}>
 				<div style={{color: this.context.theme.color2}}>
 					{this.props.children}
 				</div>
