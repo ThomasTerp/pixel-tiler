@@ -1,7 +1,7 @@
 import React from "react";
 import PaletteColor from "./PaletteColor";
 import AppContext from "../AppContext";
-import PaletteManager, {SetColorEvent} from "../PaletteManager";
+import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../PaletteManager";
 import "./Palette.scss";
 
 export interface IProps {
@@ -37,14 +37,21 @@ export default abstract class Palette extends React.Component<IProps, IState>
 	public componentDidMount(): void
 	{
 		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.on(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
 	}
 
 	public componentWillUnmount(): void
 	{
 		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.off(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
 	}
 
-	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: SetColorEvent) =>
+	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
+	{
+		this.forceUpdate();
+	}
+
+	_paletteManager_SelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
 	{
 		this.forceUpdate();
 	}

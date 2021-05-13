@@ -1,6 +1,6 @@
 import Emitter, {Event} from "./Emitter";
 
-export class SetColorEvent extends Event
+export class ColorChangeEvent extends Event
 {
 	colorID: number;
 	color: string;
@@ -14,11 +14,41 @@ export class SetColorEvent extends Event
 	}
 }
 
+export class SelectedColorIDChangeEvent extends Event
+{
+	selectedColorID: number;
+
+	constructor(selectedColorID: number)
+	{
+		super();
+
+		this.selectedColorID = selectedColorID;
+	}
+}
+
 export default class PaletteManager
 {
 	public colors: string[];
-	public colorChangeEmitter: Emitter<SetColorEvent> = new Emitter<SetColorEvent>();
+	public colorChangeEmitter: Emitter<ColorChangeEvent> = new Emitter<ColorChangeEvent>();
+	public selectedColorIDChangeEmitter: Emitter<SelectedColorIDChangeEvent> = new Emitter<SelectedColorIDChangeEvent>();
+	private _selectedColorID: number = 0;
 	private _defaultColor: string = "#ffffff";
+
+	set selectedColorID(colorID: number)
+	{
+		const selectedColorIDChangeEvent = this.selectedColorIDChangeEmitter.emit(new SelectedColorIDChangeEvent(colorID));
+		this._selectedColorID = selectedColorIDChangeEvent.selectedColorID;
+	}
+
+	get selectedColorID()
+	{
+		return this._selectedColorID;
+	}
+
+	get selectedColor()
+	{
+		return this.colors[this.selectedColorID];
+	}
 
 	constructor(colors: string[] = [])
 	{
@@ -37,8 +67,7 @@ export default class PaletteManager
 
 	setColor(colorID: number, color: string)
 	{
-		const setColorEvent = this.colorChangeEmitter.emit(new SetColorEvent(colorID, color));
-
-		this.colors[setColorEvent.colorID] = setColorEvent.color;
+		const colorChangeEvent = this.colorChangeEmitter.emit(new ColorChangeEvent(colorID, color));
+		this.colors[colorChangeEvent.colorID] = colorChangeEvent.color;
 	}
 }

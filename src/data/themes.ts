@@ -7,9 +7,9 @@ const themes: {[themeID: string]: ITheme} = {
 		color3: "#1f2f46"
 	},
 	white: {
-		color1: "#eae1e1",
+		color1: "#999999",
 		color2: "#000000",
-		color3: "#d4d4d4"
+		color3: "#f2f2f2"
 	}
 }
 export default themes;
