@@ -1,0 +1,26 @@
+
+.PaletteAddColor {
+	position: relative;
+	left: 2px;
+	top: 2px;
+	width: calc(100% - 4px);
+	height: 0px;
+	padding: 0px;
+	padding-top: calc(100% - 8px);
+	margin: 0px;
+	margin-bottom: 4px;
+	border: 2px solid;
+	cursor: pointer;
+
+	div {
+		display: flex;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		justify-content: center;
+		align-items: center;
+		font-size: 32px;
+	}
+}

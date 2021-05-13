@@ -7,6 +7,7 @@ export interface IProps {
 	paletteManager: PaletteManager;
 	colorID: number;
 	color: string;
+	isEditable: boolean;
 	isSelectable: boolean;
 }
 
@@ -16,6 +17,7 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 {
 	static contextType = AppContext;
 	static defaultProps = {
+		isEditable: true,
 		isSelectable: true
 	};
 
@@ -67,11 +69,17 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 				event.preventDefault();
 			}
 		}
+
+		if(!this.props.isEditable)
+		{
+			event.preventDefault();
+			event.preventDefault();
+		}
 	}
 
 	private _input_OnDoubleClick_OpenMenu = (event: React.MouseEvent) =>
 	{
-		if(this.props.isSelectable)
+		if(this.props.isEditable && this.props.isSelectable)
 		{
 			this._allowClick = true;
 			this._inputRef.current?.click();

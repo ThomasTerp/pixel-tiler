@@ -1,11 +1,13 @@
 import React from "react";
 import PaletteColor from "./PaletteColor";
+import PaletteAddColor from "./PaletteAddColor";
 import AppContext from "../AppContext";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../PaletteManager";
 import "./Palette.scss";
 
 export interface IProps {
 	paletteManager: PaletteManager;
+	isEditable: boolean;
 	isSelectable: boolean;
 }
 
@@ -15,6 +17,7 @@ export default abstract class Palette extends React.Component<IProps, IState>
 {
 	static contextType = AppContext;
 	static defaultProps = {
+		isEditable: true,
 		isSelectable: true
 	};
 
@@ -29,7 +32,8 @@ export default abstract class Palette extends React.Component<IProps, IState>
 	{
 		return (
 			<div className="Palette">
-				{this.props.paletteManager.colors.map((color: string, colorID: number) => <PaletteColor key={colorID} paletteManager={this.props.paletteManager} colorID={colorID} color={color} />)}
+				{this.props.paletteManager.colors.map((color: string, colorID: number) => <PaletteColor key={colorID} paletteManager={this.props.paletteManager} colorID={colorID} color={color} isEditable={this.props.isEditable} isSelectable={this.props.isSelectable} />)}
+				{this.props.isEditable ? <PaletteAddColor paletteManager={this.props.paletteManager} /> : null}
 			</div>
 		)
 	}
