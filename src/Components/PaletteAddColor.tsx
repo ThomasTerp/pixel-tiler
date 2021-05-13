@@ -23,7 +23,7 @@ export default abstract class PaletteAddColor extends React.Component<IProps, IS
 	public render(): React.ReactNode
 	{
 		return (
-			<button className="PaletteAddColor" style={{backgroundColor: this.context.theme.color1, borderColor: this.context.theme.color2}} onClick={this._paletteAddColor_OnClick_AddColor}>
+			<button className="PaletteAddColor" style={{backgroundColor: this.context.theme.color3, borderColor: this.context.theme.color2}} onClick={this._paletteAddColor_OnClick_AddColor}>
 				<div style={{color: this.context.theme.color2}}>
 					+
 				</div>
