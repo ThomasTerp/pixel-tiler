@@ -34,7 +34,7 @@ export default class SideMenu extends React.Component<IProps, IState>
 	public render(): React.ReactNode
 	{
 		const tools: React.ReactNode[] = [
-			<FileTool key="fileTool" />,
+			<FileTool key="fileTool" paletteManager={this.props.paletteManager} />,
 			<BrushTool key="brushTool" paletteManager={this.props.paletteManager} />,
 			<EraserTool key="eraserTool" />,
 			<SettingsTool key="settingsTool" />
