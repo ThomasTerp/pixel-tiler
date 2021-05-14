@@ -78,7 +78,7 @@ export default class Grid extends React.Component<IProps, IState>
 		const size: Vector2D = this.state.size.copy().multiply(this.state.zoom);
 
 		return (
-			<svg className="Grid" ref={this._svg} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
+			<svg className="Grid" ref={this._svg} xmlns="http://www.w3.org/2000/svg" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
 				{this.renderDefs()}
 				{this.renderGrid(offset, size)}
 				<GridTiles tiles={this.state.tiles} />

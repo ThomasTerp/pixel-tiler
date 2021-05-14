@@ -1,5 +1,5 @@
 
-export type RenderTileFunction = (size: number, color: string) => React.ReactNode;
+export type RenderTileFunction = (color: string) => React.ReactNode;
 
 export type TileRenderer = {
 	tileID: string,

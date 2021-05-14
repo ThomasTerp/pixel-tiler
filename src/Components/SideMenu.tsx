@@ -8,9 +8,11 @@ import SettingsTool from "./Tools/SettingsTool";
 import "./SideMenu.scss";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
+import TileManager from "../TileManager";
 
 export interface IProps {
 	paletteManager: PaletteManager;
+	tileManager: TileManager;
 }
 
 export interface IState {
@@ -35,7 +37,7 @@ export default class SideMenu extends React.Component<IProps, IState>
 	{
 		const tools: React.ReactNode[] = [
 			<FileTool key="fileTool" paletteManager={this.props.paletteManager} />,
-			<BrushTool key="brushTool" paletteManager={this.props.paletteManager} />,
+			<BrushTool key="brushTool" paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
 			<EraserTool key="eraserTool" />,
 			<SettingsTool key="settingsTool" />
 		];

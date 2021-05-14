@@ -43,7 +43,7 @@ export default class App extends React.Component<IProps, IState>
 			<AppContext.Provider value={this._appContext}>
 				<div className="App">
 					{this.renderContent()}
-					<SideMenu paletteManager={this.state.paletteManager} />
+					<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} />
 				</div>
 			</AppContext.Provider>
 		);
