@@ -287,7 +287,7 @@ export default class Grid extends React.Component<IProps, IState>
 
 	placeTile(svg: React.ReactNode, position: Vector2D, size: number, rotation: number, color: string, colorIndex: number): React.ReactNode
 	{
-		const tileNode: React.ReactNode = <Tile key={this._tileKey++} svg={svg} position={position} size={size} rotation={rotation} color={color} colorIndex={colorIndex} />;
+		const tileNode: React.ReactNode = <Tile key={this._tileKey++} id={"tile1"} svg={svg} position={position} size={size} rotation={rotation} color={color} colorIndex={colorIndex} />;
 
 		this.setState({
 			tiles: this.state.tiles.concat(tileNode)

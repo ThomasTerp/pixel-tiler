@@ -3,6 +3,7 @@ import AppContext from "../AppContext";
 import Vector2D from "../Vector2D";
 
 export interface IProps {
+	id: string,
 	svg: React.ReactNode;
 	position: Vector2D;
 	size: number;
