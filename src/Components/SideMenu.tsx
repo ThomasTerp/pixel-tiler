@@ -5,10 +5,11 @@ import FileTool from "./Tools/FileTool";
 import BrushTool from "./Tools/BrushTool";
 import EraserTool from "./Tools/EraserTool";
 import SettingsTool from "./Tools/SettingsTool";
-import "./SideMenu.scss";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
 import TileManager from "../TileManager";
+import {Description, Brush, Delete, Settings} from "@material-ui/icons";
+import "./SideMenu.scss";
 
 export interface IProps {
 	paletteManager: PaletteManager;
@@ -36,10 +37,10 @@ export default class SideMenu extends React.Component<IProps, IState>
 	public render(): React.ReactNode
 	{
 		const tools: React.ReactNode[] = [
-			<FileTool key="fileTool" paletteManager={this.props.paletteManager} />,
-			<BrushTool key="brushTool" paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
-			<EraserTool key="eraserTool" />,
-			<SettingsTool key="settingsTool" />
+			<FileTool key="fileTool" icon={<Description />} paletteManager={this.props.paletteManager} />,
+			<BrushTool key="brushTool" icon={<Brush />} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
+			<EraserTool key="eraserTool" icon={<Delete />} />,
+			<SettingsTool key="settingsTool" icon={<Settings />} />
 		];
 		const toolButtons: React.ReactNode[] = tools.map((tool: React.ReactNode) => this.renderToolButton(tool));
 		const activeTool: React.ReactNode = tools.find((tool: React.ReactNode) => this.state.activeToolKey === (tool as JSX.Element).key);
@@ -58,10 +59,11 @@ export default class SideMenu extends React.Component<IProps, IState>
 	{
 		const key: string = (tool as JSX.Element).key as string;
 		const name: string = ((tool as JSX.Element).props as IToolProps).name;
+		const icon: React.ReactNode = ((tool as JSX.Element).props as IToolProps).icon;
 
 		return (
-			<ToolButton key={`${key}Button`} isActive={this.state.activeToolKey === key} onClick={() => this.setState({activeToolKey: key})}>
-				{name}
+			<ToolButton key={`${key}Button`} text={name} isActive={this.state.activeToolKey === key} onClick={() => this.setState({activeToolKey: key})}>
+				{icon}
 			</ToolButton>
 		);
 	}

@@ -1,9 +1,11 @@
 import React from "react";
 import AppContext from "../AppContext";
+import {Tooltip} from "@material-ui/core";
 import "./ToolButton.scss";
 
 export interface IProps {
 	children: React.ReactNode;
+	text: string;
 	isActive: boolean;
 	onClick: (event: React.MouseEvent) => void
 }
@@ -34,11 +36,13 @@ export default class ToolButton extends React.Component<IProps, IState>
 		}
 
 		return (
-			<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={toolButtonStyle} onClick={this.props.onClick}>
-				<div style={{color: this.context.theme.color2}}>
-					{this.props.children}
-				</div>
-			</button>
+			<Tooltip title={this.props.text}>
+				<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={toolButtonStyle} onClick={this.props.onClick}>
+					<div style={{color: this.context.theme.color2}}>
+						{this.props.children}
+					</div>
+				</button>
+			</Tooltip>
 		)
 	}
 }

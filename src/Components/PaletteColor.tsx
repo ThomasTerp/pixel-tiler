@@ -35,16 +35,26 @@ export default abstract class PaletteColor extends React.Component<IProps, IStat
 
 	public render(): React.ReactNode
 	{
-		const paletteColorStyle: React.CSSProperties = {}
+		const paletteColorStyle: React.CSSProperties = {};
 
 		if(this.props.isSelectable && this.isSelected())
 		{
 			paletteColorStyle.backgroundColor = `${this.context.theme.color2}`;
 		}
 
+		const inputStyle: React.CSSProperties = {
+			backgroundColor: this.props.color,
+			borderColor: this.context.theme.color1
+		};
+
+		if(this.props.isSelectable || this.props.isEditable)
+		{
+			inputStyle.cursor = "pointer";
+		}
+
 		return (
 			<div className="PaletteColor" style={paletteColorStyle}>
-				<input ref={this._inputRef} style={{backgroundColor: this.props.color, borderColor: this.context.theme.color1}} type="color" defaultValue={this.props.color} onChange={this._input_OnChange_SetPaletteColor} onClick={this._input_OnClick_SelectColorID} onDoubleClick={this._input_OnDoubleClick_OpenMenu} onContextMenu={this._input_OnContextMenu_OpenMenu} />
+				<input ref={this._inputRef} style={inputStyle} type="color" defaultValue={this.props.color} onChange={this._input_OnChange_SetPaletteColor} onClick={this._input_OnClick_SelectColorID} onDoubleClick={this._input_OnDoubleClick_OpenMenu} onContextMenu={this._input_OnContextMenu_OpenMenu} />
 			</div>
 		)
 	}
