@@ -46,7 +46,7 @@ export default class SideMenu extends React.Component<IProps, IState>
 		const activeTool: React.ReactNode = tools.find((tool: React.ReactNode) => this.state.activeToolKey === (tool as JSX.Element).key);
 
 		return (
-			<div className="SideMenu" style={{backgroundColor: this.context.theme.color1}}>
+			<div className="SideMenu" style={{backgroundColor: this.context.theme.palette.primary.main}}>
 				<div className="ToolButtons">
 					{toolButtons}
 				</div>

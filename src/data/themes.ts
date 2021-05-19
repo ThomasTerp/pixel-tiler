@@ -1,15 +1,22 @@
-import ITheme from "../ITheme";
+import {createMuiTheme, responsiveFontSizes} from "@material-ui/core/styles";
 
-const themes: {[themeID: string]: ITheme} = {
-	dark: {
-		color1: "#1a212d",
-		color2: "#79c0ff",
-		color3: "#1f2f46"
-	},
-	white: {
-		color1: "#999999",
-		color2: "#000000",
-		color3: "#f2f2f2"
+let theme = createMuiTheme({
+	palette: {
+		type: "light"
 	}
-}
-export default themes;
+}/*{
+	palette: {
+		primary: {
+			main: "#79c0ff",
+			dark: "#1f2f46"
+		},
+		background: {
+			default: "#1a212d"
+		},
+		text: {
+			primary: "#79c0ff"
+		}
+	}
+}*/);
+theme = responsiveFontSizes(theme);
+export default theme;

@@ -4,12 +4,13 @@ import Grid from "./Grid";
 import Tileset from "../Tileset";
 import PaletteManager from "../PaletteManager";
 import AppContext, {IAppContext} from "../AppContext";
-import ITheme from "../ITheme";
+import {ThemeProvider} from "@material-ui/styles";
+import {Theme} from "@material-ui/core";
 import TileManager from "../TileManager";
 import "./App.scss";
 
 export interface IProps {
-	themes: {[themeID: string]: ITheme};
+	theme: Theme;
 	tilesets: Tileset[];
 	defaultPaletteColors: string[];
 }
@@ -33,7 +34,7 @@ export default class App extends React.Component<IProps, IState>
 		};
 
 		this._appContext = {
-			theme: this.props.themes.dark
+			theme: this.props.theme
 		}
 	}
 
@@ -41,10 +42,12 @@ export default class App extends React.Component<IProps, IState>
 	{
 		return (
 			<AppContext.Provider value={this._appContext}>
-				<div className="App">
-					{this.renderContent()}
-					<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} />
-				</div>
+				<ThemeProvider theme={this.props.theme}>
+					<div className="App">
+						{this.renderContent()}
+						<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} />
+					</div>
+				</ThemeProvider>
 			</AppContext.Provider>
 		);
 	}
