@@ -10,7 +10,9 @@ import "@fontsource/roboto";
 
 ReactDOM.render(
 	(
+		<React.StrictMode>
 			<App themes={themes} tilesets={tilesets} defaultPaletteColors={defaultPaletteColors} />
+		</React.StrictMode>
 	),
 	document.getElementById("root")
 );
