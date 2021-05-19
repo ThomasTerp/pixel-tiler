@@ -29,13 +29,8 @@ export default class Emitter<T extends Event = Event>
 		});
 	}
 
-	emit(event?: Event): T
+	emit(event: Event = new Event()): T
 	{
-		if(typeof event === "undefined")
-		{
-			event = new Event();
-		}
-
 		const tEvent: T = event as T;
 
 		for(const onEmit of Array.from(this._callbacks.keys()))
