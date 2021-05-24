@@ -1,7 +1,41 @@
 import React from "react";
 import AppContext from "../AppContext";
-import {Tooltip} from "@material-ui/core";
-import "./ToolButton.scss";
+import {Theme, Box, Tooltip, ButtonBase, makeStyles} from "@material-ui/core";
+
+interface IStyleProps
+{
+	props: IProps,
+	theme: Theme
+}
+
+const useStyles = makeStyles({
+	root: {
+		textAlign: "center",
+		padding: "0px",
+		paddingTop: "100%  !important",
+		border: "2px solid",
+		borderColor: (styleProps: IStyleProps) => styleProps.props.isActive ? styleProps.theme.palette.secondary.main : styleProps.theme.palette.primary.main,
+		backgroundColor: (styleProps: IStyleProps) => styleProps.theme.palette.primary.main,
+		cursor: "pointer",
+		transition: "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
+
+		"&:hover": {
+			borderColor: (styleProps: IStyleProps) => styleProps.props.isActive ? styleProps.theme.palette.secondary.main : styleProps.theme.palette.secondary.dark,
+			backgroundColor: (styleProps: IStyleProps) => styleProps.theme.palette.primary.dark
+		},
+
+		"& div": {
+			display: "flex",
+			position: "absolute",
+			top: "0px",
+			right: "0px",
+			bottom: "0px",
+			left: "0px",
+			justifyContent: "center",
+			alignItems: "center"
+		}
+	}
+});
 
 export interface IProps {
 	children: React.ReactNode;
@@ -10,39 +44,24 @@ export interface IProps {
 	onClick: (event: React.MouseEvent) => void
 }
 
-export interface IState {}
-
-export default class ToolButton extends React.Component<IProps, IState>
+const ToolButton = (props: IProps) =>
 {
-	static contextType = AppContext;
-	public static defaultProps = {}
+	const appContext = React.useContext(AppContext);
 
-	public constructor(props: IProps)
-	{
-		super(props);
+	const classes = useStyles({
+		props: props,
+		theme: appContext.theme
+	});
 
-		this.state = {};
-	}
-
-	public render(): React.ReactNode
-	{
-		const toolButtonStyle: React.CSSProperties = {
-			backgroundColor: this.context.theme.color3
-		}
-
-		if(this.props.isActive)
-		{
-			toolButtonStyle.borderColor = this.context.theme.color2;
-		}
-
-		return (
-			<Tooltip title={this.props.text}>
-				<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={toolButtonStyle} onClick={this.props.onClick}>
-					<div style={{color: this.context.theme.color2}}>
-						{this.props.children}
-					</div>
-				</button>
-			</Tooltip>
-		)
-	}
+	return (
+		<Tooltip title={props.text} enterDelay={700}>
+			<ButtonBase className={`${classes.root} ToolButton`} onClick={props.onClick}>
+				<Box>
+					{props.children}
+				</Box>
+			</ButtonBase>
+		</Tooltip>
+	)
 }
+
+export default ToolButton;

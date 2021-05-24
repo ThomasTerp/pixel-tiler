@@ -1,22 +1,26 @@
 import {createMuiTheme, responsiveFontSizes} from "@material-ui/core/styles";
+import {PaletteType} from "@material-ui/core";
 
-let theme = createMuiTheme({
-	palette: {
-		type: "light"
-	}
-}/*{
-	palette: {
-		primary: {
-			main: "#79c0ff",
-			dark: "#1f2f46"
-		},
-		background: {
-			default: "#1a212d"
-		},
-		text: {
-			primary: "#79c0ff"
+function createTheme(type: PaletteType, primaryColor: string, secondaryColor: string)
+{
+	let theme = createMuiTheme({
+		palette: {
+			type: type,
+			primary: {
+				main: primaryColor
+			},
+			secondary: {
+				main: secondaryColor
+			},
+			text: {
+				primary: secondaryColor,
+				secondary: primaryColor
+			}
 		}
-	}
-}*/);
-theme = responsiveFontSizes(theme);
-export default theme;
+	});
+	theme = responsiveFontSizes(theme);
+
+	return theme;
+}
+
+export default createTheme("dark", "#1f2f46", "#79c0ff");
