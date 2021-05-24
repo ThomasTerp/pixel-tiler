@@ -1,32 +1,7 @@
 import React from "react";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
-import {Theme, makeStyles} from "@material-ui/core";
 import "./PaletteColor.scss";
-
-interface IStyleProps
-{
-	props: IProps,
-	theme: Theme
-}
-
-const useStyles = makeStyles({
-	root: {
-		width: "100%",
-		height: "calc(100% - 4px)",
-		padding: "2px 0px 0px 0px",
-		margin: "0px",
-		//backgroundColor: (styleProps: IStyleProps) => styleProps.props.isSelectable && styleProps.props.paletteManager.selectedColorID === styleProps.props.colorID ? styleProps.theme.palette.secondary.main : "red",
-
-		"& input": {
-			border: "2px solid",
-			width: "calc(100% - 8px)",
-			height: "0px",
-			margin: "0px",
-			padding: "calc(100% - 8px) 0px 0px 0px"
-		}
-	}
-});
 
 export interface IProps {
 	paletteManager: PaletteManager;
@@ -36,46 +11,68 @@ export interface IProps {
 	isSelectable: boolean;
 }
 
-const PaletteColor = (props: IProps) =>
+export interface IState {}
+
+export default abstract class PaletteColor extends React.Component<IProps, IState>
 {
-	const appContext = React.useContext(AppContext);
-	const classes = useStyles({
-		props: props,
-		theme: appContext.theme
-	});
-	const inputRef: React.RefObject<HTMLInputElement> = React.createRef();
-	const paletteColorStyle: React.CSSProperties = {};
-	let allowClick: boolean = false;
-
-	if(props.isSelectable && props.paletteManager.selectedColorID === props.colorID)
-	{
-		paletteColorStyle.backgroundColor = `${appContext.theme.palette.primary.main}`;
-	}
-
-	const inputStyle: React.CSSProperties = {
-		backgroundColor: props.color,
-		borderColor: appContext.theme.palette.primary.main
+	static contextType = AppContext;
+	static defaultProps = {
+		isEditable: true,
+		isSelectable: true
 	};
 
-	if(props.isSelectable || props.isEditable)
+	private _inputRef: React.RefObject<HTMLInputElement>;
+	private _allowClick: boolean = false;
+
+	public constructor(props: IProps)
 	{
-		inputStyle.cursor = "pointer";
+		super(props);
+
+		this.state = {};
+
+		this._inputRef = React.createRef();
 	}
 
-	const input_OnChange_SetPaletteColor = (event: React.ChangeEvent) =>
+	public render(): React.ReactNode
 	{
-		props.paletteManager.setColor(props.colorID, (event.target as any).value);
-	}
+		const paletteColorStyle: React.CSSProperties = {};
 
-	const input_OnClick_SelectColorID = (event: React.MouseEvent) =>
-	{
-		if(props.isSelectable)
+		if(this.props.isSelectable && this.isSelected())
 		{
-			props.paletteManager.selectedColorID = props.colorID;
+			paletteColorStyle.backgroundColor = `${this.context.theme.color2}`;
+		}
 
-			if(allowClick)
+		const inputStyle: React.CSSProperties = {
+			backgroundColor: this.props.color,
+			borderColor: this.context.theme.color1
+		};
+
+		if(this.props.isSelectable || this.props.isEditable)
+		{
+			inputStyle.cursor = "pointer";
+		}
+
+		return (
+			<div className="PaletteColor" style={paletteColorStyle}>
+				<input ref={this._inputRef} style={inputStyle} type="color" defaultValue={this.props.color} onChange={this._input_OnChange_SetPaletteColor} onClick={this._input_OnClick_SelectColorID} onDoubleClick={this._input_OnDoubleClick_OpenMenu} onContextMenu={this._input_OnContextMenu_OpenMenu} />
+			</div>
+		)
+	}
+
+	private _input_OnChange_SetPaletteColor = (event: React.ChangeEvent) =>
+	{
+		this.props.paletteManager.setColor(this.props.colorID, (event.target as any).value);
+	}
+
+	private _input_OnClick_SelectColorID = (event: React.MouseEvent) =>
+	{
+		if(this.props.isSelectable)
+		{
+			this.props.paletteManager.selectedColorID = this.props.colorID;
+
+			if(this._allowClick)
 			{
-				allowClick = false;
+				this._allowClick = false;
 			}
 			else
 			{
@@ -83,44 +80,36 @@ const PaletteColor = (props: IProps) =>
 			}
 		}
 
-		if(!props.isEditable)
+		if(!this.props.isEditable)
 		{
 			event.preventDefault();
 			event.preventDefault();
 		}
 	}
 
-	const input_OnDoubleClick_OpenMenu = (event: React.MouseEvent) =>
+	private _input_OnDoubleClick_OpenMenu = (event: React.MouseEvent) =>
 	{
-		if(props.isEditable && props.isSelectable)
+		if(this.props.isEditable && this.props.isSelectable)
 		{
-			allowClick = true;
-			inputRef.current?.click();
+			this._allowClick = true;
+			this._inputRef.current?.click();
 		}
 	}
 
-	const input_OnContextMenu_OpenMenu = (event: React.MouseEvent) =>
+	private _input_OnContextMenu_OpenMenu = (event: React.MouseEvent) =>
 	{
-		if(props.isSelectable)
+		if(this.props.isSelectable)
 		{
-			allowClick = true;
+			this._allowClick = true;
 		}
 
-		inputRef.current?.click();
+		this._inputRef.current?.click();
 
 		event.preventDefault();
 	}
 
-	return (
-		<div className={`${classes.root} PaletteColor`} style={paletteColorStyle}>
-			<input ref={inputRef} style={inputStyle} type="color" defaultValue={props.color} onChange={input_OnChange_SetPaletteColor} onClick={input_OnClick_SelectColorID} onDoubleClick={input_OnDoubleClick_OpenMenu} onContextMenu={input_OnContextMenu_OpenMenu} />
-		</div>
-	)
+	private isSelected(): boolean
+	{
+		return this.props.paletteManager.selectedColorID === this.props.colorID;
+	}
 }
-
-PaletteColor.defaultProps = {
-	isEditable: true,
-	isSelectable: true
-};
-
-export default PaletteColor;

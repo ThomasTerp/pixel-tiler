@@ -17,14 +17,14 @@ export default abstract class Tool<P, S> extends React.Component<P & IProps, ISt
 	public render(): React.ReactNode
 	{
 		return (
-			<Box className="Tool" bgcolor="primary.main">
+			<div className="Tool" style={{backgroundColor: this.context.theme.color3}}>
 				<Box mt={1} mb={1}>
-					<Typography className="Name" color="textPrimary" variant="h5">
+					<Typography className="Name" style={{color: this.context.theme.color2}} variant="h5">
 						{this.props.name}
 					</Typography>
 				</Box>
 				{this.renderProperties()}
-			</Box>
+			</div>
 		)
 	}
 
