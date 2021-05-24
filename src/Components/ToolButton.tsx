@@ -1,6 +1,7 @@
 import React from "react";
 import AppContext from "../AppContext";
-import {Tooltip} from "@material-ui/core";
+import {Box, ButtonBase, Tooltip} from "@material-ui/core";
+import {conditionalClass} from "../util";
 import "./ToolButton.scss";
 
 export interface IProps {
@@ -15,7 +16,8 @@ export interface IState {}
 export default class ToolButton extends React.Component<IProps, IState>
 {
 	static contextType = AppContext;
-	public static defaultProps = {}
+	static defaultProps = {}
+	static tooltipEnterDelay = 700;
 
 	public constructor(props: IProps)
 	{
@@ -26,22 +28,13 @@ export default class ToolButton extends React.Component<IProps, IState>
 
 	public render(): React.ReactNode
 	{
-		const toolButtonStyle: React.CSSProperties = {
-			backgroundColor: this.context.theme.color3
-		}
-
-		if(this.props.isActive)
-		{
-			toolButtonStyle.borderColor = this.context.theme.color2;
-		}
-
 		return (
-			<Tooltip title={this.props.text}>
-				<button className={`ToolButton ${this.props.isActive ? "Active" : ""}`} style={toolButtonStyle} onClick={this.props.onClick}>
-					<div style={{color: this.context.theme.color2}}>
+			<Tooltip title={this.props.text} enterDelay={ToolButton.tooltipEnterDelay}>
+				<ButtonBase className={`ToolButton ${conditionalClass("Active", this.props.isActive)}`} onClick={this.props.onClick}>
+					<Box>
 						{this.props.children}
-					</div>
-				</button>
+					</Box>
+				</ButtonBase>
 			</Tooltip>
 		)
 	}

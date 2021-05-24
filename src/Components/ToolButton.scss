@@ -1,14 +1,18 @@
 
 .ToolButton {
-	position: relative;
-	text-align: center;
-	padding: 0px;
-	padding-top: 100%;
-	border: none;
-	cursor: pointer;
+	padding-top: 100% !important;
 
 	&.Active {
 		border: 2px solid;
+		border-color: var(--theme-secondary-main);
+
+		&:hover {
+			border-color: var(--theme-secondary-main);
+		}
+	}
+
+	&:hover {
+		border: 2px solid var(--theme-secondary-dark);
 	}
 
 	> div {
@@ -20,5 +24,10 @@
 		left: 0px;
 		justify-content: center;
 		align-items: center;
+		background-color: var(--theme-primary-main);
+
+		&:hover {
+			background-color: var(--theme-primary-dark)
+		}
 	}
 }

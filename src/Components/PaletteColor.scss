@@ -5,11 +5,27 @@
 	padding: 2px 0px 0px 0px;
 	margin: 0px;
 
+	&.Selectable
+	{
+		&.Active {
+			background-color: var(--theme-secondary-main);
+		}
+
+		> input {
+			cursor: pointer;
+		}
+	}
+
+	&.Editable > input {
+		cursor: pointer;
+	}
+
 	> input {
-		border: 2px solid;
 		width: calc(100% - 8px);
 		height: 0px;
 		margin: 0px;
 		padding: calc(100% - 8px) 0px 0px 0px;
+		cursor: initial;
+		border: 2px solid var(--theme-primary-dark);
 	}
 }

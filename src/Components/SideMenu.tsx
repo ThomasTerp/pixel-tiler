@@ -8,6 +8,7 @@ import SettingsTool from "./Tools/SettingsTool";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
 import TileManager from "../TileManager";
+import {Box} from "@material-ui/core";
 import {Description, Brush, Delete, Settings} from "@material-ui/icons";
 import "./SideMenu.scss";
 
@@ -37,29 +38,31 @@ export default class SideMenu extends React.Component<IProps, IState>
 	public render(): React.ReactNode
 	{
 		const tools: React.ReactNode[] = [
-			<FileTool key="fileTool" icon={<Description />} paletteManager={this.props.paletteManager} />,
-			<BrushTool key="brushTool" icon={<Brush />} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
-			<EraserTool key="eraserTool" icon={<Delete />} />,
-			<SettingsTool key="settingsTool" icon={<Settings />} />
+			<FileTool key="fileTool" icon={<Description color="secondary" />} paletteManager={this.props.paletteManager} />,
+			<BrushTool key="brushTool" icon={<Brush color="secondary" />} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
+			<EraserTool key="eraserTool" icon={<Delete color="secondary" />} />,
+			<SettingsTool key="settingsTool" icon={<Settings color="secondary" />} />
 		];
 		const toolButtons: React.ReactNode[] = tools.map((tool: React.ReactNode) => this.renderToolButton(tool));
 		const activeTool: React.ReactNode = tools.find((tool: React.ReactNode) => this.state.activeToolKey === (tool as JSX.Element).key);
 
 		return (
-			<div className="SideMenu" style={{backgroundColor: this.context.theme.palette.primary.main}}>
-				<div className="ToolButtons">
+			<Box className="SideMenu" bgcolor="primary.dark">
+				<Box className="ToolButtons">
 					{toolButtons}
-				</div>
+				</Box>
 				{activeTool}
-			</div>
+			</Box>
 		)
 	}
 
 	public renderToolButton(tool: React.ReactNode): React.ReactNode
 	{
-		const key: string = (tool as JSX.Element).key as string;
-		const name: string = ((tool as JSX.Element).props as IToolProps).name;
-		const icon: React.ReactNode = ((tool as JSX.Element).props as IToolProps).icon;
+		const toolElement: JSX.Element = (tool as JSX.Element);
+		const toolProps: IToolProps = (toolElement.props as IToolProps);
+		const key: string = toolElement.key as string;
+		const name: string = toolProps.name;
+		const icon: React.ReactNode = toolProps.icon;
 
 		return (
 			<ToolButton key={`${key}Button`} text={name} isActive={this.state.activeToolKey === key} onClick={() => this.setState({activeToolKey: key})}>

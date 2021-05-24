@@ -13,10 +13,11 @@ export interface IState {}
 
 export default abstract class PaletteAddColor extends React.Component<IProps, IState>
 {
-	public static contextType = AppContext;
-	public static defaultProps = {
+	static contextType = AppContext;
+	static defaultProps = {
 		text: "Add Color"
 	}
+	static tooltipEnterDelay = 700;
 
 	public constructor(props: IProps)
 	{
@@ -28,9 +29,9 @@ export default abstract class PaletteAddColor extends React.Component<IProps, IS
 	public render(): React.ReactNode
 	{
 		return (
-			<Tooltip title={this.props.text}>
-				<button className="PaletteAddColor" style={{backgroundColor: this.context.theme.color3, borderColor: this.context.theme.color2}} onClick={this._paletteAddColor_OnClick_AddColor}>
-					<div style={{color: this.context.theme.color2}}>
+			<Tooltip title={this.props.text} enterDelay={PaletteAddColor.tooltipEnterDelay}>
+				<button className="PaletteAddColor" onClick={this._paletteAddColor_OnClick_AddColor}>
+					<div>
 						+
 					</div>
 				</button>

@@ -7,6 +7,7 @@ import AppContext, {IAppContext} from "../AppContext";
 import {ThemeProvider} from "@material-ui/styles";
 import {Theme} from "@material-ui/core";
 import TileManager from "../TileManager";
+import $ from "jquery";
 import "./App.scss";
 
 export interface IProps {
@@ -59,5 +60,19 @@ export default class App extends React.Component<IProps, IState>
 				<Grid />
 			</div>
 		);
+	}
+
+	componentDidMount()
+	{
+		$(document.documentElement).css({
+			"--theme-primary-main": this.props.theme.palette.primary.main,
+			"--theme-primary-light": this.props.theme.palette.primary.light,
+			"--theme-primary-dark": this.props.theme.palette.primary.dark,
+			"--theme-secondary-main": this.props.theme.palette.secondary.main,
+			"--theme-secondary-light": this.props.theme.palette.secondary.light,
+			"--theme-secondary-dark": this.props.theme.palette.secondary.dark,
+			"--theme-text-primary": this.props.theme.palette.text.primary,
+			"--theme-text-secondary": this.props.theme.palette.text.secondary
+		});
 	}
 }

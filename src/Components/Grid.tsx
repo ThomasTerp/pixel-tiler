@@ -4,8 +4,8 @@ import GridTiles from "./GridTiles";
 import AppContext from "../AppContext";
 import Vector2D from "../Vector2D";
 import {generateUniqueID, clamp} from "../util";
-import "./Grid.scss";
 import $ from "jquery";
+import "./Grid.scss";
 
 export interface IProps {
 	offsetIncrement: number;
