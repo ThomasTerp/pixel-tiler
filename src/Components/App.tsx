@@ -1,27 +1,34 @@
 import React from "react";
+import $ from "jquery";
 import SideMenu from "./SideMenu";
 import Grid from "./Grid";
 import Tileset from "../Tileset";
 import PaletteManager from "../PaletteManager";
 import AppContext, {IAppContext} from "../AppContext";
 import {ThemeProvider} from "@material-ui/styles";
-import {Theme} from "@material-ui/core";
+import {Box, Theme, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import TileManager from "../TileManager";
-import $ from "jquery";
-import "./App.scss";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		userSelect: "none"
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
+{
 	theme: Theme;
 	tilesets: Tileset[];
 	defaultPaletteColors: string[];
 }
 
-export interface IState {
+export interface IState
+{
 	paletteManager: PaletteManager;
 	tileManager: TileManager;
 }
 
-export default class App extends React.Component<IProps, IState>
+class App extends React.Component<IProps, IState>
 {
 	private _appContext: IAppContext;
 
@@ -44,10 +51,10 @@ export default class App extends React.Component<IProps, IState>
 		return (
 			<AppContext.Provider value={this._appContext}>
 				<ThemeProvider theme={this.props.theme}>
-					<div className="App">
+					<Box className={`${this.props.classes.root} App`}>
 						{this.renderContent()}
 						<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} />
-					</div>
+					</Box>
 				</ThemeProvider>
 			</AppContext.Provider>
 		);
@@ -56,9 +63,9 @@ export default class App extends React.Component<IProps, IState>
 	renderContent(): React.ReactNode
 	{
 		return (
-			<div className="Content">
+			<Box className="Content">
 				<Grid />
-			</div>
+			</Box>
 		);
 	}
 
@@ -76,3 +83,5 @@ export default class App extends React.Component<IProps, IState>
 		});
 	}
 }
+
+export default withStyles(styles)(App);

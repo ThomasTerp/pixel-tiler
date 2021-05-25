@@ -2,10 +2,20 @@ import React from "react";
 import PaletteColor from "./PaletteColor";
 import PaletteAddColor from "./PaletteAddColor";
 import AppContext from "../AppContext";
+import {Box, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../PaletteManager";
-import "./Palette.scss";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		display: "grid",
+		gridTemplateColumns: "repeat(6, auto)",
+		gap: "0px",
+		margin: "2px"
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
+{
 	paletteManager: PaletteManager;
 	isEditable: boolean;
 	isSelectable: boolean;
@@ -13,7 +23,7 @@ export interface IProps {
 
 export interface IState {}
 
-export default abstract class Palette extends React.Component<IProps, IState>
+class Palette extends React.Component<IProps, IState>
 {
 	static contextType = AppContext;
 	static defaultProps = {
@@ -31,10 +41,10 @@ export default abstract class Palette extends React.Component<IProps, IState>
 	public render(): React.ReactNode
 	{
 		return (
-			<div className="Palette">
+			<Box className={`${this.props.classes.root} Palette`}>
 				{this.props.paletteManager.colors.map((color: string, colorID: number) => <PaletteColor key={colorID} paletteManager={this.props.paletteManager} colorID={colorID} color={color} isEditable={this.props.isEditable} isSelectable={this.props.isSelectable} />)}
 				{this.props.isEditable ? <PaletteAddColor paletteManager={this.props.paletteManager} /> : null}
-			</div>
+			</Box>
 		)
 	}
 
@@ -60,3 +70,5 @@ export default abstract class Palette extends React.Component<IProps, IState>
 		this.forceUpdate();
 	}
 }
+
+export default withStyles(styles)(Palette);

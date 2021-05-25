@@ -1,23 +1,30 @@
-import Tool, {IProps as IToolProps, IState as IToolState} from "./Tool";
+import React from "react";
 import Slider from "@material-ui/core/Slider";
+import ToolBox from "./ToolBox";
 
-export default class SettingsTool extends Tool<IToolProps, IToolState>
+export interface IProps
 {
-	public static defaultProps = {
-		name: "Settings"
-	};
+	name: string;
+	icon: React.ReactNode;
+}
 
-	public constructor(props: IToolProps)
+export interface IState {}
+
+export default class SettingsTool extends React.Component<IProps, IState>
+{
+	public constructor(props: IProps)
 	{
 		super(props);
 
 		this.state = {};
 	}
 
-	public renderProperties(): React.ReactNode
+	public render(): React.ReactNode
 	{
 		return (
-			<Slider />
+			<ToolBox name={this.props.name} icon={this.props.icon}>
+				<Slider />
+			</ToolBox>
 		);
 	}
 }

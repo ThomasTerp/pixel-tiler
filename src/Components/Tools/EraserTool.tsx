@@ -1,15 +1,29 @@
-import Tool, {IProps as IToolProps, IState as IToolState} from "./Tool";
+import React from "react";
+import ToolBox from "./ToolBox";
 
-export default class EraserTool extends Tool<IToolProps, IToolState>
+export interface IProps
 {
-	public static defaultProps = {
-		name: "Eraser Tool"
-	};
+	name: string;
+	icon: React.ReactNode;
+}
 
-	public constructor(props: IToolProps)
+export interface IState {}
+
+export default class EraserTool extends React.Component<IProps, IState>
+{
+	public constructor(props: IProps)
 	{
 		super(props);
 
 		this.state = {};
+	}
+
+	public render(): React.ReactNode
+	{
+		return (
+			<ToolBox name={this.props.name} icon={this.props.icon}>
+
+			</ToolBox>
+		);
 	}
 }

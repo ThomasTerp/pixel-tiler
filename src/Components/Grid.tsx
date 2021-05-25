@@ -1,13 +1,21 @@
 import React from "react";
+import $ from "jquery";
 import Tile from "./Tile";
 import GridTiles from "./GridTiles";
 import AppContext from "../AppContext";
 import Vector2D from "../Vector2D";
+import {WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {generateUniqueID, clamp} from "../util";
-import $ from "jquery";
-import "./Grid.scss";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		position: "static",
+		backgroundColor: "#0e0e10"
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
+{
 	offsetIncrement: number;
 	zoomIncrement: number;
 	zoomMultiplier: number;
@@ -18,7 +26,8 @@ export interface IProps {
 	gridSizeMaximum: number;
 }
 
-export interface IState {
+export interface IState
+{
 	uniqueID: string;
 	gridSize: number;
 	zoom: number;
@@ -29,7 +38,7 @@ export interface IState {
 	color2: string;
 }
 
-export default class Grid extends React.Component<IProps, IState>
+class Grid extends React.Component<IProps, IState>
 {
 	public static contextType = AppContext;
 	public static defaultProps = {
@@ -78,7 +87,7 @@ export default class Grid extends React.Component<IProps, IState>
 		const size: Vector2D = this.state.size.copy().multiply(this.state.zoom);
 
 		return (
-			<svg className="Grid" ref={this._svg} xmlns="http://www.w3.org/2000/svg" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
+			<svg className={`${this.props.classes.root} Grid`} ref={this._svg} xmlns="http://www.w3.org/2000/svg" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
 				{this.renderDefs()}
 				{this.renderGrid(offset, size)}
 				<GridTiles tiles={this.state.tiles} />
@@ -311,3 +320,5 @@ export default class Grid extends React.Component<IProps, IState>
 	}
 	*/
 }
+
+export default withStyles(styles)(Grid);

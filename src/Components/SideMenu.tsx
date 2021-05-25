@@ -1,6 +1,5 @@
 import React from "react";
 import ToolButton from "./ToolButton";
-import {IProps as IToolProps} from "./Tools/Tool";
 import FileTool from "./Tools/FileTool";
 import BrushTool from "./Tools/BrushTool";
 import EraserTool from "./Tools/EraserTool";
@@ -8,20 +7,43 @@ import SettingsTool from "./Tools/SettingsTool";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
 import TileManager from "../TileManager";
-import {Box} from "@material-ui/core";
+import {Box, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {Description, Brush, Delete, Settings} from "@material-ui/icons";
-import "./SideMenu.scss";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		display: "grid",
+		gridTemplateRows: "fit-content(100%) auto",
+		position: "fixed",
+		left: "0px",
+		top: "0px",
+		height: "100%",
+		width: "260px",
+		zIndex: 200,
+		textAlign: "center",
+
+		"& .ToolButtons": {
+			display: "grid",
+			gridAutoFlow: "column",
+			gridAutoColumns: "minmax(0, 1fr)",
+			gap: "4px",
+			margin: "4px"
+		}
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
+{
 	paletteManager: PaletteManager;
 	tileManager: TileManager;
 }
 
-export interface IState {
+export interface IState
+{
 	activeToolKey: string;
 }
 
-export default class SideMenu extends React.Component<IProps, IState>
+class SideMenu extends React.Component<IProps, IState>
 {
 	public static contextType = AppContext;
 	public static defaultProps = {};
@@ -37,17 +59,17 @@ export default class SideMenu extends React.Component<IProps, IState>
 
 	public render(): React.ReactNode
 	{
-		const tools: React.ReactNode[] = [
-			<FileTool key="fileTool" icon={<Description color="secondary" />} paletteManager={this.props.paletteManager} />,
-			<BrushTool key="brushTool" icon={<Brush color="secondary" />} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />,
-			<EraserTool key="eraserTool" icon={<Delete color="secondary" />} />,
-			<SettingsTool key="settingsTool" icon={<Settings color="secondary" />} />
+		const toolDataset: ToolData[] = [
+			new ToolData("fileTool", "File", <Description color="secondary" />, (key, name, icon) => <FileTool key={key} name={name} icon={icon} paletteManager={this.props.paletteManager} />),
+			new ToolData("brushTool", "Brush Tool", <Brush color="secondary" />, (key, name, icon) => <BrushTool key={key} name={name} icon={icon} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />),
+			new ToolData("eraserTool", "Eraser Tool", <Delete color="secondary" />, (key, name, icon) => <EraserTool key={key} name={name} icon={icon} />),
+			new ToolData("settingsTool", "Settings", <Settings color="secondary" />, (key, name, icon) => <SettingsTool key={key} name={name} icon={icon} />)
 		];
-		const toolButtons: React.ReactNode[] = tools.map((tool: React.ReactNode) => this.renderToolButton(tool));
-		const activeTool: React.ReactNode = tools.find((tool: React.ReactNode) => this.state.activeToolKey === (tool as JSX.Element).key);
+		const toolButtons: React.ReactNode[] = toolDataset.map((toolData: ToolData) => this.renderToolButton(toolData));
+		const activeTool: React.ReactNode = toolDataset.find((toolData: ToolData) => this.state.activeToolKey === toolData.key)?.tool;
 
 		return (
-			<Box className="SideMenu" bgcolor="primary.dark">
+			<Box className={`${this.props.classes.root} SideMenu`} bgcolor="primary.dark">
 				<Box className="ToolButtons">
 					{toolButtons}
 				</Box>
@@ -56,18 +78,30 @@ export default class SideMenu extends React.Component<IProps, IState>
 		)
 	}
 
-	public renderToolButton(tool: React.ReactNode): React.ReactNode
+	public renderToolButton(toolData: ToolData): React.ReactNode
 	{
-		const toolElement: JSX.Element = (tool as JSX.Element);
-		const toolProps: IToolProps = (toolElement.props as IToolProps);
-		const key: string = toolElement.key as string;
-		const name: string = toolProps.name;
-		const icon: React.ReactNode = toolProps.icon;
-
 		return (
-			<ToolButton key={`${key}Button`} text={name} isActive={this.state.activeToolKey === key} onClick={() => this.setState({activeToolKey: key})}>
-				{icon}
+			<ToolButton key={`${toolData.key}Button`} text={toolData.name} isActive={this.state.activeToolKey === toolData.key} onClick={() => this.setState({activeToolKey: toolData.key})}>
+				{toolData.icon}
 			</ToolButton>
 		);
 	}
 }
+
+export class ToolData
+{
+	key: string;
+	name: string;
+	icon: React.ReactNode;
+	tool: React.ReactNode;
+
+	public constructor(key: string, name: string, icon: React.ReactNode, renderTool: (key: string, name: string, icon: React.ReactNode) => React.ReactNode)
+	{
+		this.key = key;
+		this.name = name;
+		this.icon = icon;
+		this.tool = renderTool(key, name, icon);
+	}
+}
+
+export default withStyles(styles)(SideMenu);

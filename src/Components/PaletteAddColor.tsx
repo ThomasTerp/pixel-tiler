@@ -1,17 +1,48 @@
 import React from "react";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
-import {Tooltip} from "@material-ui/core";
-import "./PaletteAddColor.scss";
+import {Tooltip, Box, WithStyles, createStyles, withStyles} from "@material-ui/core";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		position: "relative",
+		left: "2px",
+		top: "2px",
+		width: "calc(100% - 4px)",
+		height: "0px",
+		padding: "0px",
+		paddingTop: "calc(100% - 8px)",
+		margin: "0px",
+		marginBottom: "4px",
+		border: "2px solid",
+		cursor: "pointer",
+		backgroundColor: "var(--theme-primary-dark)",
+		borderColor: "var(--theme-secondary-main)",
+
+		"& div": {
+			display: "flex",
+			position: "absolute",
+			top: "0px",
+			right: "0px",
+			bottom: "0px",
+			left: "0px",
+			justifyContent: "center",
+			alignItems: "center",
+			fontSize: "31px",
+			color: "var(--theme-secondary-main)"
+		}
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
+{
 	paletteManager: PaletteManager;
 	text: string;
 }
 
 export interface IState {}
 
-export default abstract class PaletteAddColor extends React.Component<IProps, IState>
+class PaletteAddColor extends React.Component<IProps, IState>
 {
 	static contextType = AppContext;
 	static defaultProps = {
@@ -30,10 +61,10 @@ export default abstract class PaletteAddColor extends React.Component<IProps, IS
 	{
 		return (
 			<Tooltip title={this.props.text} enterDelay={PaletteAddColor.tooltipEnterDelay}>
-				<button className="PaletteAddColor" onClick={this._paletteAddColor_OnClick_AddColor}>
-					<div>
+				<button className={`${this.props.classes.root} PaletteAddColor`} onClick={this._paletteAddColor_OnClick_AddColor}>
+					<Box>
 						+
-					</div>
+					</Box>
 				</button>
 			</Tooltip>
 		)
@@ -45,3 +76,5 @@ export default abstract class PaletteAddColor extends React.Component<IProps, IS
 	}
 
 }
+
+export default withStyles(styles)(PaletteAddColor);

@@ -1,10 +1,44 @@
 import React from "react";
 import AppContext from "../AppContext";
-import {Box, ButtonBase, Tooltip} from "@material-ui/core";
+import {Box, ButtonBase, Tooltip, createStyles, withStyles, WithStyles} from "@material-ui/core";
 import {conditionalClass} from "../util";
-import "./ToolButton.scss";
 
-export interface IProps {
+const styles = () => createStyles({
+	root: {
+		paddingTop: "100% !important",
+
+		"&.Active": {
+			border: "2px solid",
+			borderColor: "var(--theme-secondary-main)",
+
+			"&:hover": {
+				borderColor: "var(--theme-secondary-main)",
+			}
+		},
+
+		"&:hover": {
+			border: "2px solid var(--theme-secondary-dark)",
+		},
+
+		"& div": {
+			display: "flex",
+			position: "absolute",
+			top: "0px",
+			right: "0px",
+			bottom: "0px",
+			left: "0px",
+			justifyContent: "center",
+			alignItems: "center",
+			backgroundColor: "var(--theme-primary-main)",
+
+			"&:hover": {
+				backgroundColor: "var(--theme-primary-dark)"
+			}
+		}
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles> {
 	children: React.ReactNode;
 	text: string;
 	isActive: boolean;
@@ -13,10 +47,12 @@ export interface IProps {
 
 export interface IState {}
 
-export default class ToolButton extends React.Component<IProps, IState>
+class ToolButton extends React.Component<IProps, IState>
 {
 	static contextType = AppContext;
-	static defaultProps = {}
+	/*static propTypes = {
+		classes: PropTypes.object.isRequired
+	}*/
 	static tooltipEnterDelay = 700;
 
 	public constructor(props: IProps)
@@ -30,7 +66,7 @@ export default class ToolButton extends React.Component<IProps, IState>
 	{
 		return (
 			<Tooltip title={this.props.text} enterDelay={ToolButton.tooltipEnterDelay}>
-				<ButtonBase className={`ToolButton ${conditionalClass("Active", this.props.isActive)}`} onClick={this.props.onClick}>
+				<ButtonBase className={`${this.props.classes.root} ToolButton ${conditionalClass("Active", this.props.isActive)}`} onClick={this.props.onClick}>
 					<Box>
 						{this.props.children}
 					</Box>
@@ -39,3 +75,5 @@ export default class ToolButton extends React.Component<IProps, IState>
 		)
 	}
 }
+
+export default withStyles(styles)(ToolButton);

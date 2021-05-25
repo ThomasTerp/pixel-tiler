@@ -1,20 +1,19 @@
-import Tool, {IProps as IToolProps, IState as IToolState} from "./Tool";
+import React from "react";
 import Palette from "../Palette";
 import PaletteManager from "../../PaletteManager";
+import ToolBox from "./ToolBox";
 
-export interface IProps extends IToolProps
+export interface IProps
 {
+	name: string;
+	icon: React.ReactNode;
 	paletteManager: PaletteManager;
 }
 
-export interface IState extends IToolState {}
+export interface IState {}
 
-export default class FileTool extends Tool<IProps, IState>
+export default class FileTool extends React.Component<IProps, IState>
 {
-	public static defaultProps = {
-		name: "File"
-	};
-
 	public constructor(props: IProps)
 	{
 		super(props);
@@ -22,12 +21,12 @@ export default class FileTool extends Tool<IProps, IState>
 		this.state = {};
 	}
 
-	public renderProperties(): React.ReactNode
+	public render(): React.ReactNode
 	{
 		return (
-			<div className="Properties">
+			<ToolBox name={this.props.name} icon={this.props.icon}>
 				<Palette paletteManager={this.props.paletteManager} isEditable={true} isSelectable={false} />
-			</div>
+			</ToolBox>
 		);
 	}
 }
