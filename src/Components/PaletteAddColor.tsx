@@ -1,7 +1,7 @@
 import React from "react";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
-import {Tooltip, Box, WithStyles, createStyles, withStyles} from "@material-ui/core";
+import {Tooltip, ButtonBase, WithStyles, createStyles, withStyles} from "@material-ui/core";
 
 const styles = () => createStyles({
 	root: {
@@ -18,6 +18,10 @@ const styles = () => createStyles({
 		cursor: "pointer",
 		backgroundColor: "var(--theme-primary-dark)",
 		borderColor: "var(--theme-secondary-main)",
+
+		"&:hover": {
+			backgroundColor: "var(--theme-primary-main)"
+		},
 
 		"& div": {
 			display: "flex",
@@ -61,11 +65,11 @@ class PaletteAddColor extends React.Component<IProps, IState>
 	{
 		return (
 			<Tooltip title={this.props.text} enterDelay={PaletteAddColor.tooltipEnterDelay}>
-				<button className={`${this.props.classes.root} PaletteAddColor`} onClick={this._paletteAddColor_OnClick_AddColor}>
-					<Box>
+				<ButtonBase className={`${this.props.classes.root} PaletteAddColor`} onClick={this._paletteAddColor_OnClick_AddColor}>
+					<div>
 						+
-					</Box>
-				</button>
+					</div>
+				</ButtonBase>
 			</Tooltip>
 		)
 	}
