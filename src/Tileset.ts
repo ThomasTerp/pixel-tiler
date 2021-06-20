@@ -1,29 +1,13 @@
-
-export type RenderTileFunction = (color: string) => React.ReactNode;
-
-export type TileRenderer = {
-	tileID: string,
-	renderTile: RenderTileFunction
-}
+import TileType from "./TileType";
 
 export default class Tileset
 {
-	name: string;
-	_tiles: TileRenderer[];
+	public name: string;
+	public tileTypes: TileType[];
 
-	get tiles()
-	{
-		return this._tiles;
-	}
-
-	constructor(name: string, tiles: TileRenderer[])
+	constructor(name: string, tileTypes: TileType[])
 	{
 		this.name = name;
-		this._tiles = tiles;
-	}
-
-	getByTileID(): TileRenderer | undefined
-	{
-		return this.tiles.find((tile: TileRenderer) => tile.tileID);
+		this.tileTypes = tileTypes;
 	}
 }

@@ -64,7 +64,7 @@ class App extends React.Component<IProps, IState>
 	{
 		return (
 			<Box className="Content">
-				<Grid />
+				<Grid tileManager={this.state.tileManager} />
 			</Box>
 		);
 	}

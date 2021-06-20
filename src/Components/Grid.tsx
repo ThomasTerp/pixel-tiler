@@ -1,11 +1,11 @@
 import React from "react";
 import $ from "jquery";
-import Tile from "./Tile";
 import GridTiles from "./GridTiles";
 import AppContext from "../AppContext";
 import Vector2D from "../Vector2D";
 import {WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {generateUniqueID, clamp} from "../util";
+import TileManager from "../TileManager";
 
 const styles = () => createStyles({
 	root: {
@@ -24,6 +24,7 @@ export interface IProps extends WithStyles<typeof styles>
 	zoomMaximum: number,
 	gridSizeMinimum: number;
 	gridSizeMaximum: number;
+	tileManager: TileManager;
 }
 
 export interface IState
@@ -33,7 +34,6 @@ export interface IState
 	zoom: number;
 	offset: Vector2D;
 	size: Vector2D;
-	tiles: React.ReactNode[];
 	color1: string;
 	color2: string;
 }
@@ -71,7 +71,6 @@ class Grid extends React.Component<IProps, IState>
 			zoom: 1,
 			offset: new Vector2D(0, 0),
 			size: windowSize,
-			tiles: [],
 			color1: "#202124",
 			color2: "#303136"
 		};
@@ -90,7 +89,7 @@ class Grid extends React.Component<IProps, IState>
 			<svg className={`${this.props.classes.root} Grid`} ref={this._svg} xmlns="http://www.w3.org/2000/svg" width={`${this.state.size.x}px`} height={`${this.state.size.y}px`} viewBox={`${-offset.x},${-offset.y} ${size.x},${size.y}`} onMouseDown={this._svg_OnMouseDown_StartDragging} onMouseMove={this._svg_OnMouseMove_Drag}>
 				{this.renderDefs()}
 				{this.renderGrid(offset, size)}
-				<GridTiles tiles={this.state.tiles} />
+				<GridTiles tileManager={this.props.tileManager} />
 			</svg>
 		);
 	}
@@ -292,17 +291,6 @@ class Grid extends React.Component<IProps, IState>
 		this.setState({
 			size: new Vector2D($window.width()!, $window.height()!)
 		});
-	}
-
-	placeTile(svg: React.ReactNode, position: Vector2D, size: number, rotation: number, color: string, colorIndex: number): React.ReactNode
-	{
-		const tileNode: React.ReactNode = <Tile key={this._tileKey++} id={"tile1"} svg={svg} position={position} size={size} rotation={rotation} color={color} colorIndex={colorIndex} />;
-
-		this.setState({
-			tiles: this.state.tiles.concat(tileNode)
-		});
-
-		return tileNode;
 	}
 
 	/*

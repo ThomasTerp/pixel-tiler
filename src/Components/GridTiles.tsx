@@ -1,8 +1,10 @@
 import React from "react";
 import AppContext from "../AppContext";
+import TileManager from "../TileManager";
 
-export interface IProps {
-	tiles: React.ReactNode[]
+export interface IProps
+{
+	tileManager: TileManager;
 }
 
 export interface IState {}
@@ -16,16 +18,14 @@ export default class GridTiles extends React.Component<IProps, IState>
 	{
 		super(props);
 
-		this.state = {
-
-		};
+		this.state = {};
 	}
 
 	public render(): React.ReactNode
 	{
 		return (
 			<g className="GridTiles">
-				{this.props.tiles}
+				{this.props.tileManager.placedTiles}
 			</g>
 		)
 	}

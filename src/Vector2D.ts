@@ -1,6 +1,12 @@
 
 export default class Vector2D
 {
+	static zero = new Vector2D(0, 0);
+	static up = new Vector2D(0, 1);
+	static right = new Vector2D(1, 0);
+	static bottom = new Vector2D(0, -1);
+	static left = new Vector2D(-1, 0);
+
 	x: number;
 	y: number;
 
