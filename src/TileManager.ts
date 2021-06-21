@@ -29,19 +29,69 @@ export class TileErasedEvent extends Event
 	}
 }
 
+export class SelectedTilesetChangedEvent extends Event
+{
+	tileset: Tileset;
+
+	constructor(tileset: Tileset)
+	{
+		super();
+
+		this.tileset = tileset;
+	}
+}
+
+export class SelectedTileTypeChangedEvent extends Event
+{
+	tileType: TileType;
+
+	constructor(tileType: TileType)
+	{
+		super();
+
+		this.tileType = tileType;
+	}
+}
+
 export default class TileManager
 {
 	public tilesets: Tileset[];
 	public placedTiles: TileData[] = [];
 	public tilePlacedEmitter: Emitter<TilePlacedEvent> = new Emitter<TilePlacedEvent>();
 	public tileErasedEmitter: Emitter<TileErasedEvent> = new Emitter<TileErasedEvent>();
+	public selectedTilesetChangedEmitter: Emitter<SelectedTilesetChangedEvent> = new Emitter<SelectedTilesetChangedEvent>();
+	public selectedTileTypeChangedEmitter: Emitter<SelectedTileTypeChangedEvent> = new Emitter<SelectedTileTypeChangedEvent>();
+	private _selectedTileset: Tileset;
 	private _selectedTileType: TileType;
 	private _currentTileID: number = 0;
+
+	set selectedTileset(value: Tileset)
+	{
+		const selectedTilesetChangedEvent = this.selectedTilesetChangedEmitter.emit(new SelectedTilesetChangedEvent(value));
+		this._selectedTileset = selectedTilesetChangedEvent.tileset;
+	}
+
+	get selectedTileset(): Tileset
+	{
+		return this._selectedTileset;
+	}
+
+	set selectedTileType(value: TileType)
+	{
+		const selectedTileTypeChangedEvent = this.selectedTileTypeChangedEmitter.emit(new SelectedTileTypeChangedEvent(value));
+		this._selectedTileType = selectedTileTypeChangedEvent.tileType;
+	}
+
+	get selectedTileType(): TileType
+	{
+		return this._selectedTileType;
+	}
 
 	constructor(tilesets: Tileset[])
 	{
 		this.tilesets = tilesets;
-		this._selectedTileType = this.tilesets[0].tileTypes[0];
+		this._selectedTileset = tilesets[0];
+		this._selectedTileType = this.selectedTileset.tileTypes[0];
 	}
 
 	placeTile(tileData: TileData): number
