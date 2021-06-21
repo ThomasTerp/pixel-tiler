@@ -3,12 +3,31 @@ import Palette from "../Palette";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../../PaletteManager";
 import TileManager from "../../TileManager";
 import ToolBox from "./ToolBox";
-import {Box} from "@material-ui/core";
+import {Box, ButtonBase, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import TileType from "../../TileType";
 import TileData from "../../TileData";
 import Vector2D from "../../Vector2D";
 
-export interface IProps
+const styles = () => createStyles({
+	tileTypes: {
+		display: "grid",
+		gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+		gridGap: "2px",
+		margin: "2px",
+
+		"& > .TileType": {
+			boxSizing: "border-box",
+			width: "100%",
+			padding: "2px",
+
+			"&.Active": {
+				backgroundColor: "var(--theme-secondary-main)"
+			}
+		}
+	}
+});
+
+export interface IProps extends WithStyles<typeof styles>
 {
 	name: string;
 	icon: React.ReactNode;
@@ -16,20 +35,15 @@ export interface IProps
 	tileManager: TileManager;
 }
 
-export interface IState
-{
-	selectedTilesetID: number;
-}
+export interface IState {}
 
-export default class BrushTool extends React.Component<IProps, IState>
+class BrushTool extends React.Component<IProps, IState>
 {
 	public constructor(props: IProps)
 	{
 		super(props);
 
-		this.state = {
-			selectedTilesetID: 0
-		};
+		this.state = {};
 	}
 
 	public render(): React.ReactNode
@@ -37,11 +51,22 @@ export default class BrushTool extends React.Component<IProps, IState>
 		return (
 			<ToolBox name={this.props.name} icon={this.props.icon}>
 				<Palette paletteManager={this.props.paletteManager} />
-				<Box>
-					{this.props.tileManager.tilesets[this.state.selectedTilesetID].tileTypes.map((tileType: TileType) => <svg key={tileType.id} xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1,1">{tileType.buildSVG(new TileData(tileType, Vector2D.zero, 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}</svg>)}
+				<Box className={`${this.props.classes.tileTypes} TileTypes`}>
+					{this.renderTileTypes()}
 				</Box>
 			</ToolBox>
 		);
+	}
+
+	public renderTileTypes(): React.ReactNode
+	{
+		return this.props.tileManager.selectedTileset.tileTypes.map((tileType: TileType) => (
+			<ButtonBase key={tileType.id} className="TileType">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1,1">
+					{tileType.buildSVG(new TileData(tileType, Vector2D.zero, 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}
+				</svg>
+			</ButtonBase>
+		));
 	}
 
 	public componentDidMount(): void
@@ -66,3 +91,5 @@ export default class BrushTool extends React.Component<IProps, IState>
 		this.forceUpdate();
 	}
 }
+
+export default withStyles(styles)(BrushTool);
