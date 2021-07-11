@@ -1,7 +1,7 @@
 import React from "react";
 import Palette from "../Palette";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../../PaletteManager";
-import TileManager from "../../TileManager";
+import TileManager, {SelectedTilesetChangedEvent, SelectedTileTypeChangedEvent} from "../../TileManager";
 import ToolBox from "./ToolBox";
 import {Box, ButtonBase, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import TileType from "../../TileType";
@@ -66,7 +66,7 @@ class BrushTool extends React.Component<IProps, IState>
 	public renderTileTypes(): React.ReactNode
 	{
 		return this.props.tileManager.selectedTileset.tileTypes.map((tileType: TileType) => (
-			<ButtonBase key={tileType.id} className={`TileType ${conditionalClass("Active", this.props.tileManager.selectedTileType === tileType)}`}>
+			<ButtonBase key={tileType.id} className={`TileType ${conditionalClass("Active", this.props.tileManager.selectedTileType === tileType)}`} onClick={() => this.props.tileManager.selectedTileType = tileType}>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1,1">
 					{tileType.buildSVG(new TileData(tileType, Vector2D.zero, 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}
 				</svg>
@@ -78,12 +78,16 @@ class BrushTool extends React.Component<IProps, IState>
 	{
 		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 		this.props.paletteManager.selectedColorIDChangeEmitter.on(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.tileManager.selectedTilesetChangedEmitter.on(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
+		this.props.tileManager.selectedTileTypeChangedEmitter.on(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
 	}
 
 	public componentWillUnmount(): void
 	{
 		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 		this.props.paletteManager.selectedColorIDChangeEmitter.off(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.tileManager.selectedTilesetChangedEmitter.off(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
+		this.props.tileManager.selectedTileTypeChangedEmitter.off(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
 	}
 
 	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
@@ -92,6 +96,16 @@ class BrushTool extends React.Component<IProps, IState>
 	}
 
 	_paletteManager_SelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
+	{
+		this.forceUpdate();
+	}
+
+	_tileManager_SelectedTilesetChangedEmitter_ForceUpdate = (event: SelectedTilesetChangedEvent) =>
+	{
+		this.forceUpdate();
+	}
+
+	_tileManager_SelectedTileTypeChangedEmitter_ForceUpdate = (event: SelectedTileTypeChangedEvent) =>
 	{
 		this.forceUpdate();
 	}
