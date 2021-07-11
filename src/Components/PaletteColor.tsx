@@ -12,29 +12,33 @@ const styles = () => createStyles({
 		margin: "0px",
 
 		"&.Selectable": {
+			"&:hover": {
+				backgroundColor: "var(--theme-secondary-dark)"
+			},
+
 			"&.Active": {
-				backgroundColor: "var(--theme-secondary-main)",
+				backgroundColor: "var(--theme-secondary-main)"
 			},
 
 			"& > div > button > input": {
-				cursor: "pointer",
+				cursor: "pointer"
 			}
 		},
 
 		"&.Editable > div > button > input": {
-			cursor: "pointer",
+			cursor: "pointer"
 		},
 
 		"& > div": {
-			width: "calc(100%)",
+			width: "100%",
 
 			"& > button": {
 				position: "relative",
 				left: "0px",
-				width: "calc(100%)",
+				width: "100%",
 
 				"& > input": {
-					width: "calc(100%)",
+					width: "100%",
 					height: "4px",
 					margin: "0px",
 					padding: "calc(100% - 8px) 0px 0px 0px",

@@ -7,6 +7,7 @@ import {Box, ButtonBase, WithStyles, createStyles, withStyles} from "@material-u
 import TileType from "../../TileType";
 import TileData from "../../TileData";
 import Vector2D from "../../Vector2D";
+import {conditionalClass} from "../../util";
 
 const styles = () => createStyles({
 	tileTypes: {
@@ -19,6 +20,10 @@ const styles = () => createStyles({
 			boxSizing: "border-box",
 			width: "100%",
 			padding: "2px",
+
+			"&:hover": {
+				backgroundColor: "var(--theme-secondary-dark)"
+			},
 
 			"&.Active": {
 				backgroundColor: "var(--theme-secondary-main)"
@@ -61,7 +66,7 @@ class BrushTool extends React.Component<IProps, IState>
 	public renderTileTypes(): React.ReactNode
 	{
 		return this.props.tileManager.selectedTileset.tileTypes.map((tileType: TileType) => (
-			<ButtonBase key={tileType.id} className="TileType">
+			<ButtonBase key={tileType.id} className={`TileType ${conditionalClass("Active", this.props.tileManager.selectedTileType === tileType)}`}>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1,1">
 					{tileType.buildSVG(new TileData(tileType, Vector2D.zero, 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}
 				</svg>
