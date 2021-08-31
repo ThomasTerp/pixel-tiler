@@ -53,6 +53,30 @@ export class SelectedTileTypeChangedEvent extends Event
 	}
 }
 
+export class SelectedRotationChangedEvent extends Event
+{
+	rotation: number;
+
+	constructor(rotation: number)
+	{
+		super();
+
+		this.rotation = rotation;
+	}
+}
+
+export class SelectedSizeChangedEvent extends Event
+{
+	size: number;
+
+	constructor(size: number)
+	{
+		super();
+
+		this.size = size;
+	}
+}
+
 export default class TileManager
 {
 	public tilesets: Tileset[];
@@ -61,8 +85,12 @@ export default class TileManager
 	public tileErasedEmitter: Emitter<TileErasedEvent> = new Emitter<TileErasedEvent>();
 	public selectedTilesetChangedEmitter: Emitter<SelectedTilesetChangedEvent> = new Emitter<SelectedTilesetChangedEvent>();
 	public selectedTileTypeChangedEmitter: Emitter<SelectedTileTypeChangedEvent> = new Emitter<SelectedTileTypeChangedEvent>();
+	public selectedRotationChangedEmitter: Emitter<SelectedRotationChangedEvent> = new Emitter<SelectedRotationChangedEvent>();
+	public selectedSizeChangedEmitter: Emitter<SelectedSizeChangedEvent> = new Emitter<SelectedSizeChangedEvent>();
 	private _selectedTileset: Tileset;
 	private _selectedTileType: TileType;
+	private _selectedRotation: number = 0;
+	private _selectedSize: number = 32;
 	private _currentTileID: number = 0;
 
 	set selectedTileset(value: Tileset)
@@ -85,6 +113,28 @@ export default class TileManager
 	get selectedTileType(): TileType
 	{
 		return this._selectedTileType;
+	}
+
+	set rotation(value: number)
+	{
+		const selectedRotationChangedEvent = this.selectedRotationChangedEmitter.emit(new SelectedRotationChangedEvent(value));
+		this._selectedRotation = selectedRotationChangedEvent.rotation;
+	}
+
+	get rotation(): number
+	{
+		return this._selectedRotation;
+	}
+
+	set size(value: number)
+	{
+		const selectedSizeChangedEvent = this.selectedSizeChangedEmitter.emit(new SelectedSizeChangedEvent(value));
+		this._selectedSize = selectedSizeChangedEvent.size;
+	}
+
+	get size(): number
+	{
+		return this._selectedSize;
 	}
 
 	constructor(tilesets: Tileset[])

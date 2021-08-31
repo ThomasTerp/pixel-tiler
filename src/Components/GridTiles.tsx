@@ -1,6 +1,7 @@
 import React from "react";
 import AppContext from "../AppContext";
 import TileManager from "../TileManager";
+import Tile from "./Tile"
 
 export interface IProps
 {
@@ -25,7 +26,7 @@ export default class GridTiles extends React.Component<IProps, IState>
 	{
 		return (
 			<g className="GridTiles">
-				{this.props.tileManager.placedTiles}
+				{this.props.tileManager.placedTiles.map((tileData, tileDataID) => <Tile key={tileDataID} tileData={tileData} />)}
 			</g>
 		)
 	}

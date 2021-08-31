@@ -5,7 +5,7 @@ import AppContext from "../AppContext";
 import Vector2D from "../Vector2D";
 import {WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {generateUniqueID, clamp} from "../util";
-import TileManager from "../TileManager";
+import TileManager, {TilePlacedEvent, TileErasedEvent} from "../TileManager";
 
 const styles = () => createStyles({
 	root: {
@@ -56,7 +56,6 @@ class Grid extends React.Component<IProps, IState>
 	private _isDragging: boolean = false;
 	private _dragCursorOffset: Vector2D = new Vector2D(0, 0);
 	private _dragOffset: Vector2D = new Vector2D(0, 0);
-	private _tileKey: number = 0;
 
 	public constructor(props: IProps)
 	{
@@ -76,8 +75,6 @@ class Grid extends React.Component<IProps, IState>
 		};
 
 		this._svg = React.createRef();
-
-		(window as any).$1 = this;
 	}
 
 	public render(): React.ReactNode
@@ -126,10 +123,12 @@ class Grid extends React.Component<IProps, IState>
 		const $window: JQuery<Window> = $(window);
 		const $svg: JQuery<SVGSVGElement> = $(this._svg.current!);
 
-		$document.on("mouseup", this._document_OnMouseUp_StopDragging);
-		$document.on("keydown", this._document_OnKeyDown_Hotkeys);
+		this.props.tileManager.tilePlacedEmitter.on(this._tileManager_TilePlacedEmitter_ForceUpdate);
+		this.props.tileManager.tileErasedEmitter.on(this._tileManager_TileErasedEmitter_ForceUpdate);
+		$document.on("mouseup", this._document_MouseUp_StopDragging);
+		$document.on("keydown", this._document_KeyDown_Hotkeys);
 		$window.on("resize", this._window_Resize_SetSize);
-		$svg.on("mousewheel", this._svg_OnMouseWheel_Zoom);
+		$svg.on("mousewheel", this._svg_MouseWheel_Zoom);
 	}
 
 	public componentWillUnmount(): void
@@ -138,10 +137,12 @@ class Grid extends React.Component<IProps, IState>
 		const $window: JQuery<Window> = $(window);
 		const $svg: JQuery<SVGSVGElement> = $(this._svg.current!);
 
-		$document.off("mouseup", this._document_OnMouseUp_StopDragging);
-		$document.off("keydown", this._document_OnKeyDown_Hotkeys);
+		this.props.tileManager.tilePlacedEmitter.off(this._tileManager_TilePlacedEmitter_ForceUpdate);
+		this.props.tileManager.tileErasedEmitter.off(this._tileManager_TileErasedEmitter_ForceUpdate);
+		$document.off("mouseup", this._document_MouseUp_StopDragging);
+		$document.off("keydown", this._document_KeyDown_Hotkeys);
 		$window.off("resize", this._window_Resize_SetSize);
-		$svg.off("mousewheel", this._svg_OnMouseWheel_Zoom);
+		$svg.off("mousewheel", this._svg_MouseWheel_Zoom);
 	}
 
 	public addZoom(zoomAdd: number): void
@@ -164,7 +165,17 @@ class Grid extends React.Component<IProps, IState>
 		return gridPosition.copy().multiply(this.state.gridSize);
 	}
 
-	private _svg_OnMouseWheel_Zoom = (event: any) =>
+	_tileManager_TilePlacedEmitter_ForceUpdate = (event: TilePlacedEvent) =>
+	{
+		this.forceUpdate();
+	}
+
+	_tileManager_TileErasedEmitter_ForceUpdate = (event: TileErasedEvent) =>
+	{
+		this.forceUpdate();
+	}
+
+	private _svg_MouseWheel_Zoom = (event: any) =>
 	{
 		if(event.ctrlKey)
 		{
@@ -189,22 +200,19 @@ class Grid extends React.Component<IProps, IState>
 
 	private _svg_OnMouseDown_StartDragging = (event: React.MouseEvent) =>
 	{
-		switch(event.button)
+		if(event.button === 1)
 		{
-			case 1:
-				this._dragOffset.x = this.state.offset.x;
-				this._dragOffset.y = this.state.offset.y;
-				this._dragCursorOffset.x = event.nativeEvent.offsetX;
-				this._dragCursorOffset.y = event.nativeEvent.offsetY;
-				this._isDragging = true;
+			this._dragOffset.x = this.state.offset.x;
+			this._dragOffset.y = this.state.offset.y;
+			this._dragCursorOffset.x = event.nativeEvent.offsetX;
+			this._dragCursorOffset.y = event.nativeEvent.offsetY;
+			this._isDragging = true;
 
-				event.preventDefault();
-
-				break;
+			event.preventDefault();
 		}
 	}
 
-	private _document_OnMouseUp_StopDragging = (event: JQuery.MouseUpEvent) =>
+	private _document_MouseUp_StopDragging = (event: JQuery.MouseUpEvent) =>
 	{
 		this._isDragging = false;
 	}
@@ -222,7 +230,7 @@ class Grid extends React.Component<IProps, IState>
 		}
 	}
 
-	private _document_OnKeyDown_Hotkeys = (event: JQuery.KeyDownEvent) =>
+	private _document_KeyDown_Hotkeys = (event: JQuery.KeyDownEvent) =>
 	{
 		switch(event.key)
 		{

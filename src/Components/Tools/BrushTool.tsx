@@ -1,4 +1,5 @@
 import React from "react";
+import $ from "jquery";
 import Palette from "../Palette";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../../PaletteManager";
 import TileManager, {SelectedTilesetChangedEvent, SelectedTileTypeChangedEvent} from "../../TileManager";
@@ -44,6 +45,8 @@ export interface IState {}
 
 class BrushTool extends React.Component<IProps, IState>
 {
+	private _isDrawing: boolean = false;
+
 	public constructor(props: IProps)
 	{
 		super(props);
@@ -76,18 +79,28 @@ class BrushTool extends React.Component<IProps, IState>
 
 	public componentDidMount(): void
 	{
+		const $grid = $(".Grid");
+
 		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 		this.props.paletteManager.selectedColorIDChangeEmitter.on(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
 		this.props.tileManager.selectedTilesetChangedEmitter.on(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
 		this.props.tileManager.selectedTileTypeChangedEmitter.on(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
+		$grid.on("mousedown", this._grid_MouseDown_StartDrawing);
+		$grid.on("mouseup", this._grid_MouseUp_StopDrawing);
+		$grid.on("mousemove", this._grid_MouseMove_Draw);
 	}
 
 	public componentWillUnmount(): void
 	{
+		const $grid = $(".Grid");
+
 		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
 		this.props.paletteManager.selectedColorIDChangeEmitter.off(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
 		this.props.tileManager.selectedTilesetChangedEmitter.off(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
 		this.props.tileManager.selectedTileTypeChangedEmitter.off(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
+		$grid.off("mousedown", this._grid_MouseDown_StartDrawing);
+		$grid.off("mouseup", this._grid_MouseUp_StopDrawing);
+		$grid.off("mousemove", this._grid_MouseMove_Draw);
 	}
 
 	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
@@ -108,6 +121,30 @@ class BrushTool extends React.Component<IProps, IState>
 	_tileManager_SelectedTileTypeChangedEmitter_ForceUpdate = (event: SelectedTileTypeChangedEvent) =>
 	{
 		this.forceUpdate();
+	}
+
+	_grid_MouseDown_StartDrawing = (event: JQuery.MouseDownEvent) =>
+	{
+		if(!this._isDrawing && event.button === 0)
+		{
+			this._isDrawing = true;
+		}
+	}
+
+	_grid_MouseUp_StopDrawing = (event: JQuery.MouseUpEvent) =>
+	{
+		if(this._isDrawing && event.button === 0)
+		{
+			this._isDrawing = false;
+		}
+	}
+
+	_grid_MouseMove_Draw = (event: JQuery.MouseMoveEvent) =>
+	{
+		if(this._isDrawing)
+		{
+			this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, new Vector2D(event.offsetX, event.offsetY), this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
+		}
 	}
 }
 
