@@ -88,6 +88,14 @@ export default class Vector2D
 		return this;
 	}
 
+	mapAxes(callback: (axis: number) => number): Vector2D
+	{
+		this.x = callback(this.x);
+		this.y = callback(this.y);
+
+		return this;
+	}
+
 	equal(other: Vector2D): boolean
 	{
 		return this.x === other.x && this.y === other.y;
