@@ -77,6 +77,14 @@ class BrushTool extends React.Component<IProps, IState>
 		));
 	}
 
+	public draw(cursorPosition: Vector2D): number
+	{
+		const position: Vector2D = cursorPosition.copy()
+			.divide(this.props.tileManager.size)
+
+		return this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, position, this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
+	}
+
 	public componentDidMount(): void
 	{
 		const $grid = $(".Grid");
@@ -143,7 +151,7 @@ class BrushTool extends React.Component<IProps, IState>
 	{
 		if(this._isDrawing)
 		{
-			this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, new Vector2D(event.offsetX, event.offsetY), this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
+			this.draw(new Vector2D(event.offsetX, event.offsetY));
 		}
 	}
 }
