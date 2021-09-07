@@ -31,9 +31,12 @@ export interface IState
 {
 	uniqueID: string;
 	gridSize: number;
+	//TODO: Let other classes access this
 	zoom: number;
+	//TODO: Let other classes access this
 	offset: Vector2D;
 	size: Vector2D;
+	//TODO: Use theme
 	color1: string;
 	color2: string;
 }
