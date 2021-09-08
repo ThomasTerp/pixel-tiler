@@ -88,6 +88,14 @@ export default class Vector2D
 		return this;
 	}
 
+	negate()
+	{
+		this.x = -this.x;
+		this.y = -this.y;
+
+		return this;
+	}
+
 	mapAxes(callback: (axis: number) => number): Vector2D
 	{
 		this.x = callback(this.x);

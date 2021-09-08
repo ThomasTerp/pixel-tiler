@@ -3,11 +3,13 @@ import $ from "jquery";
 import SideMenu from "./SideMenu";
 import Grid from "./Grid";
 import Tileset from "../Tileset";
-import PaletteManager from "../PaletteManager";
 import AppContext, {IAppContext} from "../AppContext";
 import {ThemeProvider} from "@material-ui/styles";
 import {Box, Theme, WithStyles, createStyles, withStyles} from "@material-ui/core";
+import PaletteManager from "../PaletteManager";
 import TileManager from "../TileManager";
+import GridInfo from "../GridInfo";
+import Vector2D from "../Vector2D";
 
 const styles = () => createStyles({
 	root: {
@@ -26,6 +28,7 @@ export interface IState
 {
 	paletteManager: PaletteManager;
 	tileManager: TileManager;
+	gridInfo: GridInfo;
 }
 
 class App extends React.Component<IProps, IState>
@@ -36,9 +39,17 @@ class App extends React.Component<IProps, IState>
 	{
 		super(props);
 
+		const $window: JQuery<Window> = $(window);
+
 		this.state = {
 			paletteManager: new PaletteManager(this.props.defaultPaletteColors),
-			tileManager: new TileManager(this.props.tilesets)
+			tileManager: new TileManager(this.props.tilesets),
+			gridInfo: {
+				gridSize: 32,
+				zoom: 1,
+				offset: Vector2D.zero.copy(),
+				size: new Vector2D($window.width()!, $window.height()!)
+			}
 		};
 
 		this._appContext = {
@@ -53,7 +64,7 @@ class App extends React.Component<IProps, IState>
 				<ThemeProvider theme={this.props.theme}>
 					<Box className={`${this.props.classes.root} App`}>
 						{this.renderContent()}
-						<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} />
+						<SideMenu paletteManager={this.state.paletteManager} tileManager={this.state.tileManager} gridInfo={this.state.gridInfo} />
 					</Box>
 				</ThemeProvider>
 			</AppContext.Provider>
@@ -64,7 +75,7 @@ class App extends React.Component<IProps, IState>
 	{
 		return (
 			<Box className="Content">
-				<Grid tileManager={this.state.tileManager} />
+				<Grid tileManager={this.state.tileManager} gridInfo={this.state.gridInfo} />
 			</Box>
 		);
 	}

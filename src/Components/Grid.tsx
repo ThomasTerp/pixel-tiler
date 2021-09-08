@@ -6,6 +6,7 @@ import Vector2D from "../Vector2D";
 import {WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {generateUniqueID, clamp} from "../util";
 import TileManager, {TilePlacedEvent, TileErasedEvent} from "../TileManager";
+import GridInfo from "../GridInfo";
 
 const styles = () => createStyles({
 	root: {
@@ -25,15 +26,14 @@ export interface IProps extends WithStyles<typeof styles>
 	gridSizeMinimum: number;
 	gridSizeMaximum: number;
 	tileManager: TileManager;
+	gridInfo: GridInfo;
 }
 
 export interface IState
 {
 	uniqueID: string;
 	gridSize: number;
-	//TODO: Let other classes access this
 	zoom: number;
-	//TODO: Let other classes access this
 	offset: Vector2D;
 	size: Vector2D;
 	//TODO: Use theme
@@ -64,15 +64,12 @@ class Grid extends React.Component<IProps, IState>
 	{
 		super(props);
 
-		const $window: JQuery<Window> = $(window);
-		const windowSize: Vector2D = new Vector2D($window.width()!,  $window.height()!);
-
 		this.state = {
 			uniqueID: generateUniqueID("grid"),
-			gridSize: 32,
-			zoom: 1,
-			offset: new Vector2D(0, 0),
-			size: windowSize,
+			gridSize: this.props.gridInfo.gridSize,
+			zoom: this.props.gridInfo.zoom,
+			offset: this.props.gridInfo.offset.copy(),
+			size: this.props.gridInfo.size.copy(),
 			color1: "#202124",
 			color2: "#303136"
 		};
@@ -146,6 +143,14 @@ class Grid extends React.Component<IProps, IState>
 		$document.off("keydown", this._document_KeyDown_Hotkeys);
 		$window.off("resize", this._window_Resize_SetSize);
 		$svg.off("mousewheel", this._svg_MouseWheel_Zoom);
+	}
+
+	public componentDidUpdate(props: IProps, state: IState): void
+	{
+		this.props.gridInfo.gridSize = state.gridSize;
+		this.props.gridInfo.offset = state.offset.copy();
+		this.props.gridInfo.zoom = state.zoom;
+		this.props.gridInfo.size = state.size;
 	}
 
 	public addZoom(zoomAdd: number): void

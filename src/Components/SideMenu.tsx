@@ -7,6 +7,7 @@ import SettingsTool from "./Tools/SettingsTool";
 import AppContext from "../AppContext";
 import PaletteManager from "../PaletteManager";
 import TileManager from "../TileManager";
+import GridInfo from "../GridInfo";
 import {Box, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import {Description, Brush, Delete, Settings} from "@material-ui/icons";
 
@@ -36,6 +37,7 @@ export interface IProps extends WithStyles<typeof styles>
 {
 	paletteManager: PaletteManager;
 	tileManager: TileManager;
+	gridInfo: GridInfo;
 }
 
 export interface IState
@@ -61,7 +63,7 @@ class SideMenu extends React.Component<IProps, IState>
 	{
 		const toolDataset: ToolData[] = [
 			new ToolData("fileTool", "File", <Description color="secondary" />, (key, name, icon) => <FileTool key={key} name={name} icon={icon} paletteManager={this.props.paletteManager} />),
-			new ToolData("brushTool", "Brush Tool", <Brush color="secondary" />, (key, name, icon) => <BrushTool key={key} name={name} icon={icon} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} />),
+			new ToolData("brushTool", "Brush Tool", <Brush color="secondary" />, (key, name, icon) => <BrushTool key={key} name={name} icon={icon} paletteManager={this.props.paletteManager} tileManager={this.props.tileManager} gridInfo={this.props.gridInfo} />),
 			new ToolData("eraserTool", "Eraser Tool", <Delete color="secondary" />, (key, name, icon) => <EraserTool key={key} name={name} icon={icon} />),
 			new ToolData("settingsTool", "Settings", <Settings color="secondary" />, (key, name, icon) => <SettingsTool key={key} name={name} icon={icon} />)
 		];

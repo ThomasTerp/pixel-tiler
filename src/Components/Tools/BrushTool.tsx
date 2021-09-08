@@ -3,6 +3,7 @@ import $ from "jquery";
 import Palette from "../Palette";
 import PaletteManager, {ColorChangeEvent, SelectedColorIDChangeEvent} from "../../PaletteManager";
 import TileManager, {SelectedTilesetChangedEvent, SelectedTileTypeChangedEvent} from "../../TileManager";
+import GridInfo from "../../GridInfo";
 import ToolBox from "./ToolBox";
 import {Box, ButtonBase, WithStyles, createStyles, withStyles} from "@material-ui/core";
 import TileType from "../../TileType";
@@ -39,6 +40,7 @@ export interface IProps extends WithStyles<typeof styles>
 	icon: React.ReactNode;
 	paletteManager: PaletteManager;
 	tileManager: TileManager;
+	gridInfo: GridInfo;
 }
 
 export interface IState {}
@@ -71,7 +73,7 @@ class BrushTool extends React.Component<IProps, IState>
 		return this.props.tileManager.selectedTileset.tileTypes.map((tileType: TileType) => (
 			<ButtonBase key={tileType.id} className={`TileType ${conditionalClass("Active", this.props.tileManager.selectedTileType === tileType)}`} onClick={() => this.props.tileManager.selectedTileType = tileType}>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0 1,1">
-					{tileType.buildSVG(new TileData(tileType, Vector2D.zero, 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}
+					{tileType.buildSVG(new TileData(tileType, Vector2D.zero.copy(), 0, 0, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID))}
 				</svg>
 			</ButtonBase>
 		));
@@ -80,7 +82,10 @@ class BrushTool extends React.Component<IProps, IState>
 	public draw(cursorPosition: Vector2D): number
 	{
 		const position: Vector2D = cursorPosition.copy()
+			.subtract(this.props.gridInfo.offset.copy())
+			.subtract(this.props.gridInfo.size.copy().divide(2))
 			.divide(this.props.tileManager.size)
+			.multiply(this.props.gridInfo.zoom)
 
 		return this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, position, this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
 	}
