@@ -1,3 +1,5 @@
+import Vector2D from "./Vector2D";
+import {makeStyles} from "@material-ui/core";
 
 export function isPowerOfTwo(x: number): boolean
 {
@@ -23,4 +25,31 @@ export function clamp(value: number, min: number, max: number): number
 export function conditionalClass(className: string, condition: boolean): string
 {
 	return condition ? className : "";
+}
+
+export function getElementsAtPosition(position: Vector2D)
+{
+	const stack: Element[] = []
+	let element: Element | null;
+
+	do
+	{
+		element = document.elementFromPoint(position.x, position.y);
+
+		if(element == null)
+		{
+			break;
+		}
+
+		stack.push(element);
+		element.classList.add("pointer-events-none");
+	}
+	while(element.tagName !== "HTML");
+
+	for(var i: number  = 0; i < stack.length; i += 1)
+	{
+		stack[i].classList.remove("pointer-events-none");
+	}
+
+	return stack;
 }
