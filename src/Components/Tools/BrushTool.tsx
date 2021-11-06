@@ -141,6 +141,7 @@ class BrushTool extends React.Component<IProps, IState>
 		if(!this._isDrawing && event.button === 0)
 		{
 			this._isDrawing = true;
+			this.draw(new Vector2D(event.offsetX, event.offsetY));
 		}
 	}
 

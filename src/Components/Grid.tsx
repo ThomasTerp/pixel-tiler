@@ -123,8 +123,8 @@ class Grid extends React.Component<IProps, IState>
 		const $window: JQuery<Window> = $(window);
 		const $svg: JQuery<SVGSVGElement> = $(this._svg.current!);
 
-		this.props.tileManager.tilePlacedEmitter.on(this._tileManager_TilePlacedEmitter_ForceUpdate);
-		this.props.tileManager.tileErasedEmitter.on(this._tileManager_TileErasedEmitter_ForceUpdate);
+		this.props.tileManager.postTilePlacedEmitter.on(this._tileManager_PostTilePlacedEmitter_ForceUpdate);
+		this.props.tileManager.postTileErasedEmitter.on(this._tileManager_PostTileErasedEmitter_ForceUpdate);
 		$document.on("mouseup", this._document_MouseUp_StopDragging);
 		$document.on("keydown", this._document_KeyDown_Hotkeys);
 		$window.on("resize", this._window_Resize_SetSize);
@@ -137,8 +137,8 @@ class Grid extends React.Component<IProps, IState>
 		const $window: JQuery<Window> = $(window);
 		const $svg: JQuery<SVGSVGElement> = $(this._svg.current!);
 
-		this.props.tileManager.tilePlacedEmitter.off(this._tileManager_TilePlacedEmitter_ForceUpdate);
-		this.props.tileManager.tileErasedEmitter.off(this._tileManager_TileErasedEmitter_ForceUpdate);
+		this.props.tileManager.postTilePlacedEmitter.off(this._tileManager_PostTilePlacedEmitter_ForceUpdate);
+		this.props.tileManager.postTileErasedEmitter.off(this._tileManager_PostTileErasedEmitter_ForceUpdate);
 		$document.off("mouseup", this._document_MouseUp_StopDragging);
 		$document.off("keydown", this._document_KeyDown_Hotkeys);
 		$window.off("resize", this._window_Resize_SetSize);
@@ -173,12 +173,12 @@ class Grid extends React.Component<IProps, IState>
 		return gridPosition.copy().multiply(this.state.gridSize);
 	}
 
-	_tileManager_TilePlacedEmitter_ForceUpdate = (event: TilePlacedEvent) =>
+	_tileManager_PostTilePlacedEmitter_ForceUpdate = (event: TilePlacedEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_tileManager_TileErasedEmitter_ForceUpdate = (event: TileErasedEvent) =>
+	_tileManager_PostTileErasedEmitter_ForceUpdate = (event: TileErasedEvent) =>
 	{
 		this.forceUpdate();
 	}
@@ -282,7 +282,6 @@ class Grid extends React.Component<IProps, IState>
 				if(event.ctrlKey)
 				{
 					this.addZoom(this.props.zoomIncrement);
-
 					event.preventDefault();
 				}
 
@@ -292,7 +291,6 @@ class Grid extends React.Component<IProps, IState>
 				if(event.ctrlKey)
 				{
 					this.addZoom(-this.props.zoomIncrement);
-
 					event.preventDefault();
 				}
 
