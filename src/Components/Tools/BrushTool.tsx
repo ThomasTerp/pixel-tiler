@@ -82,10 +82,10 @@ class BrushTool extends React.Component<IProps, IState>
 	public draw(cursorPosition: Vector2D): number
 	{
 		const position: Vector2D = cursorPosition.copy()
-			//.multiply(this.props.gridInfo.zoom)
-			.subtract(this.props.gridInfo.offset.copy())
 			.subtract(this.props.gridInfo.size.copy().divide(2))
-			//.subtract(this.props.tileManager.size / 2)
+			.multiply(this.props.gridInfo.zoom)
+			.subtract(this.props.gridInfo.offset.copy())
+			.mapAxes((axis: number) => Math.floor(axis / this.props.tileManager.size) * this.props.tileManager.size)
 			.divide(this.props.tileManager.size)
 
 		return this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, position, this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
