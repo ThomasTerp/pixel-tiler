@@ -82,9 +82,7 @@ export default class TileManager
 	public tilesets: Tileset[];
 	public placedTiles: TileData[] = [];
 	public tilePlacedEmitter: Emitter<TilePlacedEvent> = new Emitter<TilePlacedEvent>();
-	public postTilePlacedEmitter: Emitter<TilePlacedEvent> = new Emitter<TilePlacedEvent>();
 	public tileErasedEmitter: Emitter<TileErasedEvent> = new Emitter<TileErasedEvent>();
-	public postTileErasedEmitter: Emitter<TileErasedEvent> = new Emitter<TileErasedEvent>();
 	public selectedTilesetChangedEmitter: Emitter<SelectedTilesetChangedEvent> = new Emitter<SelectedTilesetChangedEvent>();
 	public selectedTileTypeChangedEmitter: Emitter<SelectedTileTypeChangedEvent> = new Emitter<SelectedTileTypeChangedEvent>();
 	public selectedRotationChangedEmitter: Emitter<SelectedRotationChangedEvent> = new Emitter<SelectedRotationChangedEvent>();
@@ -99,6 +97,7 @@ export default class TileManager
 	{
 		const selectedTilesetChangedEvent = this.selectedTilesetChangedEmitter.emit(new SelectedTilesetChangedEvent(value));
 		this._selectedTileset = selectedTilesetChangedEvent.tileset;
+		this.selectedTilesetChangedEmitter.emitPost(selectedTilesetChangedEvent);
 	}
 
 	get selectedTileset(): Tileset
@@ -110,6 +109,7 @@ export default class TileManager
 	{
 		const selectedTileTypeChangedEvent = this.selectedTileTypeChangedEmitter.emit(new SelectedTileTypeChangedEvent(value));
 		this._selectedTileType = selectedTileTypeChangedEvent.tileType;
+		this.selectedTileTypeChangedEmitter.emitPost(selectedTileTypeChangedEvent);
 	}
 
 	get selectedTileType(): TileType
@@ -121,6 +121,7 @@ export default class TileManager
 	{
 		const selectedRotationChangedEvent = this.selectedRotationChangedEmitter.emit(new SelectedRotationChangedEvent(value));
 		this._selectedRotation = selectedRotationChangedEvent.rotation;
+		this.selectedRotationChangedEmitter.emitPost(selectedRotationChangedEvent);
 	}
 
 	get rotation(): number
@@ -132,6 +133,7 @@ export default class TileManager
 	{
 		const selectedSizeChangedEvent = this.selectedSizeChangedEmitter.emit(new SelectedSizeChangedEvent(value));
 		this._selectedSize = selectedSizeChangedEvent.size;
+		this.selectedSizeChangedEmitter.emitPost(selectedSizeChangedEvent);
 	}
 
 	get size(): number
@@ -150,7 +152,7 @@ export default class TileManager
 	{
 		const tilePlacedEvent = this.tilePlacedEmitter.emit(new TilePlacedEvent(this._currentTileID++, tileData));
 		this.placedTiles[tilePlacedEvent.tileID] = tilePlacedEvent.tileData;
-		this.postTilePlacedEmitter.emit(tilePlacedEvent);
+		this.tilePlacedEmitter.emitPost(tilePlacedEvent);
 
 		return tilePlacedEvent.tileID;
 	}
@@ -160,7 +162,7 @@ export default class TileManager
 		const tileErasedEvent = this.tileErasedEmitter.emit(new TileErasedEvent(tileID));
 		const tileData = this.placedTiles[tileErasedEvent.tileID];
 		delete this.placedTiles[tileErasedEvent.tileID];
-		this.postTileErasedEmitter.emit(tileErasedEvent);
+		this.tileErasedEmitter.emitPost(tileErasedEvent);
 
 		return tileData;
 	}

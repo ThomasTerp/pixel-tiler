@@ -38,6 +38,7 @@ export default class PaletteManager
 	{
 		const selectedColorIDChangeEvent = this.selectedColorIDChangeEmitter.emit(new SelectedColorIDChangeEvent(colorID));
 		this._selectedColorID = selectedColorIDChangeEvent.selectedColorID;
+		this.selectedColorIDChangeEmitter.emitPost(selectedColorIDChangeEvent);
 	}
 
 	get selectedColorID()
@@ -69,5 +70,6 @@ export default class PaletteManager
 	{
 		const colorChangeEvent = this.colorChangeEmitter.emit(new ColorChangeEvent(colorID, color));
 		this.colors[colorChangeEvent.colorID] = colorChangeEvent.color;
+		this.colorChangeEmitter.emitPost(colorChangeEvent);
 	}
 }

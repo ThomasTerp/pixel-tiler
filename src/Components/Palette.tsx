@@ -50,22 +50,22 @@ class Palette extends React.Component<IProps, IState>
 
 	public componentDidMount(): void
 	{
-		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
-		this.props.paletteManager.selectedColorIDChangeEmitter.on(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.onPost(this._paletteManager_PostColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.onPost(this._paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate);
 	}
 
 	public componentWillUnmount(): void
 	{
-		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
-		this.props.paletteManager.selectedColorIDChangeEmitter.off(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.offPost(this._paletteManager_PostColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.offPost(this._paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate);
 	}
 
-	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
+	_paletteManager_PostColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_paletteManager_SelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
+	_paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
 	{
 		this.forceUpdate();
 	}

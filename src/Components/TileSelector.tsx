@@ -32,5 +32,4 @@ export default abstract class TileSelector extends React.Component<IProps, IStat
 			</div>
 		)
 	}
-
 }

@@ -82,10 +82,11 @@ class BrushTool extends React.Component<IProps, IState>
 	public draw(cursorPosition: Vector2D): number
 	{
 		const position: Vector2D = cursorPosition.copy()
+			//.multiply(this.props.gridInfo.zoom)
 			.subtract(this.props.gridInfo.offset.copy())
 			.subtract(this.props.gridInfo.size.copy().divide(2))
+			//.subtract(this.props.tileManager.size / 2)
 			.divide(this.props.tileManager.size)
-			.multiply(this.props.gridInfo.zoom)
 
 		return this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, position, this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
 	}
@@ -94,10 +95,10 @@ class BrushTool extends React.Component<IProps, IState>
 	{
 		const $grid = $(".Grid");
 
-		this.props.paletteManager.colorChangeEmitter.on(this._paletteManager_ColorChangeEmitter_ForceUpdate);
-		this.props.paletteManager.selectedColorIDChangeEmitter.on(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
-		this.props.tileManager.selectedTilesetChangedEmitter.on(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
-		this.props.tileManager.selectedTileTypeChangedEmitter.on(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.onPost(this._paletteManager_PostColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.onPost(this._paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.tileManager.selectedTilesetChangedEmitter.onPost(this._tileManager_PostSelectedTilesetChangedEmitter_ForceUpdate);
+		this.props.tileManager.selectedTileTypeChangedEmitter.onPost(this._tileManager_PostSelectedTileTypeChangedEmitter_ForceUpdate);
 		$grid.on("mousedown", this._grid_MouseDown_StartDrawing);
 		$grid.on("mouseup", this._grid_MouseUp_StopDrawing);
 		$grid.on("mousemove", this._grid_MouseMove_Draw);
@@ -107,31 +108,31 @@ class BrushTool extends React.Component<IProps, IState>
 	{
 		const $grid = $(".Grid");
 
-		this.props.paletteManager.colorChangeEmitter.off(this._paletteManager_ColorChangeEmitter_ForceUpdate);
-		this.props.paletteManager.selectedColorIDChangeEmitter.off(this._paletteManager_SelectedColorIDChangeEmitter_ForceUpdate);
-		this.props.tileManager.selectedTilesetChangedEmitter.off(this._tileManager_SelectedTilesetChangedEmitter_ForceUpdate);
-		this.props.tileManager.selectedTileTypeChangedEmitter.off(this._tileManager_SelectedTileTypeChangedEmitter_ForceUpdate);
+		this.props.paletteManager.colorChangeEmitter.offPost(this._paletteManager_PostColorChangeEmitter_ForceUpdate);
+		this.props.paletteManager.selectedColorIDChangeEmitter.offPost(this._paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate);
+		this.props.tileManager.selectedTilesetChangedEmitter.offPost(this._tileManager_PostSelectedTilesetChangedEmitter_ForceUpdate);
+		this.props.tileManager.selectedTileTypeChangedEmitter.offPost(this._tileManager_PostSelectedTileTypeChangedEmitter_ForceUpdate);
 		$grid.off("mousedown", this._grid_MouseDown_StartDrawing);
 		$grid.off("mouseup", this._grid_MouseUp_StopDrawing);
 		$grid.off("mousemove", this._grid_MouseMove_Draw);
 	}
 
-	_paletteManager_ColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
+	_paletteManager_PostColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_paletteManager_SelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
+	_paletteManager_PostSelectedColorIDChangeEmitter_ForceUpdate = (event: SelectedColorIDChangeEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_tileManager_SelectedTilesetChangedEmitter_ForceUpdate = (event: SelectedTilesetChangedEvent) =>
+	_tileManager_PostSelectedTilesetChangedEmitter_ForceUpdate = (event: SelectedTilesetChangedEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_tileManager_SelectedTileTypeChangedEmitter_ForceUpdate = (event: SelectedTileTypeChangedEvent) =>
+	_tileManager_PostSelectedTileTypeChangedEmitter_ForceUpdate = (event: SelectedTileTypeChangedEvent) =>
 	{
 		this.forceUpdate();
 	}
