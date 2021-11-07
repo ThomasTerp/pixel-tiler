@@ -77,6 +77,18 @@ export class SelectedSizeChangedEvent extends Event
 	}
 }
 
+export class GhostTileChangedEvent extends Event
+{
+	ghostTile?: TileData;
+
+	constructor(ghostTile?: TileData)
+	{
+		super();
+
+		this.ghostTile = ghostTile;
+	}
+}
+
 export default class TileManager
 {
 	public tilesets: Tileset[];
@@ -87,11 +99,13 @@ export default class TileManager
 	public selectedTileTypeChangedEmitter: Emitter<SelectedTileTypeChangedEvent> = new Emitter<SelectedTileTypeChangedEvent>();
 	public selectedRotationChangedEmitter: Emitter<SelectedRotationChangedEvent> = new Emitter<SelectedRotationChangedEvent>();
 	public selectedSizeChangedEmitter: Emitter<SelectedSizeChangedEvent> = new Emitter<SelectedSizeChangedEvent>();
+	public ghostTileChangedEmitter: Emitter<GhostTileChangedEvent> = new Emitter<GhostTileChangedEvent>();
 	private _selectedTileset: Tileset;
 	private _selectedTileType: TileType;
 	private _selectedRotation: number = 0;
 	private _selectedSize: number = 32;
 	private _currentTileID: number = 0;
+	private _ghostTile?: TileData;
 
 	set selectedTileset(value: Tileset)
 	{
@@ -139,6 +153,18 @@ export default class TileManager
 	get size(): number
 	{
 		return this._selectedSize;
+	}
+
+	set ghostTile(value: TileData | undefined)
+	{
+		const ghostTileChangedEvent = this.ghostTileChangedEmitter.emit(new GhostTileChangedEvent(value));
+		this._ghostTile = ghostTileChangedEvent.ghostTile;
+		this.ghostTileChangedEmitter.emitPost(ghostTileChangedEvent);
+	}
+
+	get ghostTile(): TileData | undefined
+	{
+		return this._ghostTile;
 	}
 
 	constructor(tilesets: Tileset[])

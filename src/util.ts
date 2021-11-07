@@ -1,5 +1,4 @@
 import Vector2D from "./Vector2D";
-import {makeStyles} from "@material-ui/core";
 
 export function isPowerOfTwo(x: number): boolean
 {

@@ -79,16 +79,24 @@ class BrushTool extends React.Component<IProps, IState>
 		));
 	}
 
-	public draw(cursorPosition: Vector2D): number
+	public cursorToGridPosition(cursorPosition: Vector2D): Vector2D
 	{
-		const position: Vector2D = cursorPosition.copy()
+		return cursorPosition.copy()
 			.subtract(this.props.gridInfo.size.copy().divide(2))
 			.multiply(this.props.gridInfo.zoom)
 			.subtract(this.props.gridInfo.offset.copy())
 			.mapAxes((axis: number) => Math.floor(axis / this.props.tileManager.size) * this.props.tileManager.size)
-			.divide(this.props.tileManager.size)
+			.divide(this.props.tileManager.size);
+	}
 
-		return this.props.tileManager.placeTile(new TileData(this.props.tileManager.selectedTileType, position, this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID));
+	public buildTileData(cursorPosition: Vector2D): TileData
+	{
+		return new TileData(this.props.tileManager.selectedTileType, this.cursorToGridPosition(cursorPosition), this.props.tileManager.size, this.props.tileManager.rotation, this.props.paletteManager.selectedColor, this.props.paletteManager.selectedColorID)
+	}
+
+	public draw(cursorPosition: Vector2D): number
+	{
+		return this.props.tileManager.placeTile(this.buildTileData(cursorPosition));
 	}
 
 	public componentDidMount(): void
@@ -102,6 +110,8 @@ class BrushTool extends React.Component<IProps, IState>
 		$grid.on("mousedown", this._grid_MouseDown_StartDrawing);
 		$grid.on("mouseup", this._grid_MouseUp_StopDrawing);
 		$grid.on("mousemove", this._grid_MouseMove_Draw);
+		$grid.on("mousemove", this._grid_MouseMove_UpdateGhost);
+		$grid.on("mouseleave", this._grid_MouseLeave_RemoveGhost);
 	}
 
 	public componentWillUnmount(): void
@@ -115,6 +125,8 @@ class BrushTool extends React.Component<IProps, IState>
 		$grid.off("mousedown", this._grid_MouseDown_StartDrawing);
 		$grid.off("mouseup", this._grid_MouseUp_StopDrawing);
 		$grid.off("mousemove", this._grid_MouseMove_Draw);
+		$grid.off("mousemove", this._grid_MouseMove_UpdateGhost);
+		$grid.off("mouseleave", this._grid_MouseLeave_RemoveGhost);
 	}
 
 	_paletteManager_PostColorChangeEmitter_ForceUpdate = (event: ColorChangeEvent) =>
@@ -160,6 +172,30 @@ class BrushTool extends React.Component<IProps, IState>
 		{
 			this.draw(new Vector2D(event.offsetX, event.offsetY));
 		}
+	}
+
+	_grid_MouseMove_UpdateGhost = (event: JQuery.MouseMoveEvent) =>
+	{
+		if(this.props.tileManager.ghostTile == null || this.props.tileManager.ghostTile.tileType !== this.props.tileManager.selectedTileType)
+		{
+			this.props.tileManager.ghostTile = this.buildTileData(new Vector2D(event.offsetX, event.offsetY));
+		}
+		else
+		{
+			const ghostTile = this.props.tileManager.ghostTile;
+			ghostTile.position = this.cursorToGridPosition(new Vector2D(event.offsetX, event.offsetY));
+			ghostTile.colorID = this.props.paletteManager.selectedColorID;
+			ghostTile.color = this.props.paletteManager.selectedColor;
+			ghostTile.rotation = this.props.tileManager.rotation;
+			ghostTile.size = this.props.gridInfo.gridSize;
+
+			this.props.tileManager.ghostTile = ghostTile;
+		}
+	}
+
+	_grid_MouseLeave_RemoveGhost = (event: JQuery.MouseLeaveEvent) =>
+	{
+		this.props.tileManager.ghostTile = undefined;
 	}
 }
 

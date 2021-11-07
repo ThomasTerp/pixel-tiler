@@ -173,12 +173,12 @@ class Grid extends React.Component<IProps, IState>
 		return gridPosition.copy().multiply(this.state.gridSize);
 	}
 
-	_tileManager_PostTilePlacedEmitter_ForceUpdate = (event: TilePlacedEvent) =>
+	private _tileManager_PostTilePlacedEmitter_ForceUpdate = (event: TilePlacedEvent) =>
 	{
 		this.forceUpdate();
 	}
 
-	_tileManager_PostTileErasedEmitter_ForceUpdate = (event: TileErasedEvent) =>
+	private _tileManager_PostTileErasedEmitter_ForceUpdate = (event: TileErasedEvent) =>
 	{
 		this.forceUpdate();
 	}
